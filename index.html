@@ -775,17 +775,128 @@
 </section>
 
 <!-- ROI CALCULATOR -->
-<section style="padding:100px 24px;background:rgba(255,255,255,0.015);border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);">
-  <div style="max-width:900px;margin:0 auto;text-align:center;">
-    <p style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#f97316;margin-bottom:16px;">See Your Numbers</p>
-    <h2 style="font-size:clamp(28px,5vw,48px);font-weight:800;letter-spacing:-0.02em;margin-bottom:16px;">How much revenue are you leaving on the table?</h2>
-    <p style="font-size:18px;color:#9ca3af;margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto;">Put in your numbers. See exactly what missed calls are costing you.</p>
-    <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(249,115,22,0.2);">
-      <iframe src="/ai-roi-calculator/" width="100%" height="520" frameborder="0" scrolling="auto" style="display:block;background:#fff;"></iframe>
+<section id="calculator" style="padding:100px 24px;background:rgba(255,255,255,0.015);border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);">
+  <div style="max-width:760px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#f97316;margin-bottom:16px;">See Your Numbers</p>
+      <h2 style="font-size:clamp(28px,5vw,48px);font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:16px;">How much are missed calls costing you?</h2>
+      <p style="font-size:18px;color:#9ca3af;max-width:520px;margin:0 auto;">Put in your numbers. See exactly what you're leaving on the table.</p>
     </div>
-    <p style="font-size:13px;color:#4b5563;margin-top:16px;">Numbers look real? Scroll down — we can fix this for $397/month.</p>
+
+    <!-- Inputs -->
+    <div style="background:#0e0e0e;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:36px;margin-bottom:20px;">
+      <div style="margin-bottom:28px;">
+        <label style="display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9ca3af;margin-bottom:10px;">What industry are you in?</label>
+        <div style="position:relative;">
+          <select id="calc-industry" onchange="calcROI()" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:14px 16px;color:#fff;font-size:16px;font-family:Inter,sans-serif;appearance:none;outline:none;cursor:pointer;">
+            <option value="">— Select your industry —</option>
+            <option value="roofing_tile">Roofing (Tile — Naples/SW FL)</option>
+            <option value="roofing_shingle">Roofing (Shingle)</option>
+            <option value="hvac">HVAC / Air Conditioning</option>
+            <option value="painting_ext">Painting (Exterior)</option>
+            <option value="painting_int">Painting (Interior)</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="garage_door">Garage Door</option>
+            <option value="general">General Home Services</option>
+          </select>
+          <div style="position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:#9ca3af;">▾</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:28px;">
+        <label style="display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9ca3af;margin-bottom:10px;">Missed calls per week <span style="color:#f97316;" id="calc-missed-val">8</span></label>
+        <input type="range" id="calc-missed" min="1" max="50" value="8" oninput="document.getElementById('calc-missed-val').textContent=this.value;calcROI()" style="width:100%;-webkit-appearance:none;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;outline:none;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#4b5563;margin-top:6px;"><span>1</span><span>25</span><span>50</span></div>
+      </div>
+
+      <div>
+        <label style="display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9ca3af;margin-bottom:10px;">Close rate on answered calls <span style="color:#f97316;" id="calc-close-val">10%</span></label>
+        <input type="range" id="calc-close" min="5" max="60" value="10" oninput="document.getElementById('calc-close-val').textContent=this.value+'%';calcROI()" style="width:100%;-webkit-appearance:none;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;outline:none;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#4b5563;margin-top:6px;"><span>5%</span><span>30%</span><span>60%</span></div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="calc-results" style="display:none;background:linear-gradient(135deg,rgba(249,115,22,0.08),rgba(249,115,22,0.03));border:1px solid rgba(249,115,22,0.25);border-radius:16px;padding:36px;margin-bottom:20px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;">
+        <div style="text-align:center;background:rgba(0,0,0,0.2);border-radius:12px;padding:20px 12px;">
+          <div id="calc-weekly" style="font-size:clamp(26px,4vw,40px);font-weight:900;letter-spacing:-0.03em;color:#f97316;line-height:1;margin-bottom:6px;">—</div>
+          <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;">Lost per week</div>
+        </div>
+        <div style="text-align:center;background:rgba(0,0,0,0.2);border-radius:12px;padding:20px 12px;">
+          <div id="calc-annual" style="font-size:clamp(26px,4vw,40px);font-weight:900;letter-spacing:-0.03em;color:#f97316;line-height:1;margin-bottom:6px;">—</div>
+          <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;">Lost per year</div>
+        </div>
+        <div style="text-align:center;background:rgba(0,0,0,0.2);border-radius:12px;padding:20px 12px;">
+          <div id="calc-roi" style="font-size:clamp(26px,4vw,40px);font-weight:900;letter-spacing:-0.03em;color:#f97316;line-height:1;margin-bottom:6px;">—</div>
+          <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;">ROI at $397/mo</div>
+        </div>
+        <div style="text-align:center;background:rgba(0,0,0,0.2);border-radius:12px;padding:20px 12px;">
+          <div id="calc-payback" style="font-size:clamp(26px,4vw,40px);font-weight:900;letter-spacing:-0.03em;color:#f97316;line-height:1;margin-bottom:6px;">—</div>
+          <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;">Payback period</div>
+        </div>
+      </div>
+
+      <div id="calc-bar-wrap" style="background:rgba(255,255,255,0.05);border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px;">
+        <div id="calc-bar" style="height:100%;background:linear-gradient(90deg,#f97316,#fb923c);border-radius:8px;width:0%;transition:width 0.6s ease;"></div>
+      </div>
+      <p id="calc-bar-label" style="font-size:13px;color:#9ca3af;margin-bottom:24px;"></p>
+
+      <div id="calc-insights" style="margin-bottom:28px;"></div>
+
+      <a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" style="display:block;width:100%;background:#f97316;color:#fff;padding:18px;border-radius:8px;font-size:17px;font-weight:700;text-align:center;text-decoration:none;box-shadow:0 0 30px rgba(249,115,22,0.25);">Start Free — 14 Days on Us →</a>
+      <p style="text-align:center;font-size:13px;color:#4b5563;margin-top:12px;">$397/month after trial. No contracts. Cancel anytime.</p>
+    </div>
+
+    <div id="calc-placeholder" style="background:#0e0e0e;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px;text-align:center;">
+      <p style="color:#4b5563;font-size:15px;">Select your industry above to see your numbers.</p>
+    </div>
   </div>
 </section>
+
+<style>
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#f97316;cursor:pointer;box-shadow:0 0 8px rgba(249,115,22,0.4); }
+  input[type=range]::-moz-range-thumb { width:22px;height:22px;border-radius:50%;background:#f97316;cursor:pointer;border:none; }
+  select option { background:#1a1a1a; }
+  @media(max-width:480px) {
+    #calc-results > div:first-child { grid-template-columns:1fr 1fr !important; }
+  }
+</style>
+
+<script>
+var CALC_JOBS = {
+  roofing_tile:{v:86000,l:"tile roof"},roofing_shingle:{v:20000,l:"shingle roof"},
+  hvac:{v:5000,l:"HVAC job"},painting_ext:{v:8000,l:"exterior paint job"},
+  painting_int:{v:3500,l:"interior paint job"},plumbing:{v:1500,l:"plumbing job"},
+  garage_door:{v:1200,l:"garage door job"},general:{v:3000,l:"home service job"}
+};
+function calcFmt(n){if(n>=1000000)return"$"+(n/1000000).toFixed(1).replace(/\.0$/,"")+"M";if(n>=1000)return"$"+Math.round(n/1000)+"K";return"$"+n.toLocaleString();}
+function calcROI(){
+  var ind=document.getElementById("calc-industry").value;
+  if(!ind)return;
+  var missed=parseInt(document.getElementById("calc-missed").value);
+  var close=parseInt(document.getElementById("calc-close").value)/100;
+  var job=CALC_JOBS[ind];
+  var weekly=Math.round(missed*close*job.v);
+  var annual=weekly*52;
+  var annCost=397*12;
+  var roi=Math.round(((annual-annCost)/annCost)*100);
+  var payback=Math.round(397/(weekly/7));
+  document.getElementById("calc-weekly").textContent=calcFmt(weekly);
+  document.getElementById("calc-annual").textContent=calcFmt(annual);
+  document.getElementById("calc-roi").textContent=roi>9999?Math.round(roi/1000)+"Kx":roi+"x";
+  document.getElementById("calc-payback").textContent=payback<=1?"< 1 day":payback+" days";
+  document.getElementById("calc-bar").style.width=Math.min(100,(roi/500)*100)+"%";
+  document.getElementById("calc-bar-label").textContent="For every $1 spent on Growth Mindset AI, you recover "+calcFmt(annual/annCost)+" in lost revenue.";
+  var jobs=Math.round(missed*close*52);
+  document.getElementById("calc-insights").innerHTML=
+    "<div style='display:flex;gap:12px;background:rgba(255,255,255,0.03);border-radius:10px;padding:14px;margin-bottom:10px;font-size:14px;color:#9ca3af;line-height:1.5;'><span style='font-size:18px;flex-shrink:0;'>📞</span><span>You're missing <strong style='color:#fff;'>"+missed+" calls/week</strong> — that's <strong style='color:#fff;'>"+missed*52+" unanswered calls per year.</strong></span></div>"+
+    "<div style='display:flex;gap:12px;background:rgba(255,255,255,0.03);border-radius:10px;padding:14px;margin-bottom:10px;font-size:14px;color:#9ca3af;line-height:1.5;'><span style='font-size:18px;flex-shrink:0;'>💰</span><span>At a "+Math.round(close*100)+"% close rate, that's <strong style='color:#fff;'>"+jobs+" "+job.l+"s per year</strong> worth <strong style='color:#fff;'>"+calcFmt(annual)+"</strong> walking out the door.</span></div>"+
+    "<div style='display:flex;gap:12px;background:rgba(255,255,255,0.03);border-radius:10px;padding:14px;font-size:14px;color:#9ca3af;line-height:1.5;'><span style='font-size:18px;flex-shrink:0;'>⚡</span><span>Growth Mindset AI costs <strong style='color:#fff;'>$4,764/year</strong>. It pays for itself the moment it captures <strong style='color:#fff;'>one "+job.l+".</strong></span></div>";
+  document.getElementById("calc-results").style.display="block";
+  document.getElementById("calc-placeholder").style.display="none";
+}
+</script>
 
 <!-- PRICING -->
 <section class="pricing" id="get-started">
