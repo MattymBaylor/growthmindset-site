@@ -790,7 +790,7 @@
         <div style="position:relative;">
           <select id="calc-industry" onchange="calcROI()" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:14px 16px;color:#fff;font-size:16px;font-family:Inter,sans-serif;appearance:none;outline:none;cursor:pointer;">
             <option value="">— Select your industry —</option>
-            <option value="roofing_tile">Roofing (Tile — Naples/SW FL)</option>
+            <option value="roofing_tile" selected>Roofing (Tile — Naples/SW FL)</option>
             <option value="roofing_shingle">Roofing (Shingle)</option>
             <option value="hvac">HVAC / Air Conditioning</option>
             <option value="painting_ext">Painting (Exterior)</option>
@@ -800,6 +800,9 @@
             <option value="general">General Home Services</option>
           </select>
           <div style="position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:#9ca3af;">▾</div>
+        </div>
+        <div id="calc-job-note" style="margin-top:10px;padding:10px 14px;background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:8px;font-size:13px;color:#9ca3af;display:none;">
+          📊 We're using an average job value of <strong style="color:#f97316;" id="calc-job-val">—</strong> for this calculation — based on industry averages for Southwest Florida. <a href="#" onclick="return false;" style="color:#9ca3af;text-decoration:underline;text-decoration-style:dotted;" title="Sources: HomeAdvisor, Angi, local contractor data">How we calculate this ↗</a>
         </div>
       </div>
 
@@ -873,7 +876,10 @@ var CALC_JOBS = {
 function calcFmt(n){if(n>=1000000)return"$"+(n/1000000).toFixed(1).replace(/\.0$/,"")+"M";if(n>=1000)return"$"+Math.round(n/1000)+"K";return"$"+n.toLocaleString();}
 function calcROI(){
   var ind=document.getElementById("calc-industry").value;
-  if(!ind)return;
+  if(!ind){document.getElementById("calc-job-note").style.display="none";return;}
+  var jobLabels={"roofing_tile":"$86,000 avg tile roof (Naples/SW FL)","roofing_shingle":"$20,000 avg shingle roof","hvac":"$5,000 avg HVAC job","painting_ext":"$8,000 avg exterior paint job","painting_int":"$3,500 avg interior paint job","plumbing":"$1,500 avg plumbing job","garage_door":"$1,200 avg garage door job","general":"$3,000 avg home service job"};
+  document.getElementById("calc-job-val").textContent=jobLabels[ind]||"";
+  document.getElementById("calc-job-note").style.display="block";
   var missed=parseInt(document.getElementById("calc-missed").value);
   var close=parseInt(document.getElementById("calc-close").value)/100;
   var job=CALC_JOBS[ind];
@@ -896,6 +902,7 @@ function calcROI(){
   document.getElementById("calc-results").style.display="block";
   document.getElementById("calc-placeholder").style.display="none";
 }
+window.addEventListener("load",function(){calcROI();});
 </script>
 
 <!-- PRICING -->
