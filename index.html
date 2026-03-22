@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Growth Mindset AI — Never Miss Another Call</title>
+  <meta name="description" content="AI receptionist for home service contractors. Answers every call, books jobs, captures leads. Setup in 24 hours." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-400: #9ca3af;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --accent: #f97316;
+      --accent-dark: #ea6c0a;
+      --green: #16a34a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .logo {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .logo span { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent);
+      color: var(--white);
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-dark); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(249,115,22,0.12);
+      border: 1px solid rgba(249,115,22,0.3);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .hero-badge .dot {
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    h1 {
+      font-size: clamp(40px, 7vw, 80px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      max-width: 900px;
+      margin-bottom: 24px;
+    }
+    h1 .highlight { color: var(--accent); }
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: var(--gray-400);
+      max-width: 560px;
+      margin-bottom: 48px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: var(--white);
+      padding: 18px 40px;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 0 40px rgba(249,115,22,0.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(249,115,22,0.45);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-400);
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+      border-bottom: 1px solid transparent;
+    }
+    .btn-secondary:hover { color: var(--white); border-bottom-color: var(--white); }
+    .phone-hint {
+      font-size: 13px;
+      color: var(--gray-600);
+      margin-top: 8px;
+    }
+
+    /* SOCIAL PROOF BAR */
+    .proof-bar {
+      background: rgba(255,255,255,0.03);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--gray-400);
+    }
+    .proof-item .icon { font-size: 18px; }
+    .proof-item strong { color: var(--white); }
+
+    /* PAIN SECTION */
+    .pain {
+      padding: 100px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .pain h2 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .pain p {
+      font-size: 18px;
+      color: var(--gray-400);
+      max-width: 640px;
+      margin: 0 auto 60px;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .stat-card {
+      background: var(--black);
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray-400);
+      line-height: 1.4;
+    }
+
+    /* WHAT SHE DOES */
+    .features {
+      padding: 100px 24px;
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .features-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .features-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .features-header h2 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .features-header p {
+      font-size: 18px;
+      color: var(--gray-400);
+      margin-top: 16px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .feature-card {
+      background: #0e0e0e;
+      padding: 40px 36px;
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: rgba(249,115,22,0.1);
+      border: 1px solid rgba(249,115,22,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      font-size: 15px;
+      color: var(--gray-400);
+      line-height: 1.6;
+    }
+
+    /* HOW IT WORKS */
+    .how {
+      padding: 100px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .how h2 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .how > p {
+      font-size: 18px;
+      color: var(--gray-400);
+      margin-bottom: 64px;
+    }
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      text-align: left;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      top: 48px;
+      bottom: 48px;
+      width: 1px;
+      background: rgba(249,115,22,0.2);
+    }
+    .step {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      background: rgba(249,115,22,0.1);
+      border: 2px solid rgba(249,115,22,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      position: relative;
+      z-index: 1;
+      background: #0a0a0a;
+    }
+    .step-content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .step-content p {
+      font-size: 15px;
+      color: var(--gray-400);
+      line-height: 1.6;
+    }
+
+    /* DEMO */
+    .demo {
+      padding: 100px 24px;
+      background: rgba(249,115,22,0.04);
+      border-top: 1px solid rgba(249,115,22,0.12);
+      border-bottom: 1px solid rgba(249,115,22,0.12);
+    }
+    .demo-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .demo h2 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .demo p {
+      font-size: 18px;
+      color: var(--gray-400);
+      margin-bottom: 48px;
+    }
+    .phone-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 48px 40px;
+      margin-bottom: 32px;
+    }
+    .phone-number {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .phone-sub {
+      font-size: 16px;
+      color: var(--gray-400);
+    }
+    .phone-instructions {
+      font-size: 14px;
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
+
+    /* PRICING */
+    .pricing {
+      padding: 100px 24px;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .pricing h2 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .pricing > p {
+      font-size: 18px;
+      color: var(--gray-400);
+      margin-bottom: 48px;
+    }
+    .price-card {
+      background: #0e0e0e;
+      border: 1px solid rgba(249,115,22,0.3);
+      border-radius: 16px;
+      padding: 56px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .price-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #fb923c);
+    }
+    .price-tag {
+      font-size: clamp(56px, 8vw, 88px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .price-period {
+      font-size: 18px;
+      color: var(--gray-400);
+      margin-bottom: 40px;
+    }
+    .price-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 48px;
+    }
+    .price-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 16px;
+      color: var(--gray-400);
+    }
+    .price-features li:last-child { border-bottom: none; }
+    .price-features .check {
+      color: var(--green);
+      font-size: 18px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+    .price-features strong { color: var(--white); }
+    .price-guarantee {
+      font-size: 13px;
+      color: var(--gray-600);
+      margin-top: 20px;
+    }
+
+    /* TESTIMONIAL / TRUST */
+    .trust {
+      padding: 100px 24px;
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .trust-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .trust h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .trust > p {
+      font-size: 18px;
+      color: var(--gray-400);
+      margin-bottom: 64px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .industries {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .industry-tag {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    /* FINAL CTA */
+    .final-cta {
+      padding: 120px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      bottom: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(249,115,22,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .final-cta h2 {
+      font-size: clamp(32px, 6vw, 64px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      max-width: 760px;
+      margin: 0 auto 24px;
+    }
+    .final-cta p {
+      font-size: 18px;
+      color: var(--gray-400);
+      margin-bottom: 48px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 40px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: gap;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    footer .logo { font-size: 14px; }
+    footer p {
+      font-size: 13px;
+      color: var(--gray-600);
+    }
+    footer a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--white); }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      .proof-bar { gap: 24px; padding: 20px; }
+      .price-card { padding: 40px 28px; }
+      footer { padding: 32px 20px; }
+      .steps::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="/">Growth Mindset <span>AI</span></a>
+  <a class="nav-cta" href="#get-started">Get Started →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Live Demo Available Now
+  </div>
+  <h1>Your phone gets answered.<br><span class="highlight">Every single time.</span></h1>
+  <p class="hero-sub">AI receptionist built for home service contractors. She answers calls, qualifies leads, books appointments, and texts you instantly — even at 2am.</p>
+  <div class="hero-actions">
+    <a href="#get-started" class="btn-primary">
+      Get Your AI Receptionist →
+    </a>
+    <a href="tel:+12392599975" class="btn-secondary">
+      📞 Call the demo first: 239-259-9975
+    </a>
+    <p class="phone-hint">Hear exactly what your customers will hear</p>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-item">
+    <span class="icon">🏠</span>
+    <span>Built for <strong>home service contractors</strong></span>
+  </div>
+  <div class="proof-item">
+    <span class="icon">⚡</span>
+    <span><strong>24-hour</strong> setup</span>
+  </div>
+  <div class="proof-item">
+    <span class="icon">📞</span>
+    <span>Answers calls <strong>24/7/365</strong></span>
+  </div>
+  <div class="proof-item">
+    <span class="icon">💰</span>
+    <span>Flat <strong>$397/month</strong> — no surprises</span>
+  </div>
+</div>
+
+<!-- PAIN -->
+<section class="pain">
+  <p class="section-label">The Problem</p>
+  <h2>You're losing jobs you never even knew you missed.</h2>
+  <p>You're on the roof. In the attic. Driving between jobs. Every unanswered call is a homeowner who just called your competitor instead.</p>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-number">62%</div>
+      <div class="stat-label">of callers won't leave a voicemail — they move on</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">$5K+</div>
+      <div class="stat-label">average value of a missed estimate in home services</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">80%</div>
+      <div class="stat-label">of jobs go to the first contractor who responds</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="features-inner">
+    <div class="features-header">
+      <p class="section-label">What She Does</p>
+      <h2>Your best employee.<br>Never calls in sick.</h2>
+      <p>She handles the front of your business so you can stay focused on the job.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📞</div>
+        <h3>Answers Every Call</h3>
+        <p>Picks up instantly, day or night, weekends and holidays. No voicemail. No hold music. A real conversation every time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Qualifies the Lead</h3>
+        <p>Asks the right questions about their project — scope, timeline, location. You get a warm lead, not just a name and number.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Books the Estimate</h3>
+        <p>Syncs with your calendar and schedules appointments directly — or holds a slot and confirms with you first. Your call.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>Texts You Instantly</h3>
+        <p>The moment a call ends, you get a text or email summary — name, number, job details, and what was scheduled. Nothing slips through.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Trained on Your Business</h3>
+        <p>Knows your service area, your pricing language, your team's names. She sounds like she's been working for you for years.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Handles After-Hours</h3>
+        <p>Most contractors go dark after 5pm. You stay open. Homeowners who call Sunday night choose you on Monday morning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <p class="section-label">How It Works</p>
+  <h2>Up and running in 24 hours.</h2>
+  <p>No tech skills needed. I handle everything.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Book a 15-minute setup call</h3>
+        <p>We go over your business — what you do, your service area, how you like to handle calls. That's it. No sales pitch. Just setup.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>I train your AI receptionist</h3>
+        <p>Within 24 hours, she's trained on your business, connected to your phone system, and ready to take calls. You get a dedicated number or she can use yours.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Test her yourself — then go live</h3>
+        <p>Call her. Try to stump her. Adjust anything you want. When you're happy, flip the switch. She goes live and every call gets answered from that moment on.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Get back to doing the work</h3>
+        <p>You stop worrying about missed calls. She handles the front. You handle the jobs. Every lead gets captured, every customer gets a great first impression.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo">
+  <div class="demo-inner">
+    <p class="section-label">Try It Now</p>
+    <h2>Don't take my word for it.<br>Call her.</h2>
+    <p>She's live right now. She'll answer as a receptionist for a painting company — but imagine her saying your company name instead.</p>
+    <div class="phone-card">
+      <div class="phone-number">239-259-9975</div>
+      <div class="phone-sub">Live demo line — available 24/7</div>
+    </div>
+    <p class="phone-instructions">Ask her to book an estimate. Ask about pricing. Try to confuse her.<br>Then imagine that voice answering for your business, starting tomorrow.</p>
+  </div>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section style="padding:100px 24px;background:rgba(255,255,255,0.015);border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);">
+  <div style="max-width:900px;margin:0 auto;text-align:center;">
+    <p style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#f97316;margin-bottom:16px;">See Your Numbers</p>
+    <h2 style="font-size:clamp(28px,5vw,48px);font-weight:800;letter-spacing:-0.02em;margin-bottom:16px;">How much revenue are you leaving on the table?</h2>
+    <p style="font-size:18px;color:#9ca3af;margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto;">Put in your numbers. See exactly what missed calls are costing you.</p>
+    <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(249,115,22,0.2);">
+      <iframe src="https://growthmindset.ai/ai-roi-calculator" width="100%" height="520" frameborder="0" scrolling="auto" style="display:block;background:#fff;"></iframe>
+    </div>
+    <p style="font-size:13px;color:#4b5563;margin-top:16px;">Numbers look real? Scroll down — we can fix this for $397/month.</p>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="get-started">
+  <p class="section-label">Pricing</p>
+  <h2>One price.<br>No surprises.</h2>
+  <p>Everything included. Cancel anytime. Setup is on me.</p>
+  <div class="price-card">
+    <div class="price-tag">$397</div>
+    <div class="price-period">per month, everything included</div>
+    <ul class="price-features">
+      <li><span class="check">✓</span><span>Your AI receptionist, <strong>trained on your business</strong></span></li>
+      <li><span class="check">✓</span><span><strong>Unlimited calls</strong> answered 24/7/365</span></li>
+      <li><span class="check">✓</span><span>Lead capture — <strong>name, phone, email, address, project details</strong></span></li>
+      <li><span class="check">✓</span><span>Calendar integration — <strong>books or holds estimate slots</strong></span></li>
+      <li><span class="check">✓</span><span><strong>Instant text or email alerts</strong> after every call</span></li>
+      <li><span class="check">✓</span><span>Dedicated phone number <strong>or forward from yours</strong></span></li>
+      <li><span class="check">✓</span><span>15-minute setup call + <strong>full onboarding</strong>, done for you</span></li>
+      <li><span class="check">✓</span><span>Ongoing updates and <strong>retraining as your business changes</strong></span></li>
+    </ul>
+    <a href="https://cal.com/matthew-martelli/ai-setup" class="btn-primary" style="width:100%;justify-content:center;font-size:16px;">
+      Book Your 15-Minute Setup Call →
+    </a>
+    <p class="price-guarantee">No contracts. Cancel anytime. Setup takes 24 hours.</p>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="trust">
+  <div class="trust-inner">
+    <p class="section-label">Who It's For</p>
+    <h2>Built for the trades.</h2>
+    <p>Any home service contractor who's ever missed a call on a job site.</p>
+    <div class="industries">
+      <span class="industry-tag">🏠 Roofing</span>
+      <span class="industry-tag">🪟 Windows & Doors</span>
+      <span class="industry-tag">🧱 Siding</span>
+      <span class="industry-tag">🎨 Painting</span>
+      <span class="industry-tag">❄️ HVAC</span>
+      <span class="industry-tag">🔧 Plumbing</span>
+      <span class="industry-tag">⚡ Electrical</span>
+      <span class="industry-tag">🌿 Landscaping</span>
+      <span class="industry-tag">🛁 Bathroom Remodel</span>
+      <span class="industry-tag">🔩 General Contractor</span>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Your next missed call<br>is your last one.</h2>
+  <p>Set up in 24 hours. $397/month. No tech skills needed.</p>
+  <a href="#get-started" class="btn-primary" style="font-size:18px;padding:20px 48px;">
+    Get Your AI Receptionist →
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="logo" href="/">Growth Mindset <span>AI</span></a>
+  <p>© 2026 Growth Mindset AI. All rights reserved.</p>
+  <div style="display:flex;gap:24px;">
+    <a href="https://www.youtube.com/@matt_martelli">YouTube</a>
+    <a href="https://www.linkedin.com/in/mattmartelli">LinkedIn</a>
+    <a href="https://www.tiktok.com/@growthmindsetagency">TikTok</a>
+  </div>
+</footer>
+
+</body>
+</html>
