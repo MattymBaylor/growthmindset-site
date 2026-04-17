@@ -1,0 +1,18 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/hvac", "destination": "/hvac/index.html" },
+    { "source": "/roofing", "destination": "/roofing/index.html" },
+    { "source": "/plumbing", "destination": "/plumbing/index.html" },
+    { "source": "/electrical", "destination": "/electrical/index.html" },
+    { "source": "/insurance", "destination": "/insurance/index.html" },
+    { "source": "/real-estate", "destination": "/real-estate/index.html" },
+    { "source": "/legal", "destination": "/legal/index.html" },
+    { "source": "/medical", "destination": "/medical/index.html" },
+    { "source": "/auto", "destination": "/auto/index.html" },
+    { "source": "/property-mgmt", "destination": "/property-mgmt/index.html" },
+    { "source": "/home-services", "destination": "/home-services/index.html" },
+    { "source": "/custom", "destination": "/custom/index.html" }
+  ]
+}

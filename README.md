@@ -1,15 +1,21 @@
-# Growth Mindset AI — growthmindset.ai
+# Growth Mindset AI
 
-AI receptionist for home service contractors. Never miss another call.
+Voice AI agents for small and medium businesses.
 
-## Live Preview
-https://mattmartelli-64a442f2-6072-vm.koreacentral.cloudapp.azure.com:8443
+## Structure
 
-## Demo Line
-Call Samantha: (239) 259-9975
+- `index.html` — homepage with industry matrix
+- `<industry>/index.html` — individual industry landing pages
+- `vercel.json` — Vercel deployment config with clean URLs
+- `.htaccess` — Apache clean URL config (for hosts that use it)
 
-## Booking
-https://cal.com/matthew-martelli/ai-setup
+## Deploy
 
-## Stack
-Retell AI · Cal.com · Twilio · N8N · HeyGen
+**Vercel**: Connect this repo to Vercel → auto-deploys on push.
+
+**Any static host**: Upload the contents (except `.git/`) to your web root.
+
+## Industries
+
+HVAC, Roofing, Plumbing, Electrical, Insurance, Real Estate, Legal, Medical,
+Auto Repair, Property Management, Home Services, Custom.
