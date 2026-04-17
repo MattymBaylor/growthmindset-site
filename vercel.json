@@ -10,9 +10,10 @@
     { "source": "/real-estate", "destination": "/real-estate/index.html" },
     { "source": "/legal", "destination": "/legal/index.html" },
     { "source": "/medical", "destination": "/medical/index.html" },
-    { "source": "/auto", "destination": "/auto/index.html" },
+    { "source": "/locksmith", "destination": "/locksmith/index.html" },
     { "source": "/property-mgmt", "destination": "/property-mgmt/index.html" },
     { "source": "/home-services", "destination": "/home-services/index.html" },
-    { "source": "/custom", "destination": "/custom/index.html" }
+    { "source": "/custom", "destination": "/custom/index.html" },
+    { "source": "/auto", "destination": "/locksmith/index.html" }
   ]
 }
