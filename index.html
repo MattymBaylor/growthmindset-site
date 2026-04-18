@@ -16,6 +16,38 @@
   <meta name="twitter:description" content="Never miss another call. Voice AI agents that answer, qualify, and book — 24/7. Built for home services, insurance, real estate, legal, medical, and beyond." />
   <meta name="twitter:image" content="https://growthmindset.ai/og-image.png" />
   <link rel="canonical" href="https://growthmindset.ai" />
+
+  <!-- Organization schema (for SEO: identifies Matt Martelli as CEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Growth Mindset AI",
+    "url": "https://growthmindset.ai",
+    "logo": "https://growthmindset.ai/og-image.png",
+    "description": "Voice AI agents for small and medium businesses. Never miss a call, qualify leads 24/7, and book appointments automatically.",
+    "founder": {
+      "@type": "Person",
+      "name": "Matt Martelli",
+      "jobTitle": "Founder and CEO",
+      "image": "https://growthmindset.ai/matt-martelli.png"
+    },
+    "founderName": "Matt Martelli",
+    "sameAs": []
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Growth Mindset AI",
+    "url": "https://growthmindset.ai",
+    "author": {
+      "@type": "Person",
+      "name": "Matt Martelli"
+    }
+  }
+  </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -144,14 +176,15 @@
       50% { opacity: 0.5; transform: scale(0.85); }
     }
     h1 {
-      font-size: clamp(2.6rem, 6vw, 4.6rem);
+      font-size: clamp(2.8rem, 7vw, 5rem);
       font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -0.035em;
-      margin-bottom: 1.5rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.75rem;
       max-width: 900px;
       margin-left: auto; margin-right: auto;
     }
+    h1 br { display: block; }
     h1 em { font-style: normal; color: var(--accent); }
     .hero-sub {
       font-size: clamp(1.05rem, 2.2vw, 1.25rem);
@@ -601,6 +634,7 @@
   <nav>
     <a href="/" class="nav-logo">growthmindset<span>.ai</span></a>
     <ul class="nav-links">
+      <li><a href="#about">About</a></li>
       <li><a href="#industries">Industries</a></li>
       <li><a href="#case-study">Case Studies</a></li>
       <li><a href="https://cal.com/mattmartelli" target="_blank" rel="noopener noreferrer">Demo</a></li>
@@ -612,7 +646,7 @@
   <section id="hero">
     <div class="container">
       <div class="hero-badge">Voice AI for Real Businesses</div>
-      <h1>Voice AI agents for <em>small & medium businesses</em></h1>
+      <h1><em>AI Voice Agents</em><br>for Business</h1>
       <p class="hero-sub">Never miss another call. We build voice AI agents that answer, qualify, and book — 24/7. Sound like a real person, work in your brand voice, and scale your business without hiring.</p>
 
       <div class="hero-actions">
@@ -698,6 +732,62 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" itemscope itemtype="https://schema.org/Person" style="background:var(--bg);padding:6rem 1.5rem;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:50%;left:-10%;transform:translateY(-50%);width:600px;height:600px;background:radial-gradient(circle, rgba(0,212,255,0.05), transparent 70%);pointer-events:none;"></div>
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(260px, 400px) 1fr;gap:4.5rem;align-items:center;position:relative;">
+      <div style="position:relative;">
+        <img src="/matt-martelli.png"
+             alt="Matt Martelli, founder and CEO of Growth Mindset AI"
+             title="Matt Martelli — CEO, Growth Mindset AI"
+             itemprop="image"
+             style="width:100%;height:auto;display:block;border-radius:16px;" />
+      </div>
+      <div>
+        <div class="section-eyebrow">Meet the Founder</div>
+        <h2 style="font-size:clamp(2rem, 4vw, 2.8rem);margin-bottom:1.25rem;">Hi, I'm <em itemprop="name">Matt Martelli</em></h2>
+        <meta itemprop="jobTitle" content="Founder and CEO" />
+        <meta itemprop="worksFor" content="Growth Mindset AI" />
+        <meta itemprop="url" content="https://growthmindset.ai" />
+        <meta itemprop="email" content="matt@growthmindset.ai" />
+        <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin-bottom:1rem;" itemprop="description">I'm the founder and CEO of <strong style="color:#fff;">Growth Mindset AI</strong>. After 20+ years working with small and medium businesses in the trades, home services, and professional industries, I saw the same pattern everywhere: <strong style="color:#fff;">the best businesses were losing to worse competitors who just happened to answer the phone first.</strong></p>
+        <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin-bottom:1rem;">Growth Mindset AI fixes that. We build voice AI agents that sound human, work 24/7, and capture every lead — so you stop losing jobs you already earned.</p>
+        <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin-bottom:2rem;">This isn't a tech demo. It's a tool we've put into production for real contractors, real agencies, and real owners. If your phone rings for a living, we can help.</p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="https://cal.com/mattmartelli" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--accent);font-weight:600;padding:0.75rem 1.5rem;border:1px solid var(--accent);border-radius:8px;text-decoration:none;transition:background 0.2s;">Book a 20-min chat →</a>
+          <a href="mailto:matt@growthmindset.ai" style="display:inline-flex;align-items:center;gap:0.5rem;color:var(--text-secondary);font-weight:500;padding:0.75rem 1rem;text-decoration:none;">matt@growthmindset.ai</a>
+        </div>
+      </div>
+    </div>
+    <!-- JSON-LD for Matt Martelli / CEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Matt Martelli",
+      "jobTitle": "Founder and CEO",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Growth Mindset AI",
+        "url": "https://growthmindset.ai"
+      },
+      "url": "https://growthmindset.ai/#about",
+      "image": "https://growthmindset.ai/matt-martelli.png",
+      "email": "matt@growthmindset.ai",
+      "sameAs": [
+        "https://cal.com/mattmartelli"
+      ],
+      "description": "Matt Martelli is the founder and CEO of Growth Mindset AI, a company that builds voice AI agents for small and medium businesses."
+    }
+    </script>
+    <style>
+      @media(max-width:780px){
+        #about > div:last-of-type{grid-template-columns:1fr !important;gap:2.5rem !important;text-align:left;}
+        #about img{max-width:280px;margin:0 auto;}
+      }
+    </style>
   </section>
 
   <!-- INDUSTRIES MATRIX -->
