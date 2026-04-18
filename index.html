@@ -58,7 +58,7 @@
   </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sacramento&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -745,27 +745,44 @@
   <!-- ABOUT -->
   <section id="about" itemscope itemtype="https://schema.org/Person" style="background:var(--bg);padding:6rem 1.5rem;position:relative;overflow:hidden;">
     <div style="position:absolute;top:50%;left:-10%;transform:translateY(-50%);width:600px;height:600px;background:radial-gradient(circle, rgba(0,212,255,0.05), transparent 70%);pointer-events:none;"></div>
-    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(260px, 400px) 1fr;gap:4.5rem;align-items:center;position:relative;">
-      <div style="position:relative;">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(260px, 380px) 1fr;gap:4.5rem;align-items:start;position:relative;">
+      <div style="position:relative;padding-top:1rem;">
         <img src="/matt-martelli.png"
-             alt="Matt Martelli, founder and CEO of Growth Mindset AI"
-             title="Matt Martelli — CEO, Growth Mindset AI"
+             alt="Matthew Martelli, founder and CEO of Growth Mindset AI"
+             title="Matthew Martelli — CEO, Growth Mindset AI"
              itemprop="image"
              style="width:100%;height:auto;display:block;border-radius:16px;" />
       </div>
-      <div>
-        <p style="font-size:0.8rem;font-weight:500;letter-spacing:0.08em;color:rgba(255,255,255,0.55);margin-bottom:1.75rem;"><span itemprop="name">Matthew Martelli</span> <span style="color:rgba(255,255,255,0.3);">·</span> <span itemprop="jobTitle">CEO</span></p>
+      <div class="about-letter">
+        <!-- Name in elegant script (yellow) -->
+        <div style="margin-bottom:0.2rem;">
+          <span class="signature-script" itemprop="name" style="font-family:'Sacramento',cursive;font-size:clamp(3rem,6vw,4.5rem);color:#ffd84d;line-height:1;letter-spacing:-0.01em;display:inline-block;">Matthew Martelli</span>
+        </div>
+        <p style="font-size:0.85rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#ffd84d;margin-bottom:2rem;padding-left:0.35rem;" itemprop="jobTitle">CEO</p>
         <meta itemprop="worksFor" content="Growth Mindset AI" />
         <meta itemprop="url" content="https://growthmindset.ai" />
         <meta itemprop="email" content="matt@growthmindset.ai" />
-        <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin-bottom:1rem;" itemprop="description">I've spent years working with businesses that live and die by the phone &mdash; and I kept seeing the same problem:</p>
-        <p style="font-size:1.15rem;color:#fff;line-height:1.6;margin-bottom:1.25rem;font-weight:600;">Great companies were losing jobs to whoever answered first.</p>
-        <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin-bottom:1.25rem;">That's what led me to build this.</p>
-        <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin-bottom:1.25rem;">Not a demo. Not a concept.<br>A real system that answers every call, qualifies the lead, and books the job &mdash; automatically.</p>
-        <p style="font-size:1.15rem;color:#fff;line-height:1.6;margin-bottom:1.25rem;font-weight:600;">If your phone rings for a living, this will make you money.</p>
-        <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin-bottom:2rem;">Take a look. I think you'll see it quickly.</p>
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="https://cal.com/team/growthmindset" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--accent);font-weight:600;padding:0.75rem 1.5rem;border:1px solid var(--accent);border-radius:8px;text-decoration:none;transition:background 0.2s;">Book a 20-min chat →</a>
+
+        <!-- Letter body -->
+        <div style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;" itemprop="description">
+          <p style="margin-bottom:1rem;">I've spent years working with businesses that live and die by the phone &mdash; and I kept seeing the same problem:</p>
+          <p style="font-size:1.15rem;color:#fff;margin-bottom:1.25rem;font-weight:600;">Great companies were losing jobs to whoever answered first.</p>
+          <p style="margin-bottom:1.25rem;">That's what led me to build this.</p>
+          <p style="margin-bottom:1.25rem;">Not a demo. Not a concept.<br>A real system that answers every call, qualifies the lead, and books the job &mdash; automatically.</p>
+          <p style="font-size:1.15rem;color:#fff;margin-bottom:1.25rem;font-weight:600;">If your phone rings for a living, this will make you money.</p>
+          <p style="margin-bottom:2.5rem;">Take a look. I think you'll see it quickly.</p>
+        </div>
+
+        <!-- Sign-off -->
+        <div style="display:flex;flex-direction:column;gap:0.1rem;">
+          <p style="font-size:1rem;color:var(--text-secondary);margin-bottom:0.4rem;">Thanks for your time,</p>
+          <span class="signature-script" style="font-family:'Sacramento',cursive;font-size:clamp(2.5rem,5vw,3.5rem);color:#ffd84d;line-height:1.1;margin-left:-0.3rem;">Matthew Martelli</span>
+          <p style="font-size:0.8rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:0.1rem;padding-left:0.35rem;">Founder &amp; CEO, Growth Mindset AI</p>
+        </div>
+
+        <!-- CTAs -->
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);">
+          <a href="https://cal.com/team/growthmindset" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--accent);font-weight:600;padding:0.75rem 1.5rem;border:1px solid var(--accent);border-radius:8px;text-decoration:none;">Book a 20-min chat →</a>
           <a href="mailto:matt@growthmindset.ai" style="display:inline-flex;align-items:center;gap:0.5rem;color:var(--text-secondary);font-weight:500;padding:0.75rem 1rem;text-decoration:none;">matt@growthmindset.ai</a>
         </div>
       </div>
