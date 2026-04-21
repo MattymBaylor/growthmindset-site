@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     mode: 'FULL',
     avatar_id: body.avatar_id || '8713f92c-061e-42b0-8874-e556bf929d88',
     avatar_persona: {
-      voice_id: body.voice_id || '3cb503e4-5744-491c-9652-33463056befa',
+      voice_id: body.voice_id || '59c134e1-8b43-48f6-aa0d-43034c6b8bb0',  // Alice (British, clear & engaging)
       context_id: body.context_id || '34878300-8406-4e32-8176-1ec1ef44aceb',
       language: body.language || 'en',
     },

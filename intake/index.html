@@ -171,8 +171,17 @@
       font-size: 28px;
       background: var(--gradient-accent);
     }
-    .jv-container { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; }
-    #jessica-video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+    .jv-container { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; background: linear-gradient(160deg, #0a0a0a 0%, #051520 50%, #001420 100%); overflow: hidden; }
+    .jv-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, rgba(0,212,255,0.18) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #jessica-video { display: none; }  /* hidden — audio plays, canvas renders visuals */
+    #jessica-canvas { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 1; }
     .jv-status {
       position: absolute; top: 12px; left: 12px;
       display: flex; align-items: center; gap: 6px;
@@ -545,7 +554,8 @@
 <div id="jessica-widget" aria-label="Chat with Jessica">
   <button id="jessica-toggle" aria-label="Minimize Jessica" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
   <div class="jv-container">
-    <video id="jessica-video" autoplay playsinline></video>
+    <video id="jessica-video" autoplay playsinline muted></video>
+    <canvas id="jessica-canvas"></canvas>
     <div class="jv-status" id="jv-status"><span class="jv-dot"></span><span id="jv-status-text">Ready</span></div>
     <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
     <div class="jv-start" id="jv-start">
@@ -564,6 +574,8 @@
     const statusEl = document.getElementById('jv-status');
     const statusText = document.getElementById('jv-status-text');
     const video = document.getElementById('jessica-video');
+    const canvas = document.getElementById('jessica-canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const startOverlay = document.getElementById('jv-start');
     const startBtn = document.getElementById('jv-start-btn');
     const micBtn = document.getElementById('jv-mic-btn');
@@ -603,12 +615,52 @@
         room.on(Livekit.RoomEvent.TrackSubscribed, (track, pub, participant) => {
           if (track.kind === 'video') {
             track.attach(video);
+            // Wait for video dimensions, then start chroma-key loop
+            video.addEventListener('playing', () => startChromaKey(), { once: true });
           } else if (track.kind === 'audio') {
             const audioEl = track.attach();
             audioEl.style.display = 'none';
             document.body.appendChild(audioEl);
           }
         });
+
+        // Chroma key (green-screen removal) rendering loop
+        function startChromaKey() {
+          if (!video.videoWidth || !video.videoHeight) { requestAnimationFrame(startChromaKey); return; }
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const off = document.createElement('canvas');
+          off.width = canvas.width; off.height = canvas.height;
+          const offCtx = off.getContext('2d', { willReadFrequently: true });
+
+          function frame() {
+            if (video.readyState >= 2) {
+              offCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const img = offCtx.getImageData(0, 0, canvas.width, canvas.height);
+              const d = img.data;
+              // Green key: if green channel dominates red+blue, mark transparent
+              // Tuned for common green-screen values (~0,255,0 ± variance)
+              for (let i = 0; i < d.length; i += 4) {
+                const r = d[i], g = d[i+1], b = d[i+2];
+                // Green dominance: g is significantly higher than r and b
+                if (g > 90 && g > r * 1.3 && g > b * 1.3) {
+                  // Soft edge: partially transparent if close to threshold
+                  const greenness = g - Math.max(r, b);
+                  if (greenness > 60) {
+                    d[i+3] = 0;  // fully transparent
+                  } else {
+                    d[i+3] = Math.max(0, 255 - greenness * 4);  // edge feathering
+                    // Also desaturate the edge slightly to avoid green fringe
+                    d[i+1] = Math.min(d[i+1], (r + b) / 2);
+                  }
+                }
+              }
+              ctx.putImageData(img, 0, 0);
+            }
+            requestAnimationFrame(frame);
+          }
+          frame();
+        }
 
         room.on(Livekit.RoomEvent.ActiveSpeakersChanged, (speakers) => {
           const remoteSpeaking = speakers.some(s => s.identity !== room.localParticipant.identity);
