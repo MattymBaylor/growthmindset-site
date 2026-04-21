@@ -144,7 +144,7 @@
     footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
     footer a { color: var(--text-secondary); text-decoration: none; margin: 0 0.5rem; }
 
-    /* JESSICA WIDGET (same pattern as HGE demo) */
+    /* JESSICA WIDGET (LiveAvatar SDK) */
     #jessica-widget {
       position: fixed;
       bottom: 20px;
@@ -163,7 +163,7 @@
       width: 64px; height: 64px; border-radius: 50%; cursor: pointer;
       box-shadow: 0 8px 24px rgba(0,212,255,0.35);
     }
-    #jessica-widget.minimized iframe { display: none; }
+    #jessica-widget.minimized .jv-container { display: none; }
     #jessica-widget.minimized::before {
       content: '💬';
       position: absolute; inset: 0;
@@ -171,12 +171,59 @@
       font-size: 28px;
       background: var(--gradient-accent);
     }
-    #jessica-widget iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .jv-container { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; }
+    #jessica-video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+    .jv-status {
+      position: absolute; top: 12px; left: 12px;
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(0,0,0,0.6); color: #fff;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 600;
+      z-index: 3;
+    }
+    .jv-dot { width: 8px; height: 8px; border-radius: 50%; background: #888; }
+    .jv-status.connecting .jv-dot { background: #fbbf24; animation: pulse 1s infinite; }
+    .jv-status.listening .jv-dot { background: #20fc8f; animation: pulse 1.2s infinite; }
+    .jv-status.speaking .jv-dot { background: #00d4ff; animation: pulse 0.6s infinite; }
+    .jv-status.error .jv-dot { background: #ff4d6d; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .jv-start {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1rem;
+      background: #0a0a0a;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .jv-start:hover { background: #111; }
+    .jv-start-btn {
+      background: linear-gradient(135deg, #00d4ff, #0099ff);
+      color: #000; border: 0;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .jv-start-label { color: #bbb; font-size: 0.85rem; text-align: center; padding: 0 1rem; }
+    .jv-start.hidden { display: none; }
+    .jv-mic-btn {
+      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(0,0,0,0.7); border: 2px solid rgba(255,255,255,0.2);
+      color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s;
+      z-index: 3;
+    }
+    .jv-mic-btn.muted { background: rgba(255,77,109,0.2); border-color: #ff4d6d; }
+    .jv-mic-btn:hover { transform: translateX(-50%) scale(1.05); }
     #jessica-toggle {
       position: absolute; top: 8px; right: 8px;
       width: 28px; height: 28px; border-radius: 50%;
       background: rgba(0,0,0,0.6); color: #fff; border: 0; cursor: pointer;
-      font-size: 18px; line-height: 1; z-index: 2;
+      font-size: 18px; line-height: 1; z-index: 4;
       display: flex; align-items: center; justify-content: center;
     }
     #jessica-toggle:hover { background: rgba(0,0,0,0.9); }
@@ -494,18 +541,120 @@
   <p>© 2026 Growth Mindset AI &nbsp;·&nbsp; <a href="/">Home</a> <a href="/privacy/">Privacy</a> <a href="/terms/">Terms</a> <a href="mailto:matt@growthmindset.ai">Contact</a></p>
 </footer>
 
-<!-- Jessica avatar widget -->
+<!-- Jessica avatar widget (LiveAvatar SDK) -->
 <div id="jessica-widget" aria-label="Chat with Jessica">
   <button id="jessica-toggle" aria-label="Minimize Jessica" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
-  <iframe
-    src="https://embed.liveavatar.com/v1/dc3965f5-2d53-4f17-9610-5c8f40f67f0b"
-    allow="microphone 'src' https://embed.liveavatar.com; camera 'src' https://embed.liveavatar.com; autoplay 'src' https://embed.liveavatar.com; speaker-selection 'src' https://embed.liveavatar.com; display-capture 'src' https://embed.liveavatar.com"
-    allowfullscreen
-    loading="eager"
-    referrerpolicy="strict-origin-when-cross-origin"
-    title="Jessica - AI Assistant">
-  </iframe>
+  <div class="jv-container">
+    <video id="jessica-video" autoplay playsinline></video>
+    <div class="jv-status" id="jv-status"><span class="jv-dot"></span><span id="jv-status-text">Ready</span></div>
+    <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
+    <div class="jv-start" id="jv-start">
+      <div class="jv-start-label">Hi! I'm Jessica, your AI host. Tap to start our chat.</div>
+      <button class="jv-start-btn" id="jv-start-btn">Start chat with Jessica</button>
+    </div>
+  </div>
 </div>
+
+<script type="module">
+  import { LiveKitRoom } from 'https://cdn.jsdelivr.net/npm/livekit-client@2/+esm';
+</script>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
+<script>
+  (function() {
+    const statusEl = document.getElementById('jv-status');
+    const statusText = document.getElementById('jv-status-text');
+    const video = document.getElementById('jessica-video');
+    const startOverlay = document.getElementById('jv-start');
+    const startBtn = document.getElementById('jv-start-btn');
+    const micBtn = document.getElementById('jv-mic-btn');
+
+    let room = null;
+    let micEnabled = true;
+
+    function setStatus(state, text) {
+      statusEl.className = 'jv-status ' + state;
+      statusText.textContent = text;
+    }
+
+    async function startSession() {
+      startOverlay.classList.add('hidden');
+      setStatus('connecting', 'Connecting...');
+
+      try {
+        // 1. Get session creds from our Vercel Function
+        const tokenRes = await fetch('/api/liveavatar-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}),
+        });
+        if (!tokenRes.ok) throw new Error('Token fetch failed: ' + tokenRes.status);
+        const creds = await tokenRes.json();
+
+        // 2. Connect to LiveKit room
+        const Livekit = window.LivekitClient || window.LiveKit || window.livekitClient;
+        if (!Livekit) throw new Error('LiveKit SDK not loaded');
+
+        room = new Livekit.Room({
+          adaptiveStream: true,
+          dynacast: true,
+        });
+
+        // Attach remote video/audio tracks as they arrive
+        room.on(Livekit.RoomEvent.TrackSubscribed, (track, pub, participant) => {
+          if (track.kind === 'video') {
+            track.attach(video);
+          } else if (track.kind === 'audio') {
+            const audioEl = track.attach();
+            audioEl.style.display = 'none';
+            document.body.appendChild(audioEl);
+          }
+        });
+
+        room.on(Livekit.RoomEvent.ActiveSpeakersChanged, (speakers) => {
+          const remoteSpeaking = speakers.some(s => s.identity !== room.localParticipant.identity);
+          if (remoteSpeaking) {
+            setStatus('speaking', 'Jessica is speaking');
+          } else {
+            setStatus('listening', 'Listening');
+          }
+        });
+
+        room.on(Livekit.RoomEvent.Disconnected, () => {
+          setStatus('error', 'Disconnected');
+          startOverlay.classList.remove('hidden');
+          micBtn.style.display = 'none';
+        });
+
+        await room.connect(creds.livekit_url, creds.livekit_client_token);
+
+        // Enable mic
+        await room.localParticipant.setMicrophoneEnabled(true);
+
+        micBtn.style.display = 'flex';
+        setStatus('listening', 'Listening');
+      } catch (err) {
+        console.error('Jessica session error:', err);
+        setStatus('error', 'Error: ' + (err.message || 'connection failed'));
+        startOverlay.classList.remove('hidden');
+      }
+    }
+
+    startBtn.addEventListener('click', startSession);
+
+    micBtn.addEventListener('click', async () => {
+      if (!room) return;
+      micEnabled = !micEnabled;
+      await room.localParticipant.setMicrophoneEnabled(micEnabled);
+      micBtn.classList.toggle('muted', !micEnabled);
+      micBtn.textContent = micEnabled ? '🎤' : '🔇';
+    });
+
+    // Clean up on unload
+    window.addEventListener('beforeunload', () => {
+      if (room) room.disconnect();
+    });
+  })();
+</script>
 
 <script>
   // Expand Jessica when clicked while minimized
