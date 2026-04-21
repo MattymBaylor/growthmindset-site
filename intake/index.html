@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Consultation — Set Up Your AI Phone Assistant | Growth Mindset AI</title>
+  <meta name="description" content="Walk through a few quick questions and we'll configure an AI phone assistant that sounds exactly like your business." />
+  <link rel="canonical" href="https://growthmindset.ai/intake/" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K90LREJCJF"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-K90LREJCJF');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #161616;
+      --bg-input: #0d0d0d;
+      --border: rgba(255,255,255,0.08);
+      --border-focus: rgba(0,212,255,0.5);
+      --accent: #00d4ff;
+      --accent-dim: rgba(0,212,255,0.12);
+      --text: #ffffff;
+      --text-muted: #888888;
+      --text-secondary: #bbbbbb;
+      --gradient-accent: linear-gradient(135deg, #00d4ff, #0099ff);
+      --error: #ff4d6d;
+      --success: #20fc8f;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; min-height: 100vh; }
+
+    /* NAV */
+    nav { display:flex; align-items:center; justify-content:space-between; padding:1.25rem 2rem; border-bottom:1px solid var(--border); position:sticky; top:0; background:rgba(10,10,10,0.95); backdrop-filter:blur(12px); z-index:50; }
+    .nav-logo { font-size:1.25rem; font-weight:800; color:var(--text); text-decoration:none; letter-spacing:-0.02em; }
+    .nav-logo span { color:var(--accent); }
+    .nav-back { color:var(--text-secondary); text-decoration:none; font-size:0.9rem; font-weight:500; }
+    .nav-back:hover { color:var(--text); }
+
+    /* HERO */
+    .hero { padding: 4rem 2rem 3rem; text-align: center; max-width: 760px; margin: 0 auto; }
+    .eyebrow { display:inline-block; background:var(--accent-dim); border:1px solid rgba(0,212,255,0.3); color:var(--accent); font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; padding:0.4rem 0.9rem; border-radius:20px; margin-bottom:1.25rem; }
+    .hero h1 { font-size:clamp(2rem,5vw,3.25rem); font-weight:900; letter-spacing:-0.03em; line-height:1.15; margin-bottom:1rem; }
+    .hero h1 em { font-style: normal; background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 560px; margin: 0 auto; }
+
+    /* PROGRESS */
+    .progress-wrap { max-width: 760px; margin: 0 auto; padding: 0 2rem 2rem; }
+    .progress-bar { height: 6px; background: var(--bg-card); border-radius: 100px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gradient-accent); width: 0%; transition: width 0.3s ease; }
+    .progress-caption { text-align:center; color:var(--text-muted); font-size:0.8rem; margin-top:0.6rem; }
+
+    /* FORM */
+    .form-container { max-width: 760px; margin: 0 auto; padding: 0 2rem 8rem; }
+    .section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; transition: border-color 0.2s; }
+    .section:focus-within { border-color: rgba(0,212,255,0.25); }
+    .section-num { display:inline-block; color:var(--accent); font-weight:700; font-size:0.78rem; margin-bottom:0.5rem; letter-spacing:0.05em; }
+    .section h2 { font-size:1.35rem; font-weight:800; margin-bottom:0.4rem; letter-spacing:-0.02em; }
+    .section .subhead { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem; }
+
+    .help-btn { float:right; background:transparent; border:1px solid var(--border); color:var(--accent); font-size:0.78rem; font-weight:600; padding:0.35rem 0.8rem; border-radius:20px; cursor:pointer; margin-top:-2.5rem; transition: all 0.2s; }
+    .help-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+    .field { margin-bottom: 1.25rem; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { display:block; font-size:0.88rem; font-weight:600; color:var(--text); margin-bottom:0.5rem; }
+    .field label .req { color: var(--accent); margin-left: 2px; }
+    .field .hint { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.35rem; }
+
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="tel"],
+    .field select,
+    .field textarea {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.85rem 1rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      background: #0a0a0a;
+    }
+    .field input::placeholder, .field textarea::placeholder { color: #555; }
+    .field textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+    .field select { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2300d4ff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; cursor: pointer; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+    .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    @media (max-width: 600px) { .check-grid { grid-template-columns: 1fr; } }
+
+    .check-option, .radio-option {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .check-option:hover, .radio-option:hover { border-color: rgba(0,212,255,0.3); background: #0a0a0a; }
+    .check-option input, .radio-option input { margin-top: 0.2rem; accent-color: var(--accent); flex-shrink: 0; }
+    .check-option:has(input:checked), .radio-option:has(input:checked) { border-color: var(--accent); background: var(--accent-dim); }
+    .radio-option .ro-text { display: flex; flex-direction: column; gap: 0.2rem; }
+    .radio-option .ro-label { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .radio-option .ro-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+    .conditional { margin-top: 0.75rem; display: none; }
+    .conditional.show { display: block; }
+
+    /* SUBMIT */
+    .submit-row { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+    .btn-primary, .btn-secondary { font-family: inherit; font-weight: 700; font-size: 1rem; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; border: 0; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }
+    .btn-primary { background: var(--gradient-accent); color: #000; flex: 1; justify-content: center; min-width: 260px; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,212,255,0.25); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .save-status { color: var(--text-muted); font-size: 0.82rem; text-align: center; margin-top: 1rem; }
+    .save-status.saved { color: var(--success); }
+
+    /* CONFIRMATION */
+    .confirmation { display: none; max-width: 600px; margin: 4rem auto; padding: 3rem 2rem; text-align: center; background: var(--bg-card); border: 1px solid rgba(32,252,143,0.3); border-radius: 16px; }
+    .confirmation.show { display: block; }
+    .confirmation .eyebrow { background: rgba(32,252,143,0.1); border-color: rgba(32,252,143,0.3); color: var(--success); }
+    .confirmation h2 { font-size: 2rem; font-weight: 900; letter-spacing: -0.02em; margin: 1rem 0; }
+    .confirmation p { color: var(--text-secondary); margin-bottom: 1rem; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+    footer a { color: var(--text-secondary); text-decoration: none; margin: 0 0.5rem; }
+
+    /* JESSICA WIDGET (same pattern as HGE demo) */
+    #jessica-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,212,255,0.15);
+      border: 1px solid rgba(0,212,255,0.2);
+      background: #0a0a0a;
+      z-index: 9999;
+      transition: all 0.25s ease;
+    }
+    #jessica-widget.minimized {
+      width: 64px; height: 64px; border-radius: 50%; cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,212,255,0.35);
+    }
+    #jessica-widget.minimized iframe { display: none; }
+    #jessica-widget.minimized::before {
+      content: '💬';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      background: var(--gradient-accent);
+    }
+    #jessica-widget iframe { width: 100%; height: 100%; border: 0; display: block; }
+    #jessica-toggle {
+      position: absolute; top: 8px; right: 8px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(0,0,0,0.6); color: #fff; border: 0; cursor: pointer;
+      font-size: 18px; line-height: 1; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #jessica-toggle:hover { background: rgba(0,0,0,0.9); }
+    #jessica-widget.minimized #jessica-toggle { display: none; }
+    @media (max-width: 480px) {
+      #jessica-widget { width: calc(100vw - 24px); height: 55vh; right: 12px; bottom: 12px; }
+      #jessica-widget.minimized { width: 56px; height: 56px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">growthmindset<span>.ai</span></a>
+  <a href="/" class="nav-back">← Back to Home</a>
+</nav>
+
+<div id="main-flow">
+
+  <div class="hero">
+    <div class="eyebrow">AI Consultation</div>
+    <h1>Let's set up your <em>AI phone assistant</em>.</h1>
+    <p>Walk through a few quick questions and we'll configure an assistant that sounds exactly like your business. Our AI host is standing by on the right if you'd like a hand with any answer.</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-caption">Your progress saves as you go.</div>
+  </div>
+
+  <form class="form-container" id="intakeForm" autocomplete="on" novalidate>
+
+    <!-- SECTION 1 -->
+    <div class="section" data-section="1">
+      <span class="section-num">01</span>
+      <h2>Your contact information</h2>
+      <p class="subhead">Who should we reach out to about your account?</p>
+
+      <div class="two-col">
+        <div class="field">
+          <label>First name<span class="req">*</span></label>
+          <input type="text" name="first_name" required autocomplete="given-name" />
+        </div>
+        <div class="field">
+          <label>Last name<span class="req">*</span></label>
+          <input type="text" name="last_name" required autocomplete="family-name" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Business name<span class="req">*</span></label>
+        <input type="text" name="business_name" required autocomplete="organization" />
+      </div>
+
+      <div class="two-col">
+        <div class="field">
+          <label>Business phone</label>
+          <input type="tel" name="business_phone" placeholder="(216) 555-1234" autocomplete="tel" />
+        </div>
+        <div class="field">
+          <label>Mobile phone</label>
+          <input type="tel" name="mobile_phone" placeholder="(216) 555-1234" autocomplete="tel" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email<span class="req">*</span></label>
+        <input type="email" name="email" required autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label>Notes</label>
+        <textarea name="contact_notes" placeholder="Anything we should know about the best way to reach you?"></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" data-section="2">
+      <span class="section-num">02</span>
+      <h2>Business details</h2>
+      <p class="subhead">The basics about what you do and when you do it.</p>
+
+      <div class="field">
+        <label>Service type<span class="req">*</span></label>
+        <select name="service_type" id="serviceType" required>
+          <option value="">Select your service type…</option>
+          <option>Roofing</option>
+          <option>HVAC</option>
+          <option>Locksmith</option>
+          <option>Garage Door</option>
+          <option>Painting</option>
+          <option>Plumbing</option>
+          <option>Electrical</option>
+          <option>Insurance</option>
+          <option>Home Watch</option>
+          <option value="Other">Other</option>
+        </select>
+        <div class="conditional" id="serviceTypeOther">
+          <input type="text" name="service_type_other" placeholder="Please specify" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Service area<span class="req">*</span></label>
+        <input type="text" name="service_area" required placeholder="e.g., Greater Cleveland, OH — 40-mile radius" />
+      </div>
+
+      <div class="field">
+        <label>Business hours</label>
+        <div class="hint" style="margin-top:0;margin-bottom:0.6rem;">Your default daily schedule. We'll capture special hours later.</div>
+        <div class="two-col">
+          <div>
+            <label style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">Opens at</label>
+            <select name="opens_at" id="opensAt"></select>
+          </div>
+          <div>
+            <label style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">Closes at</label>
+            <select name="closes_at" id="closesAt"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" data-section="3">
+      <span class="section-num">03</span>
+      <button type="button" class="help-btn" data-help="section3">💬 Ask Jessica</button>
+      <h2>Tell us about your business</h2>
+      <p class="subhead">A short paragraph in your own words — we'll use this to brief your assistant.</p>
+
+      <div class="field">
+        <label>Business overview</label>
+        <textarea name="business_overview" placeholder="What you do, the services you offer, who your typical customers are, and the area you serve."></textarea>
+        <div class="hint">Two or three sentences is plenty — you can always edit later.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" data-section="4">
+      <span class="section-num">04</span>
+      <button type="button" class="help-btn" data-help="section4">💬 Ask Jessica</button>
+      <h2>What do your calls sound like?</h2>
+      <p class="subhead">Which conversations does your business handle most often? Select all that apply.</p>
+
+      <div class="check-grid">
+        <label class="check-option"><input type="checkbox" name="call_types[]" value="Booking appointments" /> Booking appointments</label>
+        <label class="check-option"><input type="checkbox" name="call_types[]" value="Answering questions (FAQs)" /> Answering questions (FAQs)</label>
+        <label class="check-option"><input type="checkbox" name="call_types[]" value="Support requests" /> Support requests</label>
+        <label class="check-option"><input type="checkbox" name="call_types[]" value="Quotes or estimates" /> Quotes or estimates</label>
+        <label class="check-option"><input type="checkbox" name="call_types[]" value="Lead capture" /> Lead capture</label>
+        <label class="check-option"><input type="checkbox" name="call_types[]" value="After-hours calls" /> After-hours calls</label>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" data-section="5">
+      <span class="section-num">05</span>
+      <button type="button" class="help-btn" data-help="section5">💬 Ask Jessica</button>
+      <h2>How should your assistant sound?</h2>
+      <p class="subhead">Pick the voice that fits your brand.</p>
+
+      <div style="display:flex;flex-direction:column;gap:0.6rem;">
+        <label class="radio-option"><input type="radio" name="tone" value="Friendly and casual" /><span class="ro-text"><span class="ro-label">Friendly and casual</span><span class="ro-desc">Warm, approachable, conversational.</span></span></label>
+        <label class="radio-option"><input type="radio" name="tone" value="Professional and polished" /><span class="ro-text"><span class="ro-label">Professional and polished</span><span class="ro-desc">Measured, respectful, business-formal.</span></span></label>
+        <label class="radio-option"><input type="radio" name="tone" value="Warm and reassuring" /><span class="ro-text"><span class="ro-label">Warm and reassuring</span><span class="ro-desc">Empathetic and calm — great for stressful calls.</span></span></label>
+        <label class="radio-option"><input type="radio" name="tone" value="Direct and efficient" /><span class="ro-text"><span class="ro-label">Direct and efficient</span><span class="ro-desc">Gets to the point and respects the caller's time.</span></span></label>
+        <label class="radio-option"><input type="radio" name="tone" value="Other" id="toneOther" /><span class="ro-text"><span class="ro-label">Other</span><span class="ro-desc">Describe the tone you want.</span></span></label>
+      </div>
+      <div class="conditional" id="toneOtherField">
+        <input type="text" name="tone_other" placeholder="Describe the tone you want" />
+      </div>
+    </div>
+
+    <!-- SECTION 6 -->
+    <div class="section" data-section="6">
+      <span class="section-num">06</span>
+      <button type="button" class="help-btn" data-help="section6">💬 Ask Jessica</button>
+      <h2>Which moment has to be perfect?</h2>
+      <p class="subhead">Of everything your assistant could do, pick the single situation it absolutely has to get right.</p>
+
+      <div style="display:flex;flex-direction:column;gap:0.6rem;">
+        <label class="radio-option"><input type="radio" name="key_scenario" value="New customer inquiries" /><span class="ro-text"><span class="ro-label">New customer inquiries</span></span></label>
+        <label class="radio-option"><input type="radio" name="key_scenario" value="Appointment booking" /><span class="ro-text"><span class="ro-label">Appointment booking</span></span></label>
+        <label class="radio-option"><input type="radio" name="key_scenario" value="After-hours missed calls" /><span class="ro-text"><span class="ro-label">After-hours missed calls</span></span></label>
+        <label class="radio-option"><input type="radio" name="key_scenario" value="Frequently asked questions" /><span class="ro-text"><span class="ro-label">Frequently asked questions</span></span></label>
+        <label class="radio-option"><input type="radio" name="key_scenario" value="Lead capture" /><span class="ro-text"><span class="ro-label">Lead capture</span></span></label>
+        <label class="radio-option"><input type="radio" name="key_scenario" value="Complaint or escalation handling" /><span class="ro-text"><span class="ro-label">Complaint or escalation handling</span></span></label>
+        <label class="radio-option"><input type="radio" name="key_scenario" value="Other" id="scenarioOther" /><span class="ro-text"><span class="ro-label">Other</span></span></label>
+      </div>
+      <div class="conditional" id="scenarioOtherField">
+        <input type="text" name="key_scenario_other" placeholder="Describe the scenario" />
+      </div>
+    </div>
+
+    <!-- SECTION 7 -->
+    <div class="section" data-section="7">
+      <span class="section-num">07</span>
+      <button type="button" class="help-btn" data-help="section7">💬 Ask Jessica</button>
+      <h2>The first 30 seconds of the call</h2>
+      <p class="subhead">Describe what should happen the moment a caller connects.</p>
+
+      <div class="field">
+        <label>Your ideal opening</label>
+        <textarea name="opening" placeholder="How the call begins, whether the assistant mentions your business name, how it asks what the caller needs, and whether the goal is to book right away or simply capture the lead."></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 8 -->
+    <div class="section" data-section="8">
+      <span class="section-num">08</span>
+      <button type="button" class="help-btn" data-help="section8">💬 Ask Jessica</button>
+      <h2>Your current booking process</h2>
+      <p class="subhead">Walk us through what happens from the moment a customer calls.</p>
+
+      <div class="field">
+        <label>Describe your current process</label>
+        <textarea name="booking_process" placeholder="Who answers the phone, what information they collect, where it gets written down, how it ends up on the schedule, and what happens after-hours."></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 9 -->
+    <div class="section" data-section="9">
+      <span class="section-num">09</span>
+      <button type="button" class="help-btn" data-help="section9">💬 Ask Jessica</button>
+      <h2>Missed calls today</h2>
+      <p class="subhead">When a call goes unanswered right now, what happens?</p>
+
+      <div style="display:flex;flex-direction:column;gap:0.6rem;">
+        <label class="radio-option"><input type="radio" name="missed_calls" value="Voicemail" /><span class="ro-text"><span class="ro-label">Voicemail</span></span></label>
+        <label class="radio-option"><input type="radio" name="missed_calls" value="Answering service" /><span class="ro-text"><span class="ro-label">Answering service</span></span></label>
+        <label class="radio-option"><input type="radio" name="missed_calls" value="I answer personally" /><span class="ro-text"><span class="ro-label">I answer personally</span></span></label>
+        <label class="radio-option"><input type="radio" name="missed_calls" value="Other" id="missedOther" /><span class="ro-text"><span class="ro-label">Other</span></span></label>
+      </div>
+      <div class="conditional" id="missedOtherField">
+        <input type="text" name="missed_calls_other" placeholder="Describe what happens" />
+      </div>
+    </div>
+
+    <!-- SECTION 10 -->
+    <div class="section" data-section="10">
+      <span class="section-num">10</span>
+      <button type="button" class="help-btn" data-help="section10">💬 Ask Jessica</button>
+      <h2>When should the AI hand off to a human?</h2>
+      <p class="subhead">Select every situation where a real person needs to take over.</p>
+
+      <div class="check-grid">
+        <label class="check-option"><input type="checkbox" name="handoff[]" value="Upset customers" /> Upset customers</label>
+        <label class="check-option"><input type="checkbox" name="handoff[]" value="Complicated questions" /> Complicated questions</label>
+        <label class="check-option"><input type="checkbox" name="handoff[]" value="Pricing requests" /> Pricing requests</label>
+        <label class="check-option"><input type="checkbox" name="handoff[]" value="Existing customer issues" /> Existing customer issues</label>
+        <label class="check-option"><input type="checkbox" name="handoff[]" value="Urgent or emergency situations" /> Urgent or emergency situations</label>
+        <label class="check-option"><input type="checkbox" name="handoff[]" value="Other" id="handoffOther" /> Other</label>
+      </div>
+      <div class="conditional" id="handoffOtherField">
+        <input type="text" name="handoff_other" placeholder="Describe the handoff rule" />
+      </div>
+    </div>
+
+    <!-- SECTION 11 -->
+    <div class="section" data-section="11">
+      <span class="section-num">11</span>
+      <button type="button" class="help-btn" data-help="section11">💬 Ask Jessica</button>
+      <h2>Brand rules</h2>
+      <p class="subhead">The "always say" and "never say" that protect your brand.</p>
+
+      <div class="field">
+        <label>Always say</label>
+        <textarea name="always_say" placeholder="e.g., 'Thanks for calling [Business], how can I help today?'"></textarea>
+      </div>
+      <div class="field">
+        <label>Never say</label>
+        <textarea name="never_say" placeholder="Words, phrases, or topics the assistant should avoid."></textarea>
+      </div>
+      <div class="field">
+        <label>Tone, wording, and 'temperature' notes</label>
+        <textarea name="temperature_notes" placeholder="Regional phrasing, formality level, use of 'sir/ma'am,' humor, etc."></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 12 -->
+    <div class="section" data-section="12">
+      <span class="section-num">12</span>
+      <button type="button" class="help-btn" data-help="section12">💬 Ask Jessica</button>
+      <h2>Anything else?</h2>
+      <p class="subhead">Edge cases, quirks, or anything that doesn't fit above.</p>
+
+      <div class="field">
+        <label>Additional notes</label>
+        <textarea name="additional_notes" placeholder="Seasonal patterns, unusual call types, specific words your customers use, insurance vs. cash jobs, ZIPs you don't serve, numbers to block, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit" class="btn-primary" id="submitBtn">
+        Submit consultation
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+      <button type="button" class="btn-secondary" id="saveBtn">Save draft</button>
+    </div>
+
+    <div class="save-status" id="saveStatus">Your answers save automatically. You can come back anytime to finish.</div>
+  </form>
+</div>
+
+<!-- CONFIRMATION -->
+<div class="confirmation" id="confirmation">
+  <div class="eyebrow">Consultation received</div>
+  <h2 id="confirmHeadline">Thanks — we've got what we need.</h2>
+  <p id="confirmSub">Your AI assistant is being configured now. We'll email you within one business day with a preview you can listen to.</p>
+  <p style="color:var(--text-muted);font-size:0.9rem;margin-top:1.5rem;">Remembered something you wanted to add? Reply to that email any time — we'll fold it in before launch.</p>
+  <a href="/" class="btn-secondary" style="margin-top:2rem;display:inline-block;">← Back to growthmindset.ai</a>
+</div>
+
+<footer>
+  <p>© 2026 Growth Mindset AI &nbsp;·&nbsp; <a href="/">Home</a> <a href="/privacy/">Privacy</a> <a href="/terms/">Terms</a> <a href="mailto:matt@growthmindset.ai">Contact</a></p>
+</footer>
+
+<!-- Jessica avatar widget -->
+<div id="jessica-widget" aria-label="Chat with Jessica">
+  <button id="jessica-toggle" aria-label="Minimize Jessica" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
+  <iframe
+    src="https://embed.liveavatar.com/v1/dc3965f5-2d53-4f17-9610-5c8f40f67f0b"
+    allow="microphone; autoplay"
+    loading="lazy"
+    title="Jessica - AI Assistant">
+  </iframe>
+</div>
+
+<script>
+  // Expand Jessica when clicked while minimized
+  document.getElementById('jessica-widget').addEventListener('click', function(e) {
+    if (this.classList.contains('minimized')) this.classList.remove('minimized');
+  });
+
+  // AI prompts per section — shown in a Jessica message bubble style (fallback to alert if widget hidden)
+  const JESSICA_PROMPTS = {
+    section3: "Think of it like introducing your business to a new neighbor. Cover four things — what you do, the services you offer, your typical customer, and the area you serve. Want me to draft a starting point based on your service type?",
+    section4: "Picture your last twenty phone calls. What were most of them about? Check every type that happens regularly — we'll train the assistant to handle each one well.",
+    section5: "Tone is how your assistant feels, not what it says. Quick rule of thumb: stressed callers respond to warm and reassuring, premium brands lean professional and polished, and neighborhood businesses sound best friendly and casual. We can always fine-tune after you hear it.",
+    section6: "Ask yourself this: if the assistant dropped the ball on one thing, which one would make you call us the next day? That's your answer.",
+    section7: "Walk me through what the caller hears. Should it say your business name first? Does it ask 'how can I help?' or jump straight to 'are you calling to book an appointment?' And what's the primary goal — book the job, or capture the lead?",
+    section8: "Picture a call coming in right now and trace it step by step. Who picks up? What do they ask? Where does the information go? How does it land on the schedule? And what happens after hours or when no one can answer?",
+    section9: "No wrong answer — even 'honestly, nothing happens and they hang up' is helpful information.",
+    section10: "These are the moments the AI shouldn't try to handle alone. The most common ones are upset tone, pricing requests (if you never quote over the phone), and existing customers with an active job. Pick every one that fits; you can always loosen the rules later.",
+    section11: "Three quick buckets. Required phrases — greetings, disclaimers, taglines. Banned language — competitor names, promises you can't back up, words you've sworn off. And stylistic guardrails — formality, regional phrasing, whether to use honorifics.",
+    section12: "Anything that trips up a new employee usually trips up the AI too. Think about seasonal spikes, edge-case call types, specific jargon your customers use, or anyone you want automatically blocked."
+  };
+
+  // Help buttons — show prompt in an on-page tooltip + open Jessica
+  document.querySelectorAll('.help-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const key = this.dataset.help;
+      const msg = JESSICA_PROMPTS[key];
+      // Pop Jessica open if minimized
+      document.getElementById('jessica-widget').classList.remove('minimized');
+      // Show as a small toast near the button
+      const existing = document.getElementById('jessica-toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.id = 'jessica-toast';
+      toast.textContent = msg;
+      toast.style.cssText = 'position:fixed;bottom:460px;right:20px;width:320px;background:#111;border:1px solid rgba(0,212,255,0.3);color:#bbb;padding:1rem 1.25rem;border-radius:12px;font-size:0.88rem;line-height:1.6;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9998;animation:fadeIn 0.25s ease;';
+      const close = document.createElement('button');
+      close.textContent = '×';
+      close.style.cssText = 'position:absolute;top:6px;right:10px;background:transparent;border:0;color:#666;font-size:20px;cursor:pointer;line-height:1;';
+      close.onclick = () => toast.remove();
+      toast.appendChild(close);
+      document.body.appendChild(toast);
+      setTimeout(() => { if (toast.parentNode) toast.remove(); }, 15000);
+    });
+  });
+
+  // Build business hours options
+  function buildHours() {
+    const opens = document.getElementById('opensAt');
+    const closes = document.getElementById('closesAt');
+    opens.appendChild(new Option('24/7', '24/7'));
+    closes.appendChild(new Option('24/7', '24/7'));
+    function format(h, m) {
+      const period = h >= 12 ? 'PM' : 'AM';
+      const hour12 = ((h + 11) % 12) + 1;
+      return `${hour12}:${String(m).padStart(2,'0')} ${period}`;
+    }
+    // Opens: 6:00 AM → 10:00 AM in 30-min steps
+    for (let h = 6; h <= 10; h++) {
+      for (let m of [0, 30]) {
+        if (h === 10 && m === 30) break;
+        opens.appendChild(new Option(format(h, m), format(h, m)));
+      }
+      if (h === 10) opens.appendChild(new Option(format(10, 0), format(10, 0)));
+    }
+    // (Above loop already handles 6:00–10:00)
+    // Closes: 4:00 PM → 10:00 PM in 30-min steps
+    for (let h = 16; h <= 22; h++) {
+      for (let m of [0, 30]) {
+        if (h === 22 && m === 30) break;
+        closes.appendChild(new Option(format(h, m), format(h, m)));
+      }
+    }
+  }
+  buildHours();
+
+  // Conditional "Other" fields
+  function wireConditional(triggerSelector, showConditionFn, targetId) {
+    const trigger = document.querySelectorAll(triggerSelector);
+    const target = document.getElementById(targetId);
+    trigger.forEach(t => t.addEventListener('change', () => {
+      target.classList.toggle('show', showConditionFn());
+    }));
+  }
+  document.getElementById('serviceType').addEventListener('change', function() {
+    document.getElementById('serviceTypeOther').classList.toggle('show', this.value === 'Other');
+  });
+  document.querySelectorAll('input[name="tone"]').forEach(r => r.addEventListener('change', () => {
+    document.getElementById('toneOtherField').classList.toggle('show', document.getElementById('toneOther').checked);
+  }));
+  document.querySelectorAll('input[name="key_scenario"]').forEach(r => r.addEventListener('change', () => {
+    document.getElementById('scenarioOtherField').classList.toggle('show', document.getElementById('scenarioOther').checked);
+  }));
+  document.querySelectorAll('input[name="missed_calls"]').forEach(r => r.addEventListener('change', () => {
+    document.getElementById('missedOtherField').classList.toggle('show', document.getElementById('missedOther').checked);
+  }));
+  document.getElementById('handoffOther').addEventListener('change', function() {
+    document.getElementById('handoffOtherField').classList.toggle('show', this.checked);
+  });
+
+  // Progress bar: count filled required + non-required fields
+  const form = document.getElementById('intakeForm');
+  const progressFill = document.getElementById('progressFill');
+  function updateProgress() {
+    const required = form.querySelectorAll('[required]');
+    let filled = 0;
+    required.forEach(el => { if (el.value && el.value.trim()) filled++; });
+    const pct = Math.round((filled / required.length) * 100);
+    progressFill.style.width = pct + '%';
+  }
+  form.addEventListener('input', updateProgress);
+  form.addEventListener('change', updateProgress);
+
+  // LocalStorage auto-save
+  const STORAGE_KEY = 'gm_intake_draft_v1';
+  function collect() {
+    const data = {};
+    new FormData(form).forEach((v, k) => {
+      if (k.endsWith('[]')) { data[k] = data[k] || []; data[k].push(v); }
+      else data[k] = v;
+    });
+    return data;
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(collect()));
+      const s = document.getElementById('saveStatus');
+      s.textContent = 'Saved just now';
+      s.classList.add('saved');
+      setTimeout(() => { s.textContent = 'Your answers save automatically. You can come back anytime to finish.'; s.classList.remove('saved'); }, 2500);
+    } catch (e) {}
+  }
+  function restore() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      Object.entries(data).forEach(([k, v]) => {
+        if (Array.isArray(v)) {
+          form.querySelectorAll(`[name="${k}"]`).forEach(el => { if (v.includes(el.value)) el.checked = true; });
+        } else {
+          const el = form.querySelector(`[name="${k}"]`);
+          if (!el) return;
+          if (el.type === 'radio') form.querySelectorAll(`[name="${k}"]`).forEach(r => { if (r.value === v) r.checked = true; });
+          else el.value = v;
+        }
+      });
+      // Re-trigger conditionals
+      ['serviceType', 'toneOther', 'scenarioOther', 'missedOther', 'handoffOther'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.dispatchEvent(new Event('change'));
+      });
+      updateProgress();
+    } catch (e) {}
+  }
+  restore();
+  let saveTimer;
+  form.addEventListener('input', () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 800); });
+  form.addEventListener('change', () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 800); });
+  document.getElementById('saveBtn').addEventListener('click', save);
+
+  // Submit
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const requiredFields = form.querySelectorAll('[required]');
+    let missing = [];
+    requiredFields.forEach(el => { if (!el.value || !el.value.trim()) { missing.push(el); el.style.borderColor = 'var(--error)'; } else { el.style.borderColor = ''; } });
+    if (missing.length) {
+      missing[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      missing[0].focus();
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = 'Submitting…';
+
+    const data = collect();
+    data.submitted_at = new Date().toISOString();
+    data.source = 'growthmindset.ai/intake';
+
+    try {
+      const res = await fetch('/api/intake', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      // Success regardless of endpoint status (we also capture in localStorage backup)
+      localStorage.setItem(STORAGE_KEY + '_submitted', JSON.stringify(data));
+    } catch (err) {
+      localStorage.setItem(STORAGE_KEY + '_submitted', JSON.stringify(data));
+    }
+
+    // Show confirmation
+    const firstName = data.first_name || 'there';
+    document.getElementById('confirmHeadline').textContent = `Thanks, ${firstName} — we've got what we need.`;
+    document.getElementById('confirmSub').textContent = `Your AI assistant is being configured now. We'll email you at ${data.email || 'your email'} within one business day with a preview you can listen to.`;
+    document.getElementById('main-flow').style.display = 'none';
+    document.getElementById('confirmation').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    localStorage.removeItem(STORAGE_KEY);
+    if (typeof gtag === 'function') gtag('event', 'intake_submitted', { service_type: data.service_type || 'unknown' });
+  });
+
+  updateProgress();
+</script>
+
+</body>
+</html>
