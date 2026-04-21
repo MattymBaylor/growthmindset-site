@@ -635,11 +635,27 @@
 
         await room.connect(creds.livekit_url, creds.livekit_client_token);
 
-        // Enable mic
-        await room.localParticipant.setMicrophoneEnabled(true);
-
-        micBtn.style.display = 'flex';
-        setStatus('listening', 'Listening');
+        // Try to enable mic — but don't fail the whole session if it's not available
+        try {
+          await room.localParticipant.setMicrophoneEnabled(true);
+          micBtn.style.display = 'flex';
+          setStatus('listening', 'Listening');
+        } catch (micErr) {
+          console.warn('Mic not available:', micErr);
+          micEnabled = false;
+          micBtn.style.display = 'flex';
+          micBtn.classList.add('muted');
+          micBtn.textContent = '🔇';
+          const isPermission = /permission|denied|not allowed/i.test(micErr.message || '');
+          const isNoDevice = /not found|no.*device/i.test(micErr.message || '');
+          if (isPermission) {
+            setStatus('error', 'Mic blocked — check padlock 🔒');
+          } else if (isNoDevice) {
+            setStatus('error', 'No mic found — plug one in & retry');
+          } else {
+            setStatus('listening', 'Connected (mic off)');
+          }
+        }
       } catch (err) {
         console.error('Jessica session error:', err);
         setStatus('error', 'Error: ' + (err.message || 'connection failed'));
