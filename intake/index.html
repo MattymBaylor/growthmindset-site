@@ -499,10 +499,10 @@
   <button id="jessica-toggle" aria-label="Minimize Jessica" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
   <iframe
     src="https://embed.liveavatar.com/v1/dc3965f5-2d53-4f17-9610-5c8f40f67f0b"
-    allow="microphone *; camera *; autoplay *; display-capture; speaker-selection"
+    allow="microphone 'src' https://embed.liveavatar.com; camera 'src' https://embed.liveavatar.com; autoplay 'src' https://embed.liveavatar.com; speaker-selection 'src' https://embed.liveavatar.com; display-capture 'src' https://embed.liveavatar.com"
     allowfullscreen
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade"
+    loading="eager"
+    referrerpolicy="strict-origin-when-cross-origin"
     title="Jessica - AI Assistant">
   </iframe>
 </div>
