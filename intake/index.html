@@ -163,7 +163,8 @@
       width: 64px; height: 64px; border-radius: 50%; cursor: pointer;
       box-shadow: 0 8px 24px rgba(0,212,255,0.35);
     }
-    #jessica-widget.minimized .jv-container { display: none; }
+    #jessica-widget.minimized .jv-container,
+    #jessica-widget.minimized iframe { display: none; }
     #jessica-widget.minimized::before {
       content: '💬';
       position: absolute; inset: 0;
@@ -550,132 +551,19 @@
 </footer>
 
 <!-- Jessica avatar widget (LiveAvatar SDK) -->
+<!-- Jessica avatar widget (iframe — reliable campaign version; SDK version parked for next sprint) -->
 <div id="jessica-widget" aria-label="Chat with Jessica">
   <button id="jessica-toggle" aria-label="Minimize Jessica" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
-  <div class="jv-container">
-    <video id="jessica-video" autoplay playsinline></video>
-    <div class="jv-status" id="jv-status"><span class="jv-dot"></span><span id="jv-status-text">Ready</span></div>
-    <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
-    <div class="jv-start" id="jv-start">
-      <div class="jv-start-label">Hi! I'm Jessica, your AI host. Tap to start our chat.</div>
-      <button class="jv-start-btn" id="jv-start-btn">Start chat with Jessica</button>
-    </div>
-  </div>
+  <iframe
+    src="https://embed.liveavatar.com/v1/bb840425-f5d0-4137-aaa0-d2a3eadc9396"
+    allow="microphone; camera; autoplay; speaker-selection"
+    allowfullscreen
+    loading="eager"
+    referrerpolicy="strict-origin-when-cross-origin"
+    title="Jessica - AI Assistant"
+    style="width:100%;height:100%;border:0;display:block;">
+  </iframe>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
-<script>
-  (function() {
-    const statusEl = document.getElementById('jv-status');
-    const statusText = document.getElementById('jv-status-text');
-    const video = document.getElementById('jessica-video');
-    const startOverlay = document.getElementById('jv-start');
-    const startBtn = document.getElementById('jv-start-btn');
-    const micBtn = document.getElementById('jv-mic-btn');
-
-    let room = null;
-    let micEnabled = true;
-
-    function setStatus(state, text) {
-      statusEl.className = 'jv-status ' + state;
-      statusText.textContent = text;
-    }
-
-    async function startSession() {
-      startOverlay.classList.add('hidden');
-      setStatus('connecting', 'Connecting...');
-
-      try {
-        // 1. Get session creds from our Vercel Function
-        const tokenRes = await fetch('/api/liveavatar-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({}),
-        });
-        if (!tokenRes.ok) throw new Error('Token fetch failed: ' + tokenRes.status);
-        const creds = await tokenRes.json();
-
-        // 2. Connect to LiveKit room
-        const Livekit = window.LivekitClient || window.LiveKit || window.livekitClient;
-        if (!Livekit) throw new Error('LiveKit SDK not loaded');
-
-        room = new Livekit.Room({
-          adaptiveStream: true,
-          dynacast: true,
-        });
-
-        // Attach remote video/audio tracks as they arrive
-        room.on(Livekit.RoomEvent.TrackSubscribed, (track, pub, participant) => {
-          if (track.kind === 'video') {
-            track.attach(video);
-          } else if (track.kind === 'audio') {
-            const audioEl = track.attach();
-            audioEl.style.display = 'none';
-            document.body.appendChild(audioEl);
-          }
-        });
-
-        room.on(Livekit.RoomEvent.ActiveSpeakersChanged, (speakers) => {
-          const remoteSpeaking = speakers.some(s => s.identity !== room.localParticipant.identity);
-          if (remoteSpeaking) {
-            setStatus('speaking', 'Jessica is speaking');
-          } else {
-            setStatus('listening', 'Listening');
-          }
-        });
-
-        room.on(Livekit.RoomEvent.Disconnected, () => {
-          setStatus('error', 'Disconnected');
-          startOverlay.classList.remove('hidden');
-          micBtn.style.display = 'none';
-        });
-
-        await room.connect(creds.livekit_url, creds.livekit_client_token);
-
-        // Try to enable mic — but don't fail the whole session if it's not available
-        try {
-          await room.localParticipant.setMicrophoneEnabled(true);
-          micBtn.style.display = 'flex';
-          setStatus('listening', 'Listening');
-        } catch (micErr) {
-          console.warn('Mic not available:', micErr);
-          micEnabled = false;
-          micBtn.style.display = 'flex';
-          micBtn.classList.add('muted');
-          micBtn.textContent = '🔇';
-          const isPermission = /permission|denied|not allowed/i.test(micErr.message || '');
-          const isNoDevice = /not found|no.*device/i.test(micErr.message || '');
-          if (isPermission) {
-            setStatus('error', 'Mic blocked — check padlock 🔒');
-          } else if (isNoDevice) {
-            setStatus('error', 'No mic found — plug one in & retry');
-          } else {
-            setStatus('listening', 'Connected (mic off)');
-          }
-        }
-      } catch (err) {
-        console.error('Jessica session error:', err);
-        setStatus('error', 'Error: ' + (err.message || 'connection failed'));
-        startOverlay.classList.remove('hidden');
-      }
-    }
-
-    startBtn.addEventListener('click', startSession);
-
-    micBtn.addEventListener('click', async () => {
-      if (!room) return;
-      micEnabled = !micEnabled;
-      await room.localParticipant.setMicrophoneEnabled(micEnabled);
-      micBtn.classList.toggle('muted', !micEnabled);
-      micBtn.textContent = micEnabled ? '🎤' : '🔇';
-    });
-
-    // Clean up on unload
-    window.addEventListener('beforeunload', () => {
-      if (room) room.disconnect();
-    });
-  })();
-</script>
 
 <script>
   // Expand Jessica when clicked while minimized
