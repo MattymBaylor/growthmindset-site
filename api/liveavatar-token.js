@@ -29,6 +29,10 @@ export default async function handler(req, res) {
       context_id: body.context_id || '34878300-8406-4e32-8176-1ec1ef44aceb',
       language: body.language || 'en',
     },
+    video_settings: {
+      quality: body.quality || 'very_high',  // 1080p max
+      encoding: body.encoding || 'H264',
+    },
   };
 
   try {
