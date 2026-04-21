@@ -1006,36 +1006,45 @@
 
 
   <!-- FAQ -->
+  <style>
+    .faq-item { padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
+    .faq-item summary { font-size: 1rem; font-weight: 700; color: var(--text); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::marker { display: none; }
+    .faq-item .faq-icon { color: var(--accent); font-size: 1.5rem; line-height: 1; transition: transform 0.2s ease; flex-shrink: 0; }
+    .faq-item[open] .faq-icon { transform: rotate(45deg); }
+    .faq-item p { margin-top: 1rem; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; }
+  </style>
   <section id="faq" style="padding:6rem 1.5rem;">
     <div class="container" style="max-width:800px;">
       <div class="section-header">
         <h2>Got Questions? <em>Here Are the Honest Answers.</em></h2>
       </div>
-      <div style="display:flex;flex-direction:column;gap:1px;border-top:1px solid var(--border);">
+      <div style="display:flex;flex-direction:column;border-top:1px solid var(--border);">
 
-        <details style="padding:1.5rem 0;border-bottom:1px solid var(--border);">
-          <summary style="font-size:1rem;font-weight:700;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">Does it really sound human? <span style="color:var(--accent);font-size:1.2rem;">+</span></summary>
-          <p style="margin-top:1rem;font-size:0.95rem;color:var(--text-secondary);line-height:1.7;">Yes. The AI uses natural speech — no robotic scripts. Most callers don't know they're talking to AI until someone tells them. Hear a live example using the demo on this page.</p>
+        <details class="faq-item">
+          <summary>Does it really sound human? <span class="faq-icon">+</span></summary>
+          <p>Yes. The AI uses natural speech — no robotic scripts. Most callers don't know they're talking to AI until someone tells them. Hear a live example using the demo on this page.</p>
         </details>
 
-        <details style="padding:1.5rem 0;border-bottom:1px solid var(--border);">
-          <summary style="font-size:1rem;font-weight:700;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">I already have a receptionist. Do I still need this? <span style="color:var(--accent);font-size:1.2rem;">+</span></summary>
-          <p style="margin-top:1rem;font-size:0.95rem;color:var(--text-secondary);line-height:1.7;">Yes — and they'll thank you. Your AI handles overflow, after-hours, and weekends so nothing falls through the cracks. Your receptionist stays focused on the people in front of them.</p>
+        <details class="faq-item">
+          <summary>I already have a receptionist. Do I still need this? <span class="faq-icon">+</span></summary>
+          <p>Yes — and they'll thank you. Your AI handles overflow, after-hours, and weekends so nothing falls through the cracks. Your receptionist stays focused on the people in front of them.</p>
         </details>
 
-        <details style="padding:1.5rem 0;border-bottom:1px solid var(--border);">
-          <summary style="font-size:1rem;font-weight:700;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">How fast is setup? <span style="color:var(--accent);font-size:1.2rem;">+</span></summary>
-          <p style="margin-top:1rem;font-size:0.95rem;color:var(--text-secondary);line-height:1.7;">Under 24 hours. We configure everything — voice, script, calendar, lead routing. You answer a few questions, approve the setup, and go live. No IT required.</p>
+        <details class="faq-item">
+          <summary>How fast is setup? <span class="faq-icon">+</span></summary>
+          <p>Under 24 hours. We configure everything — voice, script, calendar, lead routing. You answer a few questions, approve the setup, and go live. No IT required.</p>
         </details>
 
-        <details style="padding:1.5rem 0;border-bottom:1px solid var(--border);">
-          <summary style="font-size:1rem;font-weight:700;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">What if a caller wants to speak to a real person? <span style="color:var(--accent);font-size:1.2rem;">+</span></summary>
-          <p style="margin-top:1rem;font-size:0.95rem;color:var(--text-secondary);line-height:1.7;">The AI either transfers the call directly or takes a message and notifies you immediately. Your rules, your setup.</p>
+        <details class="faq-item">
+          <summary>What if a caller wants to speak to a real person? <span class="faq-icon">+</span></summary>
+          <p>The AI either transfers the call directly or takes a message and notifies you immediately. Your rules, your setup.</p>
         </details>
 
-        <details style="padding:1.5rem 0;border-bottom:1px solid var(--border);">
-          <summary style="font-size:1rem;font-weight:700;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">Is there a long-term contract? <span style="color:var(--accent);font-size:1.2rem;">+</span></summary>
-          <p style="margin-top:1rem;font-size:0.95rem;color:var(--text-secondary);line-height:1.7;">No. Month-to-month, cancel anytime. No cancellation fees, no questions asked. We keep you because the product works — not because you're locked in.</p>
+        <details class="faq-item">
+          <summary>Is there a long-term contract? <span class="faq-icon">+</span></summary>
+          <p>No. Month-to-month, cancel anytime. No cancellation fees, no questions asked. We keep you because the product works — not because you're locked in.</p>
         </details>
 
       </div>
