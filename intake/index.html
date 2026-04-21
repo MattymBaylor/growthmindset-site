@@ -17,9 +17,10 @@
       --bg: #0a0a0a;
       --bg-card: #111111;
       --bg-card-hover: #161616;
-      --bg-input: #0d0d0d;
-      --border: rgba(255,255,255,0.08);
-      --border-focus: rgba(0,212,255,0.5);
+      --bg-input: #1a2332;
+      --bg-input-focus: #1f2b3d;
+      --border: rgba(0,212,255,0.18);
+      --border-focus: rgba(0,212,255,0.6);
       --accent: #00d4ff;
       --accent-dim: rgba(0,212,255,0.12);
       --text: #ffffff;
@@ -82,16 +83,17 @@
       font-family: inherit;
       font-size: 0.95rem;
       padding: 0.85rem 1rem;
-      transition: border-color 0.2s, background 0.2s;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
     }
     .field input:focus,
     .field select:focus,
     .field textarea:focus {
       outline: none;
       border-color: var(--border-focus);
-      background: #0a0a0a;
+      background: var(--bg-input-focus);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.12);
     }
-    .field input::placeholder, .field textarea::placeholder { color: #555; }
+    .field input::placeholder, .field textarea::placeholder { color: #8aa4b8; }
     .field textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
     .field select { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2300d4ff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; cursor: pointer; }
 
@@ -110,7 +112,7 @@
       cursor: pointer;
       transition: all 0.15s;
     }
-    .check-option:hover, .radio-option:hover { border-color: rgba(0,212,255,0.3); background: #0a0a0a; }
+    .check-option:hover, .radio-option:hover { border-color: rgba(0,212,255,0.5); background: var(--bg-input-focus); }
     .check-option input, .radio-option input { margin-top: 0.2rem; accent-color: var(--accent); flex-shrink: 0; }
     .check-option:has(input:checked), .radio-option:has(input:checked) { border-color: var(--accent); background: var(--accent-dim); }
     .radio-option .ro-text { display: flex; flex-direction: column; gap: 0.2rem; }
@@ -497,8 +499,10 @@
   <button id="jessica-toggle" aria-label="Minimize Jessica" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
   <iframe
     src="https://embed.liveavatar.com/v1/dc3965f5-2d53-4f17-9610-5c8f40f67f0b"
-    allow="microphone; autoplay"
+    allow="microphone *; camera *; autoplay *; display-capture; speaker-selection"
+    allowfullscreen
     loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
     title="Jessica - AI Assistant">
   </iframe>
 </div>
