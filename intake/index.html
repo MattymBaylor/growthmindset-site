@@ -684,7 +684,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/selfie_segmentation.js" crossorigin="anonymous"></script>
+<!-- MediaPipe Selfie Segmentation disabled — the @0.1.1675 wasm build crashes in modern Chrome/Safari.
+     Gradient background renders via .jv-container CSS instead; will re-enable chroma key when we
+     pin a working version. -->
 <script>
   (function() {
     const statusEl = document.getElementById('jv-status');
@@ -698,6 +700,161 @@
     let room = null;
     let micEnabled = true;
     let audioElements = [];
+
+    // ---- Shared auto-fill state (must live at IIFE scope so chips, buttons, and bubble handlers can all reach it)
+    let lastFocusedField = null;
+    let currentResponse = '';
+    let responseInProgress = false;
+    let lastCompleteResponse = '';
+    const undoStack = [];
+    const MAX_UNDO = 10;
+
+    function flashField(el, color) {
+      if (!el) return;
+      const glow = color || 'rgba(0,212,255,0.25)';
+      const border = color ? color.replace('0.25', '0.7') : 'rgba(0,212,255,0.7)';
+      const orig = el.style.boxShadow;
+      const origBorder = el.style.borderColor;
+      el.style.transition = 'box-shadow .3s ease, border-color .3s ease';
+      el.style.boxShadow = '0 0 0 4px ' + glow;
+      el.style.borderColor = border;
+      setTimeout(() => { el.style.boxShadow = orig; el.style.borderColor = origBorder; }, 1200);
+    }
+
+    function fillActiveField(text, targetField) {
+      const field = targetField || lastFocusedField;
+      if (!field || !text) return false;
+      const clean = text.trim();
+      if (!clean) return false;
+      const previousValue = field.value;
+      if (!field.value.trim()) {
+        field.value = clean;
+      } else {
+        const sep = field.tagName === 'TEXTAREA' ? '\n\n' : ' ';
+        field.value = field.value.trimEnd() + sep + clean;
+      }
+      undoStack.push({ field, previousValue, insertedText: clean, timestamp: Date.now() });
+      if (undoStack.length > MAX_UNDO) undoStack.shift();
+      field._jvJustFilled = true;
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+      field.dispatchEvent(new Event('change', { bubbles: true }));
+      flashField(field);
+      showUndoToast();
+      console.log('[Jessica] filled field:', field.name, '←', clean.slice(0, 60) + (clean.length > 60 ? '…' : ''));
+      return true;
+    }
+
+    function undoLastFill() {
+      const last = undoStack.pop();
+      if (!last) return;
+      last.field.value = last.previousValue;
+      last.field.dispatchEvent(new Event('input', { bubbles: true }));
+      last.field.dispatchEvent(new Event('change', { bubbles: true }));
+      last.field.focus();
+      lastFocusedField = last.field;
+      flashField(last.field, 'rgba(255,77,109,0.25)');
+    }
+
+    function showUndoToast() {
+      let toast = document.getElementById('jv-undo-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'jv-undo-toast';
+        toast.style.cssText = 'position:fixed;bottom:460px;right:20px;background:#111;border:1px solid rgba(0,212,255,0.3);color:#bbb;padding:0.6rem 1rem;border-radius:10px;font-size:0.85rem;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9998;display:flex;align-items:center;gap:0.75rem;transition:opacity .2s;';
+        document.body.appendChild(toast);
+      }
+      toast.style.opacity = '1';
+      toast.innerHTML = '<span>✨ Filled by Jessica</span>';
+      const undoBtn = document.createElement('button');
+      undoBtn.textContent = 'Undo';
+      undoBtn.style.cssText = 'background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.4);color:#ff6b85;padding:0.3rem 0.75rem;border-radius:6px;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;';
+      undoBtn.onclick = () => { undoLastFill(); toast.style.opacity = '0'; };
+      const hint = document.createElement('span');
+      hint.textContent = 'or Ctrl+Z';
+      hint.style.cssText = 'color:#666;font-size:0.75rem;';
+      toast.appendChild(undoBtn);
+      toast.appendChild(hint);
+      clearTimeout(toast._hideTimer);
+      toast._hideTimer = setTimeout(() => { toast.style.opacity = '0'; }, 8000);
+    }
+
+    function removeFieldChips() {
+      document.querySelectorAll('.jv-field-chip').forEach(c => c.remove());
+    }
+
+    function addFieldChips(text) {
+      removeFieldChips();
+      const form = document.getElementById('intakeForm');
+      if (!form) return;
+      const fields = form.querySelectorAll('textarea, input[type="text"], input[type="email"], input[type="tel"]');
+      fields.forEach(field => {
+        const label = field.closest('.field')?.querySelector('label');
+        if (!label) return;
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'jv-field-chip';
+        chip.innerHTML = '⬇️ Insert';
+        chip.title = "Insert Jessica's last answer into this field";
+        chip.style.cssText = 'margin-left:0.75rem;background:linear-gradient(135deg,#00d4ff,#0099ff);color:#000;border:0;font-family:inherit;font-weight:700;font-size:0.7rem;padding:0.2rem 0.55rem;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;gap:0.25rem;box-shadow:0 2px 6px rgba(0,212,255,0.35);vertical-align:middle;';
+        chip.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          fillActiveField(text, field);  // explicit target — no focus-tracking needed
+          removeFieldChips();
+        };
+        label.appendChild(chip);
+      });
+    }
+
+    function showInsertButton(text) {
+      const btn = document.getElementById('jv-insert-btn');
+      if (btn) {
+        btn.dataset.text = text;
+        btn.style.display = 'flex';
+        btn.classList.add('pulse');
+        clearTimeout(btn._hideTimer);
+        btn._hideTimer = setTimeout(() => {
+          btn.style.display = 'none';
+          btn.classList.remove('pulse');
+        }, 120000);
+      }
+      const bubble = document.getElementById('jv-transcript');
+      const textEl = document.getElementById('jv-t-text');
+      if (bubble && textEl) {
+        textEl.textContent = text;
+        bubble.dataset.text = text;
+        bubble.classList.add('visible');
+      }
+      addFieldChips(text);
+    }
+
+    // Track focused form fields
+    const intakeFormEl = document.getElementById('intakeForm');
+    if (intakeFormEl) {
+      intakeFormEl.addEventListener('focusin', (e) => {
+        const el = e.target;
+        if (el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && ['text','email','tel'].includes(el.type)))) {
+          lastFocusedField = el;
+        }
+      });
+      intakeFormEl.addEventListener('input', (e) => {
+        if (e.target.closest('.field')) {
+          if (!e.target._jvJustFilled) removeFieldChips();
+          else delete e.target._jvJustFilled;
+        }
+      });
+    }
+
+    // Ctrl/Cmd+Z inside filled field triggers our undo
+    document.addEventListener('keydown', (e) => {
+      const isUndo = (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z';
+      if (!isUndo || undoStack.length === 0) return;
+      const last = undoStack[undoStack.length - 1];
+      if (document.activeElement === last.field) {
+        e.preventDefault();
+        undoLastFill();
+      }
+    });
 
     function log(...args) { console.log('[Jessica]', ...args); }
     function warn(...args) { console.warn('[Jessica]', ...args); }
@@ -913,175 +1070,7 @@
         room.on(Livekit.RoomEvent.MediaDevicesError, (e) => warn('MediaDevicesError:', e));
         room.on(Livekit.RoomEvent.SignalConnected, () => log('SignalConnected'));
 
-        // 🪩 Auto-fill: track the last field user focused inside the form
-        let lastFocusedField = null;
-        const intakeForm = document.getElementById('intakeForm');
-        if (intakeForm) {
-          intakeForm.addEventListener('focusin', (e) => {
-            const el = e.target;
-            if (el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && ['text','email','tel'].includes(el.type)))) {
-              lastFocusedField = el;
-              log('tracked focus:', el.name || '(unnamed)');
-            }
-          });
-        }
-
-        // Accumulate Jessica's current spoken response until avatar.speak_ended fires
-        let currentResponse = '';
-        let responseInProgress = false;
-        let lastCompleteResponse = '';  // the most recent thing Jessica finished saying
-
-        // Undo stack: [{field, previousValue, insertedText}]
-        const undoStack = [];
-        const MAX_UNDO = 10;
-
-        function flashField(el, color) {
-          if (!el) return;
-          const glow = color || 'rgba(0,212,255,0.25)';
-          const border = color ? color.replace('0.25', '0.7') : 'rgba(0,212,255,0.7)';
-          const orig = el.style.boxShadow;
-          const origBorder = el.style.borderColor;
-          el.style.transition = 'box-shadow .3s ease, border-color .3s ease';
-          el.style.boxShadow = '0 0 0 4px ' + glow;
-          el.style.borderColor = border;
-          setTimeout(() => { el.style.boxShadow = orig; el.style.borderColor = origBorder; }, 1200);
-        }
-
-        function fillActiveField(text) {
-          if (!lastFocusedField || !text) return;
-          const field = lastFocusedField;
-          const clean = text.trim();
-          if (!clean) return;
-          const previousValue = field.value;
-          // If empty, replace. If has content, append with a space/newline.
-          if (!field.value.trim()) {
-            field.value = clean;
-          } else {
-            const sep = field.tagName === 'TEXTAREA' ? '\n\n' : ' ';
-            field.value = field.value.trimEnd() + sep + clean;
-          }
-          // Push to undo stack
-          undoStack.push({ field, previousValue, insertedText: clean, timestamp: Date.now() });
-          if (undoStack.length > MAX_UNDO) undoStack.shift();
-          // Trigger change/input so auto-save + progress bar update
-          field._jvJustFilled = true;
-          field.dispatchEvent(new Event('input', { bubbles: true }));
-          field.dispatchEvent(new Event('change', { bubbles: true }));
-          flashField(field);
-          showUndoToast();
-          log('filled field:', field.name, '←', clean.slice(0, 60) + (clean.length > 60 ? '…' : ''));
-        }
-
-        function undoLastFill() {
-          const last = undoStack.pop();
-          if (!last) return;
-          last.field.value = last.previousValue;
-          last.field.dispatchEvent(new Event('input', { bubbles: true }));
-          last.field.dispatchEvent(new Event('change', { bubbles: true }));
-          last.field.focus();
-          lastFocusedField = last.field;
-          flashField(last.field, 'rgba(255,77,109,0.25)');
-          log('undid fill on', last.field.name);
-        }
-
-        function showUndoToast() {
-          let toast = document.getElementById('jv-undo-toast');
-          if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'jv-undo-toast';
-            toast.style.cssText = 'position:fixed;bottom:460px;right:20px;background:#111;border:1px solid rgba(0,212,255,0.3);color:#bbb;padding:0.6rem 1rem;border-radius:10px;font-size:0.85rem;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9998;display:flex;align-items:center;gap:0.75rem;transition:opacity .2s;';
-            document.body.appendChild(toast);
-          }
-          toast.style.opacity = '1';
-          toast.innerHTML = '<span>✨ Filled by Jessica</span>';
-          const undoBtn = document.createElement('button');
-          undoBtn.textContent = 'Undo';
-          undoBtn.style.cssText = 'background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.4);color:#ff6b85;padding:0.3rem 0.75rem;border-radius:6px;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;';
-          undoBtn.onclick = () => { undoLastFill(); toast.style.opacity = '0'; };
-          const hint = document.createElement('span');
-          hint.textContent = 'or press Ctrl+Z';
-          hint.style.cssText = 'color:#666;font-size:0.75rem;';
-          toast.appendChild(undoBtn);
-          toast.appendChild(hint);
-          clearTimeout(toast._hideTimer);
-          toast._hideTimer = setTimeout(() => { toast.style.opacity = '0'; }, 8000);
-        }
-
-        // Global Ctrl/Cmd+Z handler — undo Jessica's last fill if cursor is in the filled field
-        document.addEventListener('keydown', (e) => {
-          const isUndo = (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z';
-          if (!isUndo) return;
-          if (undoStack.length === 0) return;
-          // Only intercept if the active field is the last-filled field (respect native undo elsewhere)
-          const last = undoStack[undoStack.length - 1];
-          if (document.activeElement === last.field) {
-            e.preventDefault();
-            undoLastFill();
-          }
-        });
-
-        // 📋 After Jessica finishes speaking: show insert button + transcript bubble + per-field insert chips
-        function showInsertButton(text) {
-          const btn = document.getElementById('jv-insert-btn');
-          if (btn) {
-            btn.dataset.text = text;
-            btn.style.display = 'flex';
-            btn.classList.add('pulse');
-            clearTimeout(btn._hideTimer);
-            btn._hideTimer = setTimeout(() => {
-              btn.style.display = 'none';
-              btn.classList.remove('pulse');
-            }, 120000);
-          }
-          // Populate the transcript bubble above her
-          const bubble = document.getElementById('jv-transcript');
-          const textEl = document.getElementById('jv-t-text');
-          if (bubble && textEl) {
-            textEl.textContent = text;
-            bubble.dataset.text = text;
-            bubble.classList.add('visible');
-          }
-          // Add a little "⬇️ Insert here" chip next to every eligible field
-          addFieldChips(text);
-        }
-
-        function removeFieldChips() {
-          document.querySelectorAll('.jv-field-chip').forEach(c => c.remove());
-        }
-
-        function addFieldChips(text) {
-          removeFieldChips();
-          const form = document.getElementById('intakeForm');
-          if (!form) return;
-          const fields = form.querySelectorAll('textarea, input[type="text"], input[type="email"], input[type="tel"]');
-          fields.forEach(field => {
-            const label = field.closest('.field')?.querySelector('label');
-            if (!label) return;
-            const chip = document.createElement('button');
-            chip.type = 'button';
-            chip.className = 'jv-field-chip';
-            chip.innerHTML = '⬇️ Insert';
-            chip.title = 'Insert Jessica\'s last answer into this field';
-            chip.style.cssText = 'margin-left:0.75rem;background:linear-gradient(135deg,#00d4ff,#0099ff);color:#000;border:0;font-family:inherit;font-weight:700;font-size:0.7rem;padding:0.2rem 0.55rem;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;gap:0.25rem;box-shadow:0 2px 6px rgba(0,212,255,0.35);vertical-align:middle;';
-            chip.onclick = (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              lastFocusedField = field;
-              fillActiveField(text);
-              removeFieldChips();
-            };
-            label.appendChild(chip);
-          });
-        }
-
-        // Clean up chips if user edits a field manually (they become stale)
-        document.getElementById('intakeForm')?.addEventListener('input', (e) => {
-          if (e.target.closest('.field')) {
-            // Only remove chips if this wasn't a programmatic fill (no 'jv-filled' marker)
-            if (!e.target._jvJustFilled) removeFieldChips();
-            else delete e.target._jvJustFilled;
-          }
-        });
+        // (Auto-fill state + helpers now live at IIFE scope — see top of IIFE)
 
         // Listen for LiveAvatar response events (transcriptions, speak_ended)
         room.on(Livekit.RoomEvent.DataReceived, (payload, participant, kind, topic) => {
@@ -1356,8 +1345,9 @@
       const widget = document.getElementById('jessica-widget');
       widget.classList.remove('minimized');
 
-      // Build a focused prompt Jessica will receive as if the user just asked
-      const prompt = `The user is working on the "${ctx.name}" section of their AI voice agent setup. This section asks for ${ctx.field}. ${ctx.nudge} Keep your response concise and conversational — 2-3 sentences max unless they ask for more.`;
+      // Build a focused prompt Jessica will receive as if the user just asked.
+      // Phrased as a direct request from "me" (the user) — keeps her in English & in character.
+      const prompt = `Respond in English. I need help with the "${ctx.name}" section — the one that asks for ${ctx.field}. ${ctx.nudge} Keep your answer short, conversational, and in English — 2-3 sentences max.`;
 
       // Try to send to Jessica via LiveAvatar event
       const sent = typeof window.askJessica === 'function' ? await window.askJessica(prompt) : false;
