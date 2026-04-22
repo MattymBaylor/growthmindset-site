@@ -19,16 +19,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server misconfigured: LIVEAVATAR_API_KEY not set' });
   }
 
-  // Defaults are Jessica's config; body can override for other avatars
+  // Defaults: Dani (growthmindset.ai/intake). HGE's Jessica lives on a separate backend.
+  //   avatar_id  8713f92c… → mmartelli (ACTIVE, IMAGE-type, Matt's custom avatar — renamed to "Dani")
+  //   voice_id   6b986a0f… → "Elise – Warm, Natural and Engaging" (paired with Dani in LiveAvatar)
+  //   context_id 47e60dd1… → "Dani - Personal AI Agent for Business" (GM-specific instructions)
   const body = req.body || {};
   const payload = {
     mode: 'FULL',
     avatar_id: body.avatar_id || '8713f92c-061e-42b0-8874-e556bf929d88',
     avatar_persona: {
-      voice_id: body.voice_id || '864a26b8-bfba-4435-9cc5-1dd593de5ca7',  // The real British lady Matt loved
-      context_id: body.context_id || '34878300-8406-4e32-8176-1ec1ef44aceb',
+      voice_id: body.voice_id || '6b986a0f-4969-45da-93ee-b03baa0e9904',
+      context_id: body.context_id || '47e60dd1-e828-412a-b00a-e29e86db0484',
       language: body.language || 'en',
-      // 🔒 Lock STT to English so Jessica doesn't code-switch to French/Spanish mid-session
+      // 🔒 Lock STT to English so Dani doesn't code-switch to French/Spanish mid-session
       stt_config: body.stt_config || { provider: 'deepgram', language: 'en', model: 'nova-2' },
     },
     video_settings: {
