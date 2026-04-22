@@ -171,12 +171,18 @@
       font-size: 28px;
       background: var(--gradient-accent);
     }
-    .jv-container { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; background: linear-gradient(160deg, #0a0a0a 0%, #051520 50%, #001420 100%); overflow: hidden; }
+    .jv-container { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 25%, rgba(0, 212, 255, 0.25) 0%, transparent 55%),
+        linear-gradient(160deg, #021a28 0%, #041828 40%, #02111a 100%);
+    }
     .jv-container::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 30%, rgba(0,212,255,0.18) 0%, transparent 55%);
+      background:
+        radial-gradient(circle at 30% 85%, rgba(0, 153, 255, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 70% 15%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
     }
@@ -1152,8 +1158,34 @@
           else if (/not found|no.*device/i.test(m)) setStatus('listening', 'Connected (no mic)');
         });
 
-        // Expose for console debugging
+        // Expose for global use (help buttons, console debugging)
         window.__jessica = { room, Livekit };
+
+        // Send a prompt to Jessica — she'll generate an LLM response and speak it aloud
+        window.askJessica = async function(prompt) {
+          if (!room || !room.localParticipant) {
+            warn('askJessica called but room not connected');
+            return false;
+          }
+          const payload = JSON.stringify({
+            event_id: crypto.randomUUID(),
+            event_type: 'avatar.speak_response',
+            session_id: room.name || '',
+            text: prompt,
+          });
+          const encoded = new TextEncoder().encode(payload);
+          try {
+            await room.localParticipant.publishData(encoded, {
+              reliable: true,
+              topic: 'agent-control',
+            });
+            log('askJessica sent:', prompt.slice(0, 80) + '...');
+            return true;
+          } catch (e) {
+            err('askJessica publishData failed:', e);
+            return false;
+          }
+        };
 
       } catch (e) {
         err('session error:', e);
@@ -1257,42 +1289,100 @@
     if (this.classList.contains('minimized')) this.classList.remove('minimized');
   });
 
-  // AI prompts per section — shown in a Jessica message bubble style (fallback to alert if widget hidden)
-  const JESSICA_PROMPTS = {
-    section3: "Think of it like introducing your business to a new neighbor. Cover four things — what you do, the services you offer, your typical customer, and the area you serve. Want me to draft a starting point based on your service type?",
-    section4: "Picture your last twenty phone calls. What were most of them about? Check every type that happens regularly — we'll train the assistant to handle each one well.",
-    section5: "Tone is how your assistant feels, not what it says. Quick rule of thumb: stressed callers respond to warm and reassuring, premium brands lean professional and polished, and neighborhood businesses sound best friendly and casual. We can always fine-tune after you hear it.",
-    section6: "Ask yourself this: if the assistant dropped the ball on one thing, which one would make you call us the next day? That's your answer.",
-    section7: "Walk me through what the caller hears. Should it say your business name first? Does it ask 'how can I help?' or jump straight to 'are you calling to book an appointment?' And what's the primary goal — book the job, or capture the lead?",
-    section8: "Picture a call coming in right now and trace it step by step. Who picks up? What do they ask? Where does the information go? How does it land on the schedule? And what happens after hours or when no one can answer?",
-    section9: "No wrong answer — even 'honestly, nothing happens and they hang up' is helpful information.",
-    section10: "These are the moments the AI shouldn't try to handle alone. The most common ones are upset tone, pricing requests (if you never quote over the phone), and existing customers with an active job. Pick every one that fits; you can always loosen the rules later.",
-    section11: "Three quick buckets. Required phrases — greetings, disclaimers, taglines. Banned language — competitor names, promises you can't back up, words you've sworn off. And stylistic guardrails — formality, regional phrasing, whether to use honorifics.",
-    section12: "Anything that trips up a new employee usually trips up the AI too. Think about seasonal spikes, edge-case call types, specific jargon your customers use, or anyone you want automatically blocked."
+  // Section metadata — Jessica gets the section name + field description + coaching prompt
+  // when user clicks "Ask Jessica" on that section.
+  const SECTION_CONTEXT = {
+    section3: {
+      name: "Business overview",
+      field: "a short paragraph describing what the business does, their services, typical customers, and service area",
+      nudge: "Help them draft a 2-3 sentence business overview. Ask what service type they picked (roofing, HVAC, etc.) if needed, then offer a concise starting draft they can refine."
+    },
+    section4: {
+      name: "Call types",
+      field: "a checklist of the main kinds of calls their business handles (booking, FAQs, support, quotes, lead capture, after-hours)",
+      nudge: "Help them think through their last twenty phone calls and identify the 2-4 most common call types. Don't list all options — ask which ones they actually get regularly."
+    },
+    section5: {
+      name: "Assistant tone",
+      field: "which voice tone fits their brand: friendly & casual, professional & polished, warm & reassuring, or direct & efficient",
+      nudge: "Help them pick a tone. Quick rule: stressed callers → warm & reassuring, premium brands → professional & polished, neighborhood businesses → friendly & casual. Ask a quick question about their brand vibe and recommend one."
+    },
+    section6: {
+      name: "Key scenario",
+      field: "the single situation the assistant absolutely has to nail",
+      nudge: "Help them pick the ONE scenario that matters most. Ask: 'If the assistant dropped the ball on one thing, which would make you call us the next day?' Help them decide between new inquiries, booking, after-hours, FAQs, lead capture, or escalation."
+    },
+    section7: {
+      name: "Opening script",
+      field: "what the first 30 seconds of the call should sound like",
+      nudge: "Help them design the opening greeting. Should it mention the business name first? Ask 'how can I help?' or jump straight to 'calling to book?' Offer 2 quick sample openers based on their service type."
+    },
+    section8: {
+      name: "Current booking process",
+      field: "a description of how calls currently get answered and turned into bookings today",
+      nudge: "Walk them through tracing a call step by step: who picks up, what they ask, where info lands, how it gets scheduled, what happens after-hours. Help them describe it naturally."
+    },
+    section9: {
+      name: "Missed calls today",
+      field: "what happens when a call goes unanswered right now: voicemail, answering service, personal callback, or something else",
+      nudge: "Ask what currently happens when they miss a call. There's no wrong answer — even 'nothing, they hang up' is helpful. Just help them pick honestly."
+    },
+    section10: {
+      name: "Human handoff rules",
+      field: "a checklist of situations where the AI should hand off to a real person (upset callers, pricing requests, emergencies, etc.)",
+      nudge: "Help them think through when to hand off. Common ones: upset tone, pricing requests (if they never quote over the phone), existing customers with active jobs, true emergencies. Ask which ones apply to their business."
+    },
+    section11: {
+      name: "Brand rules",
+      field: "three things: required phrases (always say), banned language (never say), and tone/wording notes",
+      nudge: "Help them fill three buckets: (1) always-say phrases like greetings/disclaimers, (2) banned language like competitor names or promises they can't make, (3) stylistic notes like formality, regional phrasing, or honorifics. Ask one bucket at a time."
+    },
+    section12: {
+      name: "Anything else",
+      field: "edge cases, seasonal patterns, unusual call types, customer jargon, or anything that didn't fit above",
+      nudge: "Ask if there's anything that trips up new employees — seasonal spikes, edge-case call types, specific jargon their customers use, or anyone they want automatically blocked. Often there's at least one thing."
+    }
   };
 
-  // Help buttons — show prompt in an on-page tooltip + open Jessica
+  // Help buttons — NOW actually talk to Jessica with section context
   document.querySelectorAll('.help-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
+    btn.addEventListener('click', async function(e) {
       e.preventDefault();
       const key = this.dataset.help;
-      const msg = JESSICA_PROMPTS[key];
+      const ctx = SECTION_CONTEXT[key];
+      if (!ctx) return;
+
       // Pop Jessica open if minimized
-      document.getElementById('jessica-widget').classList.remove('minimized');
-      // Show as a small toast near the button
-      const existing = document.getElementById('jessica-toast');
-      if (existing) existing.remove();
-      const toast = document.createElement('div');
-      toast.id = 'jessica-toast';
-      toast.textContent = msg;
-      toast.style.cssText = 'position:fixed;bottom:460px;right:20px;width:320px;background:#111;border:1px solid rgba(0,212,255,0.3);color:#bbb;padding:1rem 1.25rem;border-radius:12px;font-size:0.88rem;line-height:1.6;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9998;animation:fadeIn 0.25s ease;';
-      const close = document.createElement('button');
-      close.textContent = '×';
-      close.style.cssText = 'position:absolute;top:6px;right:10px;background:transparent;border:0;color:#666;font-size:20px;cursor:pointer;line-height:1;';
-      close.onclick = () => toast.remove();
-      toast.appendChild(close);
-      document.body.appendChild(toast);
-      setTimeout(() => { if (toast.parentNode) toast.remove(); }, 15000);
+      const widget = document.getElementById('jessica-widget');
+      widget.classList.remove('minimized');
+
+      // Build a focused prompt Jessica will receive as if the user just asked
+      const prompt = `The user is working on the "${ctx.name}" section of their AI voice agent setup. This section asks for ${ctx.field}. ${ctx.nudge} Keep your response concise and conversational — 2-3 sentences max unless they ask for more.`;
+
+      // Try to send to Jessica via LiveAvatar event
+      const sent = typeof window.askJessica === 'function' ? await window.askJessica(prompt) : false;
+
+      if (sent) {
+        // Visual confirmation — briefly flash the button
+        const orig = this.innerHTML;
+        this.innerHTML = '💬 Asking...';
+        setTimeout(() => { this.innerHTML = orig; }, 1500);
+      } else {
+        // Fallback: Jessica isn't connected yet — show tooltip telling user to start her
+        const existing = document.getElementById('jessica-toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.id = 'jessica-toast';
+        toast.innerHTML = '<strong style="color:#00d4ff">Start Jessica first</strong><br>Click "Start chat with Jessica" on the widget, then try asking again.';
+        toast.style.cssText = 'position:fixed;bottom:460px;right:20px;width:320px;background:#111;border:1px solid rgba(0,212,255,0.3);color:#bbb;padding:1rem 1.25rem;border-radius:12px;font-size:0.88rem;line-height:1.6;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9998;';
+        const close = document.createElement('button');
+        close.textContent = '×';
+        close.style.cssText = 'position:absolute;top:6px;right:10px;background:transparent;border:0;color:#666;font-size:20px;cursor:pointer;line-height:1;';
+        close.onclick = () => toast.remove();
+        toast.appendChild(close);
+        document.body.appendChild(toast);
+        setTimeout(() => { if (toast.parentNode) toast.remove(); }, 8000);
+      }
     });
   });
 
