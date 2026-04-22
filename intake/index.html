@@ -171,20 +171,12 @@
       font-size: 28px;
       background: var(--gradient-accent);
     }
-    .jv-container { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 25%, rgba(0, 212, 255, 0.25) 0%, transparent 55%),
-        linear-gradient(160deg, #021a28 0%, #041828 40%, #02111a 100%);
-    }
-    .jv-container::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 30% 85%, rgba(0, 153, 255, 0.15) 0%, transparent 45%),
-        radial-gradient(circle at 70% 15%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
+    .jv-container {
+      width: 100%; height: 100%;
+      position: relative;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      background: #000;
     }
     #jessica-video { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 1; }
     #jessica-video.chroma-hidden { visibility: hidden; }
