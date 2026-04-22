@@ -846,17 +846,42 @@
           });
         }
 
+        // Trigger phrases that signal "please fill the field with what you just said"
+        // (Lowercased, punctuation-stripped comparison)
+        const TRIGGER_PHRASES = [
+          'fill it in', 'fill that in', 'fill in', 'fill it', 'fill the field', 'fill the box',
+          'write that for me', 'write that down', 'write it down', 'write that in', 'write it in',
+          'put that in', 'put that in the box', 'put that in the field', 'put it in the box', 'put it in',
+          'use that', 'use that one', 'yes use that', 'go with that', 'that works', 'that sounds good',
+          'yes do it', 'do it', 'yeah do it', 'okay do it', 'ok do it', 'yes please', 'yep do it',
+          'save that', 'save it', 'keep that', 'keep it',
+          'insert that', 'insert it', 'add that', 'add it', 'put it there',
+          'sounds good', 'perfect', 'great', 'that\'s perfect', 'that\'s great', 'love it',
+          'for me', 'can you fill it in', 'can you fill it', 'can you write that',
+          'she fills it', 'fill it for me',
+        ];
+
+        // Auto-fill mode: 'always' = fill every Jessica response into active field; 'trigger' = only on trigger phrase
+        const AUTOFILL_MODE = 'always';  // matches Matt's request "she fills it"
+        let pendingFill = false;  // set to true by user trigger phrase
+
         // Accumulate Jessica's current spoken response until avatar.speak_ended fires
         let currentResponse = '';
         let responseInProgress = false;
 
-        function flashField(el) {
+        // Undo stack: [{field, previousValue, insertedText}]
+        const undoStack = [];
+        const MAX_UNDO = 10;
+
+        function flashField(el, color) {
           if (!el) return;
+          const glow = color || 'rgba(0,212,255,0.25)';
+          const border = color ? color.replace('0.25', '0.7') : 'rgba(0,212,255,0.7)';
           const orig = el.style.boxShadow;
           const origBorder = el.style.borderColor;
           el.style.transition = 'box-shadow .3s ease, border-color .3s ease';
-          el.style.boxShadow = '0 0 0 4px rgba(0,212,255,0.25)';
-          el.style.borderColor = 'rgba(0,212,255,0.7)';
+          el.style.boxShadow = '0 0 0 4px ' + glow;
+          el.style.borderColor = border;
           setTimeout(() => { el.style.boxShadow = orig; el.style.borderColor = origBorder; }, 1200);
         }
 
@@ -865,6 +890,7 @@
           const field = lastFocusedField;
           const clean = text.trim();
           if (!clean) return;
+          const previousValue = field.value;
           // If empty, replace. If has content, append with a space/newline.
           if (!field.value.trim()) {
             field.value = clean;
@@ -872,11 +898,71 @@
             const sep = field.tagName === 'TEXTAREA' ? '\n\n' : ' ';
             field.value = field.value.trimEnd() + sep + clean;
           }
+          // Push to undo stack
+          undoStack.push({ field, previousValue, insertedText: clean, timestamp: Date.now() });
+          if (undoStack.length > MAX_UNDO) undoStack.shift();
           // Trigger change/input so auto-save + progress bar update
           field.dispatchEvent(new Event('input', { bubbles: true }));
           field.dispatchEvent(new Event('change', { bubbles: true }));
           flashField(field);
+          showUndoToast();
           log('filled field:', field.name, '←', clean.slice(0, 60) + (clean.length > 60 ? '…' : ''));
+        }
+
+        function undoLastFill() {
+          const last = undoStack.pop();
+          if (!last) return;
+          last.field.value = last.previousValue;
+          last.field.dispatchEvent(new Event('input', { bubbles: true }));
+          last.field.dispatchEvent(new Event('change', { bubbles: true }));
+          last.field.focus();
+          lastFocusedField = last.field;
+          flashField(last.field, 'rgba(255,77,109,0.25)');
+          log('undid fill on', last.field.name);
+        }
+
+        function showUndoToast() {
+          let toast = document.getElementById('jv-undo-toast');
+          if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'jv-undo-toast';
+            toast.style.cssText = 'position:fixed;bottom:460px;right:20px;background:#111;border:1px solid rgba(0,212,255,0.3);color:#bbb;padding:0.6rem 1rem;border-radius:10px;font-size:0.85rem;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9998;display:flex;align-items:center;gap:0.75rem;transition:opacity .2s;';
+            document.body.appendChild(toast);
+          }
+          toast.style.opacity = '1';
+          toast.innerHTML = '<span>✨ Filled by Jessica</span>';
+          const undoBtn = document.createElement('button');
+          undoBtn.textContent = 'Undo';
+          undoBtn.style.cssText = 'background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.4);color:#ff6b85;padding:0.3rem 0.75rem;border-radius:6px;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;';
+          undoBtn.onclick = () => { undoLastFill(); toast.style.opacity = '0'; };
+          const hint = document.createElement('span');
+          hint.textContent = 'or press Ctrl+Z';
+          hint.style.cssText = 'color:#666;font-size:0.75rem;';
+          toast.appendChild(undoBtn);
+          toast.appendChild(hint);
+          clearTimeout(toast._hideTimer);
+          toast._hideTimer = setTimeout(() => { toast.style.opacity = '0'; }, 8000);
+        }
+
+        // Global Ctrl/Cmd+Z handler — undo Jessica's last fill if cursor is in the filled field
+        document.addEventListener('keydown', (e) => {
+          const isUndo = (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z';
+          if (!isUndo) return;
+          if (undoStack.length === 0) return;
+          // Only intercept if the active field is the last-filled field (respect native undo elsewhere)
+          const last = undoStack[undoStack.length - 1];
+          if (document.activeElement === last.field) {
+            e.preventDefault();
+            undoLastFill();
+          }
+        });
+
+        function normalizePhrase(s) {
+          return s.toLowerCase().replace(/[^\w\s']/g, '').replace(/\s+/g, ' ').trim();
+        }
+        function userSaidTrigger(text) {
+          const norm = normalizePhrase(text);
+          return TRIGGER_PHRASES.some(p => norm.includes(normalizePhrase(p)));
         }
 
         // Listen for LiveAvatar response events (transcriptions, speak_ended)
@@ -885,19 +971,25 @@
           try {
             const txt = new TextDecoder().decode(payload);
             const evt = JSON.parse(txt);
-            log('event:', evt.event_type);
-            if (evt.event_type === 'avatar.speak_started') {
+            log('event:', evt.event_type, evt.text ? '— ' + evt.text.slice(0, 60) : '');
+            if (evt.event_type === 'user.transcription' && evt.text) {
+              if (userSaidTrigger(evt.text)) {
+                pendingFill = true;
+                log('🔥 trigger phrase detected');
+              }
+            } else if (evt.event_type === 'avatar.speak_started') {
               currentResponse = '';
               responseInProgress = true;
             } else if (evt.event_type === 'avatar.transcription') {
-              // Accumulate — transcription may come in pieces or as one chunk
               if (evt.text) currentResponse += (currentResponse ? ' ' : '') + evt.text;
             } else if (evt.event_type === 'avatar.speak_ended') {
               if (responseInProgress && currentResponse) {
-                fillActiveField(currentResponse);
+                const shouldFill = AUTOFILL_MODE === 'always' || pendingFill;
+                if (shouldFill) fillActiveField(currentResponse);
               }
               responseInProgress = false;
               currentResponse = '';
+              pendingFill = false;
             }
           } catch (err) {
             warn('DataReceived parse error:', err);
