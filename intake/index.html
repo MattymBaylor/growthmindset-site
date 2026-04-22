@@ -259,6 +259,52 @@
       0%, 100% { box-shadow: 0 4px 12px rgba(0,212,255,0.35); }
       50% { box-shadow: 0 4px 24px rgba(0,212,255,0.8); }
     }
+
+    /* Jessica transcript bubble — floats above the widget */
+    #jv-transcript {
+      position: fixed;
+      bottom: 460px; right: 20px;
+      width: 320px;
+      background: #0d1a22;
+      border: 1px solid rgba(0,212,255,0.3);
+      border-radius: 14px;
+      padding: 1rem 1.25rem 0.75rem;
+      color: #e6f4ff;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+      z-index: 9998;
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    #jv-transcript.visible { display: block; animation: slideUp .25s ease; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    #jv-transcript .jv-t-label {
+      font-size: 0.7rem; font-weight: 700; color: #00d4ff;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    #jv-transcript .jv-t-text { color: #e6f4ff; margin-bottom: 0.75rem; }
+    #jv-transcript .jv-t-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    #jv-transcript .jv-t-btn {
+      background: rgba(0,212,255,0.12);
+      border: 1px solid rgba(0,212,255,0.35);
+      color: #00d4ff;
+      font-family: inherit; font-weight: 600; font-size: 0.78rem;
+      padding: 0.35rem 0.75rem; border-radius: 8px; cursor: pointer;
+      transition: background .15s;
+    }
+    #jv-transcript .jv-t-btn:hover { background: rgba(0,212,255,0.25); }
+    #jv-transcript .jv-t-close {
+      position: absolute; top: 6px; right: 10px;
+      background: transparent; border: 0; color: #666;
+      font-size: 18px; cursor: pointer; line-height: 1;
+    }
+    #jv-transcript .jv-t-close:hover { color: #fff; }
+    @media (max-width: 480px) {
+      #jv-transcript { width: calc(100vw - 24px); right: 12px; bottom: calc(55vh + 20px); }
+    }
     .jv-mic-level {
       position: absolute; bottom: 66px; left: 50%; transform: translateX(-50%);
       width: 120px; height: 4px; border-radius: 2px;
@@ -620,6 +666,17 @@
   </div>
 </div>
 
+<!-- Jessica's transcript bubble — shows her last response above the widget -->
+<div id="jv-transcript">
+  <button class="jv-t-close" id="jv-t-close" title="Close">×</button>
+  <div class="jv-t-label">💬 Jessica said</div>
+  <div class="jv-t-text" id="jv-t-text"></div>
+  <div class="jv-t-actions">
+    <button class="jv-t-btn" id="jv-t-copy">📋 Copy</button>
+    <button class="jv-t-btn" id="jv-t-insert">⬇️ Insert into field</button>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/selfie_segmentation.js" crossorigin="anonymous"></script>
 <script>
@@ -956,19 +1013,27 @@
           }
         });
 
-        // 📋 Insert-last-response button — appears on widget after Jessica finishes speaking
+        // 📋 After Jessica finishes speaking: show insert button + transcript bubble
         function showInsertButton(text) {
           const btn = document.getElementById('jv-insert-btn');
-          if (!btn) return;
-          btn.dataset.text = text;
-          btn.style.display = 'flex';
-          btn.classList.add('pulse');
-          clearTimeout(btn._hideTimer);
-          // Hide after 2 minutes of inactivity
-          btn._hideTimer = setTimeout(() => {
-            btn.style.display = 'none';
-            btn.classList.remove('pulse');
-          }, 120000);
+          if (btn) {
+            btn.dataset.text = text;
+            btn.style.display = 'flex';
+            btn.classList.add('pulse');
+            clearTimeout(btn._hideTimer);
+            btn._hideTimer = setTimeout(() => {
+              btn.style.display = 'none';
+              btn.classList.remove('pulse');
+            }, 120000);
+          }
+          // Also populate the transcript bubble above her
+          const bubble = document.getElementById('jv-transcript');
+          const textEl = document.getElementById('jv-t-text');
+          if (bubble && textEl) {
+            textEl.textContent = text;
+            bubble.dataset.text = text;
+            bubble.classList.add('visible');
+          }
         }
 
         // Listen for LiveAvatar response events (transcriptions, speak_ended)
@@ -1075,7 +1140,7 @@
       } catch (e) { warn('mic toggle error:', e); }
     });
 
-    // Insert button: drops Jessica's last response into the active field
+    // Insert button (on widget): drops Jessica's last response into the active field
     const insertBtn = document.getElementById('jv-insert-btn');
     if (insertBtn) {
       insertBtn.addEventListener('click', (e) => {
@@ -1083,7 +1148,6 @@
         const text = insertBtn.dataset.text;
         if (!text) return;
         if (!lastFocusedField) {
-          // Nothing focused — briefly nudge: attach a one-time hint
           insertBtn.textContent = 'Click a field first';
           setTimeout(() => { insertBtn.innerHTML = '📋 Insert into field'; }, 1800);
           return;
@@ -1092,6 +1156,51 @@
         insertBtn.style.display = 'none';
         insertBtn.classList.remove('pulse');
         clearTimeout(insertBtn._hideTimer);
+      });
+    }
+
+    // Transcript bubble actions: Copy, Insert, Close
+    const bubble = document.getElementById('jv-transcript');
+    const tCopy = document.getElementById('jv-t-copy');
+    const tInsert = document.getElementById('jv-t-insert');
+    const tClose = document.getElementById('jv-t-close');
+    if (tCopy) {
+      tCopy.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const text = bubble.dataset.text || '';
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+          tCopy.textContent = '✓ Copied!';
+          setTimeout(() => { tCopy.innerHTML = '📋 Copy'; }, 1800);
+        } catch (err) {
+          // Fallback for older browsers
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+          tCopy.textContent = '✓ Copied!';
+          setTimeout(() => { tCopy.innerHTML = '📋 Copy'; }, 1800);
+        }
+      });
+    }
+    if (tInsert) {
+      tInsert.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = bubble.dataset.text || '';
+        if (!text) return;
+        if (!lastFocusedField) {
+          tInsert.textContent = 'Click a field first';
+          setTimeout(() => { tInsert.innerHTML = '⬇️ Insert into field'; }, 1800);
+          return;
+        }
+        fillActiveField(text);
+        bubble.classList.remove('visible');
+      });
+    }
+    if (tClose) {
+      tClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        bubble.classList.remove('visible');
       });
     }
 
