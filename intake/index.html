@@ -180,7 +180,21 @@
       pointer-events: none;
       z-index: 0;
     }
-    #jessica-video { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 1; }
+    #jessica-video { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 1; }
+    #jessica-video.chroma-hidden { visibility: hidden; }
+    #jessica-canvas {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      position: absolute; inset: 0;
+      z-index: 2;
+      display: none;
+      /* Custom background — swap to change what's behind Jessica:
+         solid:    background: #0a0a0a;
+         gradient: background: linear-gradient(160deg, #001420 0%, #002840 100%);
+         image:    background: url('/my-bg.jpg') center/cover; */
+      background: transparent;  /* lets the widget's own gradient show through */
+    }
+    #jessica-canvas.active { display: block; }
     .jv-status {
       position: absolute; top: 12px; left: 12px;
       display: flex; align-items: center; gap: 6px;
@@ -577,6 +591,7 @@
   <button id="jessica-toggle" aria-label="Minimize Jessica" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
   <div class="jv-container">
     <video id="jessica-video" autoplay playsinline muted></video>
+    <canvas id="jessica-canvas"></canvas>
     <div class="jv-status" id="jv-status"><span class="jv-dot"></span><span id="jv-status-text">Ready</span></div>
     <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
     <div class="jv-mic-level" id="jv-mic-level"><div class="jv-mic-level-fill" id="jv-mic-level-fill"></div></div>
@@ -589,6 +604,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/selfie_segmentation.js" crossorigin="anonymous"></script>
 <script>
   (function() {
     const statusEl = document.getElementById('jv-status');
@@ -687,6 +703,65 @@
       track.attach(video);
       // Force play — autoplay policy can block even on muted video in some browsers
       await tryPlay(video, 'video');
+      // Kick off chroma-key segmentation (silently fails back to raw video if unavailable)
+      startChromaKey().catch(e => warn('chroma-key disabled:', e));
+    }
+
+    // ---- Chroma-key (MediaPipe Selfie Segmentation) ---------------------------------
+    const canvas = document.getElementById('jessica-canvas');
+    let segRunning = false;
+    async function startChromaKey() {
+      if (segRunning) return;
+      if (!window.SelfieSegmentation) { warn('SelfieSegmentation global missing'); return; }
+      if (video.readyState < 2) {
+        await new Promise(r => video.addEventListener('loadeddata', r, { once: true }));
+      }
+      const cctx = canvas.getContext('2d');
+      // Downsample to keep perf snappy — widget is 320×420, so 256-wide output is plenty
+      const targetW = 256;
+      const sizeCanvas = () => {
+        const vw = video.videoWidth || 640;
+        const vh = video.videoHeight || 480;
+        const scale = targetW / vw;
+        canvas.width = targetW;
+        canvas.height = Math.round(vh * scale);
+      };
+      sizeCanvas();
+      video.addEventListener('resize', sizeCanvas);
+
+      const seg = new window.SelfieSegmentation({
+        locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/${f}`,
+      });
+      seg.setOptions({ modelSelection: 1, selfieMode: false });
+      seg.onResults((results) => {
+        const w = canvas.width, h = canvas.height;
+        cctx.save();
+        cctx.clearRect(0, 0, w, h);
+        // Mask first, then composite the person into the mask shape
+        cctx.drawImage(results.segmentationMask, 0, 0, w, h);
+        cctx.globalCompositeOperation = 'source-in';
+        cctx.drawImage(results.image, 0, 0, w, h);
+        cctx.restore();
+      });
+      await seg.initialize();
+      log('chroma-key initialized');
+
+      segRunning = true;
+      canvas.classList.add('active');
+      video.classList.add('chroma-hidden');
+
+      // Frame loop — throttle to ~24fps to save CPU
+      let last = 0;
+      async function loop(ts) {
+        if (!segRunning) return;
+        if (ts - last > 41 && video.readyState >= 2) {
+          last = ts;
+          try { await seg.send({ image: video }); }
+          catch (e) { warn('seg frame error:', e); }
+        }
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
     }
 
     async function attachAudio(track) {
