@@ -163,8 +163,7 @@
       width: 64px; height: 64px; border-radius: 50%; cursor: pointer;
       box-shadow: 0 8px 24px rgba(0,212,255,0.35);
     }
-    #jessica-widget.minimized .jv-container,
-    #jessica-widget.minimized iframe { display: none; }
+    #jessica-widget.minimized .jv-container { display: none; }
     #jessica-widget.minimized::before {
       content: '💬';
       position: absolute; inset: 0;
@@ -228,6 +227,14 @@
     }
     .jv-mic-btn.muted { background: rgba(255,77,109,0.2); border-color: #ff4d6d; }
     .jv-mic-btn:hover { transform: translateX(-50%) scale(1.05); }
+    .jv-unmute-btn {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.85); border: 1px solid rgba(0,212,255,0.5);
+      color: #fff; cursor: pointer; padding: 0.6rem 1rem; border-radius: 8px;
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      z-index: 4;
+    }
+    .jv-unmute-btn:hover { background: rgba(0,0,0,0.95); border-color: var(--accent); }
     #jessica-toggle {
       position: absolute; top: 8px; right: 8px;
       width: 28px; height: 28px; border-radius: 50%;
@@ -551,19 +558,214 @@
 </footer>
 
 <!-- Jessica avatar widget (LiveAvatar SDK) -->
-<!-- Jessica avatar widget (iframe — reliable campaign version; SDK version parked for next sprint) -->
 <div id="jessica-widget" aria-label="Chat with Jessica">
   <button id="jessica-toggle" aria-label="Minimize Jessica" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
-  <iframe
-    src="https://embed.liveavatar.com/v1/bb840425-f5d0-4137-aaa0-d2a3eadc9396"
-    allow="microphone; camera; autoplay; speaker-selection"
-    allowfullscreen
-    loading="eager"
-    referrerpolicy="strict-origin-when-cross-origin"
-    title="Jessica - AI Assistant"
-    style="width:100%;height:100%;border:0;display:block;">
-  </iframe>
+  <div class="jv-container">
+    <video id="jessica-video" autoplay playsinline muted></video>
+    <div class="jv-status" id="jv-status"><span class="jv-dot"></span><span id="jv-status-text">Ready</span></div>
+    <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
+    <button class="jv-unmute-btn" id="jv-unmute-btn" title="Unmute Jessica" style="display:none">🔊 Tap for sound</button>
+    <div class="jv-start" id="jv-start">
+      <div class="jv-start-label">Hi! I'm Jessica, your AI host. Tap to start our chat.</div>
+      <button class="jv-start-btn" id="jv-start-btn">Start chat with Jessica</button>
+    </div>
+  </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
+<script>
+  (function() {
+    const statusEl = document.getElementById('jv-status');
+    const statusText = document.getElementById('jv-status-text');
+    const video = document.getElementById('jessica-video');
+    const startOverlay = document.getElementById('jv-start');
+    const startBtn = document.getElementById('jv-start-btn');
+    const micBtn = document.getElementById('jv-mic-btn');
+    const unmuteBtn = document.getElementById('jv-unmute-btn');
+
+    let room = null;
+    let micEnabled = true;
+    let audioElements = [];
+
+    function log(...args) { console.log('[Jessica]', ...args); }
+    function warn(...args) { console.warn('[Jessica]', ...args); }
+    function err(...args) { console.error('[Jessica]', ...args); }
+
+    function setStatus(state, text) {
+      statusEl.className = 'jv-status ' + state;
+      statusText.textContent = text;
+      log('status →', state, '—', text);
+    }
+
+    async function tryPlay(el, label) {
+      try {
+        await el.play();
+        log(label, 'play() ok');
+        return true;
+      } catch (e) {
+        warn(label, 'play() rejected:', e.name, e.message);
+        return false;
+      }
+    }
+
+    function showUnmuteButton() {
+      unmuteBtn.style.display = 'block';
+    }
+
+    async function attachVideo(track) {
+      track.attach(video);
+      // Force play — autoplay policy can block even on muted video in some browsers
+      await tryPlay(video, 'video');
+    }
+
+    async function attachAudio(track) {
+      const audioEl = document.createElement('audio');
+      audioEl.autoplay = true;
+      audioEl.playsInline = true;
+      audioEl.style.display = 'none';
+      document.body.appendChild(audioEl);
+      track.attach(audioEl);
+      audioElements.push(audioEl);
+      const ok = await tryPlay(audioEl, 'audio');
+      if (!ok) {
+        // Autoplay blocked — show unmute button for user gesture
+        showUnmuteButton();
+      }
+    }
+
+    async function startSession() {
+      startOverlay.classList.add('hidden');
+      setStatus('connecting', 'Connecting...');
+
+      const Livekit = window.LivekitClient || window.LiveKit || window.livekitClient;
+      if (!Livekit) {
+        err('LiveKit SDK global missing. window keys:', Object.keys(window).filter(k => /livekit/i.test(k)));
+        setStatus('error', 'LiveKit SDK failed to load');
+        startOverlay.classList.remove('hidden');
+        return;
+      }
+      log('LiveKit SDK loaded, version:', Livekit.version || 'unknown');
+
+      try {
+        // 1. Get session creds from our Vercel Function
+        log('fetching token...');
+        const tokenRes = await fetch('/api/liveavatar-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}),
+        });
+        if (!tokenRes.ok) {
+          const errText = await tokenRes.text().catch(() => '');
+          throw new Error('Token fetch ' + tokenRes.status + ': ' + errText.slice(0, 200));
+        }
+        const creds = await tokenRes.json();
+        log('got creds — url:', creds.livekit_url, 'hasToken:', !!creds.livekit_client_token);
+
+        // 2. Create room. adaptiveStream: false — widget is always-visible, don't pause.
+        room = new Livekit.Room({
+          adaptiveStream: false,
+          dynacast: true,
+        });
+
+        // Bind handlers BEFORE connect
+        room.on(Livekit.RoomEvent.TrackSubscribed, async (track, pub, participant) => {
+          log('TrackSubscribed:', track.kind, 'from', participant.identity);
+          try {
+            if (track.kind === 'video') await attachVideo(track);
+            else if (track.kind === 'audio') await attachAudio(track);
+          } catch (e) { err('attach error:', e); }
+        });
+
+        room.on(Livekit.RoomEvent.TrackUnsubscribed, (track) => {
+          log('TrackUnsubscribed:', track.kind);
+          track.detach().forEach(el => el.remove());
+        });
+
+        room.on(Livekit.RoomEvent.ParticipantConnected, (p) => log('ParticipantConnected:', p.identity));
+        room.on(Livekit.RoomEvent.ParticipantDisconnected, (p) => log('ParticipantDisconnected:', p.identity));
+        room.on(Livekit.RoomEvent.ConnectionStateChanged, (s) => log('ConnectionState:', s));
+        room.on(Livekit.RoomEvent.MediaDevicesError, (e) => warn('MediaDevicesError:', e));
+        room.on(Livekit.RoomEvent.SignalConnected, () => log('SignalConnected'));
+
+        room.on(Livekit.RoomEvent.ActiveSpeakersChanged, (speakers) => {
+          if (!room || !room.localParticipant) return;
+          const remoteSpeaking = speakers.some(s => s.identity !== room.localParticipant.identity);
+          if (remoteSpeaking) setStatus('speaking', 'Jessica is speaking');
+          else setStatus('listening', 'Listening');
+        });
+
+        room.on(Livekit.RoomEvent.Disconnected, (reason) => {
+          warn('Disconnected, reason:', reason);
+          setStatus('error', 'Disconnected');
+          startOverlay.classList.remove('hidden');
+          micBtn.style.display = 'none';
+          unmuteBtn.style.display = 'none';
+        });
+
+        // 3. Connect — publishes nothing, just joins the room and subscribes
+        log('connecting to', creds.livekit_url);
+        await room.connect(creds.livekit_url, creds.livekit_client_token, { autoSubscribe: true });
+        log('connected. remoteParticipants:', room.remoteParticipants.size);
+        setStatus('listening', 'Connected — waiting for Jessica');
+
+        // Catch up on tracks that were already published (in case we missed the event)
+        room.remoteParticipants.forEach((p) => {
+          log('existing participant:', p.identity, 'pubs:', p.trackPublications.size);
+          p.trackPublications.forEach((pub) => {
+            if (pub.track) {
+              log('catch-up attach:', pub.track.kind);
+              if (pub.track.kind === 'video') attachVideo(pub.track);
+              else if (pub.track.kind === 'audio') attachAudio(pub.track);
+            }
+          });
+        });
+
+        // 4. Enable mic in the background — never block status transitions
+        room.localParticipant.setMicrophoneEnabled(true).then(() => {
+          log('mic enabled');
+          micBtn.style.display = 'flex';
+        }).catch((micErr) => {
+          warn('mic error:', micErr);
+          micEnabled = false;
+          micBtn.style.display = 'flex';
+          micBtn.classList.add('muted');
+          micBtn.textContent = '🔇';
+          const m = micErr.message || '';
+          if (/permission|denied|not allowed/i.test(m)) setStatus('error', 'Mic blocked 🔒');
+          else if (/not found|no.*device/i.test(m)) setStatus('listening', 'Connected (no mic)');
+        });
+
+      } catch (e) {
+        err('session error:', e);
+        setStatus('error', (e.message || 'connection failed').slice(0, 80));
+        startOverlay.classList.remove('hidden');
+      }
+    }
+
+    startBtn.addEventListener('click', startSession);
+
+    unmuteBtn.addEventListener('click', async () => {
+      unmuteBtn.style.display = 'none';
+      for (const el of audioElements) await tryPlay(el, 'audio-unmute');
+      video.muted = false;
+      await tryPlay(video, 'video-unmute');
+    });
+
+    micBtn.addEventListener('click', async () => {
+      if (!room) return;
+      try {
+        micEnabled = !micEnabled;
+        await room.localParticipant.setMicrophoneEnabled(micEnabled);
+        micBtn.classList.toggle('muted', !micEnabled);
+        micBtn.textContent = micEnabled ? '🎤' : '🔇';
+      } catch (e) { warn('mic toggle error:', e); }
+    });
+
+    window.addEventListener('beforeunload', () => {
+      if (room) room.disconnect();
+    });
+  })();
+</script>
 
 <script>
   // Expand Jessica when clicked while minimized
