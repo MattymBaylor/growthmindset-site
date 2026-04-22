@@ -28,6 +28,8 @@ export default async function handler(req, res) {
       voice_id: body.voice_id || '864a26b8-bfba-4435-9cc5-1dd593de5ca7',  // The real British lady Matt loved
       context_id: body.context_id || '34878300-8406-4e32-8176-1ec1ef44aceb',
       language: body.language || 'en',
+      // 🔒 Lock STT to English so Jessica doesn't code-switch to French/Spanish mid-session
+      stt_config: body.stt_config || { provider: 'deepgram', language: 'en', model: 'nova-2' },
     },
     video_settings: {
       quality: body.quality || 'very_high',  // 1080p max

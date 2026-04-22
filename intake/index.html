@@ -1327,7 +1327,8 @@
       const widget = document.getElementById('jessica-widget');
       widget.classList.remove('minimized');
 
-      const prompt = `Respond in English. I need help with the "${ctx.name}" section — the one that asks for ${ctx.field}. ${ctx.nudge} If drafting text, put the suggested answer in quotes like "this is the answer" so I can easily copy it. Keep your reply short — 2-3 sentences max.`;
+      // Strong English-only instruction + quote-wrapping so the answer extractor can isolate it
+      const prompt = `[ALWAYS REPLY IN ENGLISH ONLY — NEVER FRENCH, SPANISH, OR ANY OTHER LANGUAGE.] I need help with the "${ctx.name}" section — the one that asks for ${ctx.field}. ${ctx.nudge} If you are drafting text for the form, WRAP THE DRAFT IN DOUBLE QUOTES like "this is the answer" so it can be copied cleanly. Keep your reply short — 2-3 sentences in English.`;
 
       const origLabel = this.innerHTML;
       const setLabel = (t) => { this.innerHTML = t; };
