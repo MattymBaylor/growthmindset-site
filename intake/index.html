@@ -664,7 +664,6 @@
     <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
     <div class="jv-mic-level" id="jv-mic-level"><div class="jv-mic-level-fill" id="jv-mic-level-fill"></div></div>
     <button class="jv-unmute-btn" id="jv-unmute-btn" title="Unmute Jessica" style="display:none">🔊 Tap for sound</button>
-    <button class="jv-insert-btn" id="jv-insert-btn" title="Insert Jessica's last response into the focused field" style="display:none">📋 Insert into field</button>
     <div class="jv-start" id="jv-start">
       <div class="jv-start-label">Hi! I'm Jessica, your AI host. Tap to start our chat.</div>
       <button class="jv-start-btn" id="jv-start-btn">Start chat with Jessica</button>
@@ -782,50 +781,40 @@
       document.querySelectorAll('.jv-field-chip').forEach(c => c.remove());
     }
 
-    function addFieldChips(text) {
-      removeFieldChips();
-      const form = document.getElementById('intakeForm');
-      if (!form) return;
-      const fields = form.querySelectorAll('textarea, input[type="text"], input[type="email"], input[type="tel"]');
-      fields.forEach(field => {
-        const label = field.closest('.field')?.querySelector('label');
-        if (!label) return;
-        const chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'jv-field-chip';
-        chip.innerHTML = '⬇️ Insert';
-        chip.title = "Insert Jessica's last answer into this field";
-        chip.style.cssText = 'margin-left:0.75rem;background:linear-gradient(135deg,#00d4ff,#0099ff);color:#000;border:0;font-family:inherit;font-weight:700;font-size:0.7rem;padding:0.2rem 0.55rem;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;gap:0.25rem;box-shadow:0 2px 6px rgba(0,212,255,0.35);vertical-align:middle;';
-        chip.onclick = (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          fillActiveField(text, field);  // explicit target — no focus-tracking needed
-          removeFieldChips();
-        };
-        label.appendChild(chip);
-      });
+    function addFieldChips() { /* disabled — transcript bubble is the single insert path */ }
+
+    // Extract the part of Jessica's response meant for the field.
+    //   Priority: (1) quoted text, (2) text after "here's a draft:" style cues, (3) full text.
+    function extractAnswer(text) {
+      if (!text) return '';
+      const patterns = [
+        /“([^”]{10,})”/,
+        /"([^"]{10,})"/,
+        /‘([^’]{10,})’/,
+        /'([^']{10,})'/
+      ];
+      for (const re of patterns) {
+        const m = text.match(re);
+        if (m) return m[1].trim();
+      }
+      const cueRe = /(?:here'?s?(?:\s+a)?\s+(?:quick\s+)?(?:draft|answer|suggestion|copy|version|example|summary|one)[:\s]+|here\s+it\s+is[:\s]+|here\s+you\s+go[:\s]+|try\s+this[:\s]+|you\s+could\s+(?:say|write|use)[:\s]+|i(?:'d)?\s+suggest[:\s]+)([\s\S]+?)(?:\s+(?:feel\s+free|let\s+me\s+know|would\s+you|does\s+that|hope\s+that|tweak|adjust|edit|shall\s+we|ready\s+to|move\s+on)[^.!?]*[.?!]?\s*$|$)/i;
+      const cm = text.match(cueRe);
+      if (cm && cm[1].trim().length > 10) {
+        return cm[1].trim().replace(/^["“‘']+|["”’']+$/g, '').trim();
+      }
+      return text.trim();
     }
 
     function showInsertButton(text) {
-      const btn = document.getElementById('jv-insert-btn');
-      if (btn) {
-        btn.dataset.text = text;
-        btn.style.display = 'flex';
-        btn.classList.add('pulse');
-        clearTimeout(btn._hideTimer);
-        btn._hideTimer = setTimeout(() => {
-          btn.style.display = 'none';
-          btn.classList.remove('pulse');
-        }, 120000);
-      }
+      const answer = extractAnswer(text);
       const bubble = document.getElementById('jv-transcript');
       const textEl = document.getElementById('jv-t-text');
       if (bubble && textEl) {
-        textEl.textContent = text;
-        bubble.dataset.text = text;
+        textEl.textContent = answer;
+        bubble.dataset.text = answer;
+        bubble.dataset.fullText = text;
         bubble.classList.add('visible');
       }
-      addFieldChips(text);
     }
 
     // Track focused form fields
@@ -1185,6 +1174,10 @@
 
     startBtn.addEventListener('click', startSession);
 
+    // Expose for help buttons to auto-start Jessica
+    window.__jessicaStart = () => startSession();
+    window.__jessicaIsReady = () => !!(room && room.state === 'connected' && typeof window.askJessica === 'function');
+
     unmuteBtn.addEventListener('click', async () => {
       unmuteBtn.style.display = 'none';
       for (const el of audioElements) await tryPlay(el, 'audio-unmute');
@@ -1201,25 +1194,6 @@
         micBtn.textContent = micEnabled ? '🎤' : '🔇';
       } catch (e) { warn('mic toggle error:', e); }
     });
-
-    // Insert button (on widget): drops Jessica's last response into the active field
-    const insertBtn = document.getElementById('jv-insert-btn');
-    if (insertBtn) {
-      insertBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const text = insertBtn.dataset.text;
-        if (!text) return;
-        if (!lastFocusedField) {
-          insertBtn.textContent = 'Click a field first';
-          setTimeout(() => { insertBtn.innerHTML = '📋 Insert into field'; }, 1800);
-          return;
-        }
-        fillActiveField(text);
-        insertBtn.style.display = 'none';
-        insertBtn.classList.remove('pulse');
-        clearTimeout(insertBtn._hideTimer);
-      });
-    }
 
     // Transcript bubble actions: Copy, Insert, Close
     const bubble = document.getElementById('jv-transcript');
@@ -1333,7 +1307,16 @@
     }
   };
 
-  // Help buttons — NOW actually talk to Jessica with section context
+  // Help buttons — talk to Jessica with section context. Auto-starts her if not already running.
+  async function waitForJessica(timeoutMs = 25000) {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      if (typeof window.__jessicaIsReady === 'function' && window.__jessicaIsReady()) return true;
+      await new Promise(r => setTimeout(r, 300));
+    }
+    return false;
+  }
+
   document.querySelectorAll('.help-btn').forEach(btn => {
     btn.addEventListener('click', async function(e) {
       e.preventDefault();
@@ -1341,38 +1324,31 @@
       const ctx = SECTION_CONTEXT[key];
       if (!ctx) return;
 
-      // Pop Jessica open if minimized
       const widget = document.getElementById('jessica-widget');
       widget.classList.remove('minimized');
 
-      // Build a focused prompt Jessica will receive as if the user just asked.
-      // Phrased as a direct request from "me" (the user) — keeps her in English & in character.
-      const prompt = `Respond in English. I need help with the "${ctx.name}" section — the one that asks for ${ctx.field}. ${ctx.nudge} Keep your answer short, conversational, and in English — 2-3 sentences max.`;
+      const prompt = `Respond in English. I need help with the "${ctx.name}" section — the one that asks for ${ctx.field}. ${ctx.nudge} If drafting text, put the suggested answer in quotes like "this is the answer" so I can easily copy it. Keep your reply short — 2-3 sentences max.`;
 
-      // Try to send to Jessica via LiveAvatar event
-      const sent = typeof window.askJessica === 'function' ? await window.askJessica(prompt) : false;
+      const origLabel = this.innerHTML;
+      const setLabel = (t) => { this.innerHTML = t; };
 
-      if (sent) {
-        // Visual confirmation — briefly flash the button
-        const orig = this.innerHTML;
-        this.innerHTML = '💬 Asking...';
-        setTimeout(() => { this.innerHTML = orig; }, 1500);
-      } else {
-        // Fallback: Jessica isn't connected yet — show tooltip telling user to start her
-        const existing = document.getElementById('jessica-toast');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.id = 'jessica-toast';
-        toast.innerHTML = '<strong style="color:#00d4ff">Start Jessica first</strong><br>Click "Start chat with Jessica" on the widget, then try asking again.';
-        toast.style.cssText = 'position:fixed;bottom:460px;right:20px;width:320px;background:#111;border:1px solid rgba(0,212,255,0.3);color:#bbb;padding:1rem 1.25rem;border-radius:12px;font-size:0.88rem;line-height:1.6;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9998;';
-        const close = document.createElement('button');
-        close.textContent = '×';
-        close.style.cssText = 'position:absolute;top:6px;right:10px;background:transparent;border:0;color:#666;font-size:20px;cursor:pointer;line-height:1;';
-        close.onclick = () => toast.remove();
-        toast.appendChild(close);
-        document.body.appendChild(toast);
-        setTimeout(() => { if (toast.parentNode) toast.remove(); }, 8000);
+      // Auto-start Jessica if she isn't running
+      if (!window.__jessicaIsReady || !window.__jessicaIsReady()) {
+        setLabel('🟠 Starting Jessica…');
+        if (typeof window.__jessicaStart === 'function') window.__jessicaStart();
+        const ready = await waitForJessica(25000);
+        if (!ready) {
+          setLabel('⚠️ Couldn’t start');
+          setTimeout(() => setLabel(origLabel), 3000);
+          return;
+        }
+        // Small grace period so the LLM/context is fully warm before the first prompt
+        await new Promise(r => setTimeout(r, 800));
       }
+
+      setLabel('💬 Asking…');
+      const sent = typeof window.askJessica === 'function' ? await window.askJessica(prompt) : false;
+      setTimeout(() => setLabel(origLabel), 1500);
     });
   });
 
