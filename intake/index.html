@@ -202,6 +202,7 @@
       background: #0a0a0a;
       cursor: pointer;
       transition: background 0.2s;
+      z-index: 5;   /* must sit above #jessica-video (z-index:1) or clicks never reach the start button */
     }
     .jv-start:hover { background: #111; }
     .jv-start-btn {
