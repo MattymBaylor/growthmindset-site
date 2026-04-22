@@ -833,6 +833,77 @@
         room.on(Livekit.RoomEvent.MediaDevicesError, (e) => warn('MediaDevicesError:', e));
         room.on(Livekit.RoomEvent.SignalConnected, () => log('SignalConnected'));
 
+        // 🪩 Auto-fill: track the last field user focused inside the form
+        let lastFocusedField = null;
+        const intakeForm = document.getElementById('intakeForm');
+        if (intakeForm) {
+          intakeForm.addEventListener('focusin', (e) => {
+            const el = e.target;
+            if (el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && ['text','email','tel'].includes(el.type)))) {
+              lastFocusedField = el;
+              log('tracked focus:', el.name || '(unnamed)');
+            }
+          });
+        }
+
+        // Accumulate Jessica's current spoken response until avatar.speak_ended fires
+        let currentResponse = '';
+        let responseInProgress = false;
+
+        function flashField(el) {
+          if (!el) return;
+          const orig = el.style.boxShadow;
+          const origBorder = el.style.borderColor;
+          el.style.transition = 'box-shadow .3s ease, border-color .3s ease';
+          el.style.boxShadow = '0 0 0 4px rgba(0,212,255,0.25)';
+          el.style.borderColor = 'rgba(0,212,255,0.7)';
+          setTimeout(() => { el.style.boxShadow = orig; el.style.borderColor = origBorder; }, 1200);
+        }
+
+        function fillActiveField(text) {
+          if (!lastFocusedField || !text) return;
+          const field = lastFocusedField;
+          const clean = text.trim();
+          if (!clean) return;
+          // If empty, replace. If has content, append with a space/newline.
+          if (!field.value.trim()) {
+            field.value = clean;
+          } else {
+            const sep = field.tagName === 'TEXTAREA' ? '\n\n' : ' ';
+            field.value = field.value.trimEnd() + sep + clean;
+          }
+          // Trigger change/input so auto-save + progress bar update
+          field.dispatchEvent(new Event('input', { bubbles: true }));
+          field.dispatchEvent(new Event('change', { bubbles: true }));
+          flashField(field);
+          log('filled field:', field.name, '←', clean.slice(0, 60) + (clean.length > 60 ? '…' : ''));
+        }
+
+        // Listen for LiveAvatar response events (transcriptions, speak_ended)
+        room.on(Livekit.RoomEvent.DataReceived, (payload, participant, kind, topic) => {
+          if (topic !== 'agent-response') return;
+          try {
+            const txt = new TextDecoder().decode(payload);
+            const evt = JSON.parse(txt);
+            log('event:', evt.event_type);
+            if (evt.event_type === 'avatar.speak_started') {
+              currentResponse = '';
+              responseInProgress = true;
+            } else if (evt.event_type === 'avatar.transcription') {
+              // Accumulate — transcription may come in pieces or as one chunk
+              if (evt.text) currentResponse += (currentResponse ? ' ' : '') + evt.text;
+            } else if (evt.event_type === 'avatar.speak_ended') {
+              if (responseInProgress && currentResponse) {
+                fillActiveField(currentResponse);
+              }
+              responseInProgress = false;
+              currentResponse = '';
+            }
+          } catch (err) {
+            warn('DataReceived parse error:', err);
+          }
+        });
+
         room.on(Livekit.RoomEvent.ActiveSpeakersChanged, (speakers) => {
           if (!room || !room.localParticipant) return;
           const remoteSpeaking = speakers.some(s => s.identity !== room.localParticipant.identity);
