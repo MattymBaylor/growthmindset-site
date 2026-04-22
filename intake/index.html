@@ -862,7 +862,7 @@
         ];
 
         // Auto-fill mode: 'always' = fill every Jessica response into active field; 'trigger' = only on trigger phrase
-        const AUTOFILL_MODE = 'always';  // matches Matt's request "she fills it"
+        const AUTOFILL_MODE = 'trigger';  // only fills when user says a trigger phrase
         let pendingFill = false;  // set to true by user trigger phrase
 
         // Accumulate Jessica's current spoken response until avatar.speak_ended fires
