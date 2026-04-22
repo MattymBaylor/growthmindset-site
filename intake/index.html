@@ -1422,6 +1422,7 @@
 
   // LocalStorage auto-save
   const STORAGE_KEY = 'gm_intake_draft_v1';
+  const PROFILE_KEY = 'gm_intake_profile_v1';  // sticky across sessions: user identity fields
   function collect() {
     const data = {};
     new FormData(form).forEach((v, k) => {
@@ -1462,11 +1463,87 @@
       updateProgress();
     } catch (e) {}
   }
+  // 🪩 Pre-fill from URL query params first (highest priority), then profile, then draft.
+  // Examples:
+  //   /intake/?first_name=Matt&last_name=Martelli&business_name=Growth+Mindset+AI&email=matt@growthmindset.ai
+  //   /intake/?service_type=Roofing&service_area=Greater+Cleveland
+  function prefillFromUrl() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (!params.toString()) return 0;
+      let count = 0;
+      params.forEach((value, key) => {
+        // Normalize: accept snake_case, camelCase, kebab-case
+        const normKey = key.replace(/-/g, '_').replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
+        const el = form.querySelector(`[name="${normKey}"], [name="${key}"]`);
+        if (!el) return;
+        if (el.type === 'radio') {
+          form.querySelectorAll(`[name="${el.name}"]`).forEach(r => {
+            if (r.value.toLowerCase() === value.toLowerCase()) r.checked = true;
+          });
+          count++;
+        } else if (el.type === 'checkbox') {
+          // Comma-separated values for checkboxes: ?call_types=booking,faqs
+          const values = value.split(',').map(v => v.trim().toLowerCase());
+          form.querySelectorAll(`[name="${el.name}"]`).forEach(c => {
+            if (values.some(v => c.value.toLowerCase().includes(v))) c.checked = true;
+          });
+          count++;
+        } else {
+          el.value = value;
+          count++;
+        }
+      });
+      return count;
+    } catch (e) { return 0; }
+  }
+
+  // Profile pre-fill (identity fields that carry across sessions even after submit)
+  function restoreProfile() {
+    try {
+      const raw = localStorage.getItem(PROFILE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      Object.entries(data).forEach(([k, v]) => {
+        const el = form.querySelector(`[name="${k}"]`);
+        if (el && !el.value) el.value = v;  // don't overwrite if already set (URL params win)
+      });
+    } catch (e) {}
+  }
+
+  // Save profile fields (identity only — stays sticky across sessions)
+  const PROFILE_FIELDS = ['first_name', 'last_name', 'business_name', 'email', 'business_phone', 'mobile_phone'];
+  function saveProfile() {
+    try {
+      const data = {};
+      const fd = new FormData(form);
+      PROFILE_FIELDS.forEach(k => {
+        const v = fd.get(k);
+        if (v && String(v).trim()) data[k] = v;
+      });
+      if (Object.keys(data).length) {
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(data));
+      }
+    } catch (e) {}
+  }
+
+  // Apply prefills in priority order: URL > profile > draft
+  const urlFillCount = prefillFromUrl();
+  restoreProfile();
   restore();
+  if (urlFillCount > 0) {
+    updateProgress();
+    // Flash a small toast so the user knows something was pre-filled
+    const t = document.createElement('div');
+    t.textContent = `✨ ${urlFillCount} field${urlFillCount === 1 ? '' : 's'} pre-filled for you`;
+    t.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#0d1a22;border:1px solid rgba(0,212,255,0.4);color:#e6f4ff;padding:0.6rem 1.25rem;border-radius:100px;font-size:0.88rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9998;animation:fadeIn .3s ease;';
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.transition = 'opacity .3s'; t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 4000);
+  }
   let saveTimer;
-  form.addEventListener('input', () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 800); });
-  form.addEventListener('change', () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 800); });
-  document.getElementById('saveBtn').addEventListener('click', save);
+  form.addEventListener('input', () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => { save(); saveProfile(); }, 800); });
+  form.addEventListener('change', () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => { save(); saveProfile(); }, 800); });
+  document.getElementById('saveBtn').addEventListener('click', () => { save(); saveProfile(); });
 
   // Submit
   form.addEventListener('submit', async function(e) {
