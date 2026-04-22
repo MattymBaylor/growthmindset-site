@@ -243,6 +243,22 @@
     .jv-mic-btn.muted { background: rgba(255,77,109,0.2); border-color: #ff4d6d; }
     .jv-mic-btn:hover { transform: translateX(-50%) scale(1.05); }
     .jv-mic-btn.active { border-color: #20fc8f; box-shadow: 0 0 0 3px rgba(32,252,143,0.35); }
+    .jv-insert-btn {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #00d4ff, #0099ff);
+      color: #000; border: 0; font-weight: 700; font-size: 0.82rem;
+      padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,212,255,0.35);
+      font-family: inherit; z-index: 4; white-space: nowrap;
+      display: none; align-items: center; gap: 0.35rem;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .jv-insert-btn:hover { transform: translateX(-50%) scale(1.05); box-shadow: 0 6px 20px rgba(0,212,255,0.5); }
+    .jv-insert-btn.pulse { animation: insertPulse 2s ease-in-out 2; }
+    @keyframes insertPulse {
+      0%, 100% { box-shadow: 0 4px 12px rgba(0,212,255,0.35); }
+      50% { box-shadow: 0 4px 24px rgba(0,212,255,0.8); }
+    }
     .jv-mic-level {
       position: absolute; bottom: 66px; left: 50%; transform: translateX(-50%);
       width: 120px; height: 4px; border-radius: 2px;
@@ -596,6 +612,7 @@
     <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
     <div class="jv-mic-level" id="jv-mic-level"><div class="jv-mic-level-fill" id="jv-mic-level-fill"></div></div>
     <button class="jv-unmute-btn" id="jv-unmute-btn" title="Unmute Jessica" style="display:none">🔊 Tap for sound</button>
+    <button class="jv-insert-btn" id="jv-insert-btn" title="Insert Jessica's last response into the focused field" style="display:none">📋 Insert into field</button>
     <div class="jv-start" id="jv-start">
       <div class="jv-start-label">Hi! I'm Jessica, your AI host. Tap to start our chat.</div>
       <button class="jv-start-btn" id="jv-start-btn">Start chat with Jessica</button>
@@ -846,25 +863,6 @@
           });
         }
 
-        // Trigger phrases that signal "please fill the field with what you just said"
-        // (Lowercased, punctuation-stripped comparison)
-        const TRIGGER_PHRASES = [
-          'fill it in', 'fill that in', 'fill in', 'fill it', 'fill the field', 'fill the box',
-          'write that for me', 'write that down', 'write it down', 'write that in', 'write it in',
-          'put that in', 'put that in the box', 'put that in the field', 'put it in the box', 'put it in',
-          'use that', 'use that one', 'yes use that', 'go with that', 'that works', 'that sounds good',
-          'yes do it', 'do it', 'yeah do it', 'okay do it', 'ok do it', 'yes please', 'yep do it',
-          'save that', 'save it', 'keep that', 'keep it',
-          'insert that', 'insert it', 'add that', 'add it', 'put it there',
-          'sounds good', 'perfect', 'great', 'that\'s perfect', 'that\'s great', 'love it',
-          'for me', 'can you fill it in', 'can you fill it', 'can you write that',
-          'she fills it', 'fill it for me',
-        ];
-
-        // Auto-fill mode: 'always' = fill every Jessica response into active field; 'trigger' = only on trigger phrase
-        const AUTOFILL_MODE = 'trigger';  // only fills when user says a trigger phrase
-        let pendingFill = false;  // set to true by user trigger phrase
-
         // Accumulate Jessica's current spoken response until avatar.speak_ended fires
         let currentResponse = '';
         let responseInProgress = false;
@@ -958,12 +956,19 @@
           }
         });
 
-        function normalizePhrase(s) {
-          return s.toLowerCase().replace(/[^\w\s']/g, '').replace(/\s+/g, ' ').trim();
-        }
-        function userSaidTrigger(text) {
-          const norm = normalizePhrase(text);
-          return TRIGGER_PHRASES.some(p => norm.includes(normalizePhrase(p)));
+        // 📋 Insert-last-response button — appears on widget after Jessica finishes speaking
+        function showInsertButton(text) {
+          const btn = document.getElementById('jv-insert-btn');
+          if (!btn) return;
+          btn.dataset.text = text;
+          btn.style.display = 'flex';
+          btn.classList.add('pulse');
+          clearTimeout(btn._hideTimer);
+          // Hide after 2 minutes of inactivity
+          btn._hideTimer = setTimeout(() => {
+            btn.style.display = 'none';
+            btn.classList.remove('pulse');
+          }, 120000);
         }
 
         // Listen for LiveAvatar response events (transcriptions, speak_ended)
@@ -973,35 +978,18 @@
             const txt = new TextDecoder().decode(payload);
             const evt = JSON.parse(txt);
             log('event:', evt.event_type, evt.text ? '— ' + evt.text.slice(0, 60) : '');
-            if (evt.event_type === 'user.transcription' && evt.text) {
-              if (userSaidTrigger(evt.text)) {
-                log('🔥 trigger phrase detected');
-                // If Jessica already said something recently, fill that. Otherwise flag for her next response.
-                if (lastCompleteResponse && !responseInProgress) {
-                  fillActiveField(lastCompleteResponse);
-                  lastCompleteResponse = '';  // don't re-fill on another trigger
-                } else {
-                  pendingFill = true;
-                }
-              }
-            } else if (evt.event_type === 'avatar.speak_started') {
+            if (evt.event_type === 'avatar.speak_started') {
               currentResponse = '';
               responseInProgress = true;
             } else if (evt.event_type === 'avatar.transcription') {
               if (evt.text) currentResponse += (currentResponse ? ' ' : '') + evt.text;
             } else if (evt.event_type === 'avatar.speak_ended') {
               if (responseInProgress && currentResponse) {
-                const shouldFill = AUTOFILL_MODE === 'always' || pendingFill;
-                if (shouldFill) {
-                  fillActiveField(currentResponse);
-                  lastCompleteResponse = '';
-                } else {
-                  lastCompleteResponse = currentResponse;  // remember for later trigger
-                }
+                lastCompleteResponse = currentResponse;
+                showInsertButton(currentResponse);
               }
               responseInProgress = false;
               currentResponse = '';
-              pendingFill = false;
             }
           } catch (err) {
             warn('DataReceived parse error:', err);
@@ -1086,6 +1074,26 @@
         micBtn.textContent = micEnabled ? '🎤' : '🔇';
       } catch (e) { warn('mic toggle error:', e); }
     });
+
+    // Insert button: drops Jessica's last response into the active field
+    const insertBtn = document.getElementById('jv-insert-btn');
+    if (insertBtn) {
+      insertBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = insertBtn.dataset.text;
+        if (!text) return;
+        if (!lastFocusedField) {
+          // Nothing focused — briefly nudge: attach a one-time hint
+          insertBtn.textContent = 'Click a field first';
+          setTimeout(() => { insertBtn.innerHTML = '📋 Insert into field'; }, 1800);
+          return;
+        }
+        fillActiveField(text);
+        insertBtn.style.display = 'none';
+        insertBtn.classList.remove('pulse');
+        clearTimeout(insertBtn._hideTimer);
+      });
+    }
 
     window.addEventListener('beforeunload', () => {
       if (room) room.disconnect();
