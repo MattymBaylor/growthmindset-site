@@ -868,6 +868,7 @@
         // Accumulate Jessica's current spoken response until avatar.speak_ended fires
         let currentResponse = '';
         let responseInProgress = false;
+        let lastCompleteResponse = '';  // the most recent thing Jessica finished saying
 
         // Undo stack: [{field, previousValue, insertedText}]
         const undoStack = [];
@@ -974,8 +975,14 @@
             log('event:', evt.event_type, evt.text ? '— ' + evt.text.slice(0, 60) : '');
             if (evt.event_type === 'user.transcription' && evt.text) {
               if (userSaidTrigger(evt.text)) {
-                pendingFill = true;
                 log('🔥 trigger phrase detected');
+                // If Jessica already said something recently, fill that. Otherwise flag for her next response.
+                if (lastCompleteResponse && !responseInProgress) {
+                  fillActiveField(lastCompleteResponse);
+                  lastCompleteResponse = '';  // don't re-fill on another trigger
+                } else {
+                  pendingFill = true;
+                }
               }
             } else if (evt.event_type === 'avatar.speak_started') {
               currentResponse = '';
@@ -985,7 +992,12 @@
             } else if (evt.event_type === 'avatar.speak_ended') {
               if (responseInProgress && currentResponse) {
                 const shouldFill = AUTOFILL_MODE === 'always' || pendingFill;
-                if (shouldFill) fillActiveField(currentResponse);
+                if (shouldFill) {
+                  fillActiveField(currentResponse);
+                  lastCompleteResponse = '';
+                } else {
+                  lastCompleteResponse = currentResponse;  // remember for later trigger
+                }
               }
               responseInProgress = false;
               currentResponse = '';
