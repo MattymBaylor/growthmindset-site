@@ -20,13 +20,13 @@ export default async function handler(req, res) {
   }
 
   // Defaults: Dani (growthmindset.ai/intake). HGE's Jessica lives on a separate backend.
-  //   avatar_id  8713f92c… → mmartelli (ACTIVE, IMAGE-type, Matt's custom avatar — renamed to "Dani")
+  //   avatar_id  eb0f7572… → mmartelli v2 (ACTIVE, IMAGE-type, Matt's updated cleaner Dani avatar)
   //   voice_id   6b986a0f… → "Elise – Warm, Natural and Engaging" (paired with Dani in LiveAvatar)
   //   context_id 47e60dd1… → "Dani - Personal AI Agent for Business" (GM-specific instructions)
   const body = req.body || {};
   const payload = {
     mode: 'FULL',
-    avatar_id: body.avatar_id || '8713f92c-061e-42b0-8874-e556bf929d88',
+    avatar_id: body.avatar_id || 'eb0f7572-e556-464b-ad95-aeb3485e5c06',
     avatar_persona: {
       voice_id: body.voice_id || '6b986a0f-4969-45da-93ee-b03baa0e9904',
       context_id: body.context_id || '47e60dd1-e828-412a-b00a-e29e86db0484',
