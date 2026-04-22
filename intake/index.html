@@ -227,6 +227,20 @@
     }
     .jv-mic-btn.muted { background: rgba(255,77,109,0.2); border-color: #ff4d6d; }
     .jv-mic-btn:hover { transform: translateX(-50%) scale(1.05); }
+    .jv-mic-btn.active { border-color: #20fc8f; box-shadow: 0 0 0 3px rgba(32,252,143,0.35); }
+    .jv-mic-level {
+      position: absolute; bottom: 66px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 4px; border-radius: 2px;
+      background: rgba(255,255,255,0.1);
+      overflow: hidden; z-index: 3;
+      display: none;
+    }
+    .jv-mic-level.show { display: block; }
+    .jv-mic-level-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #20fc8f, #00d4ff);
+      transition: width 0.08s linear;
+    }
     .jv-unmute-btn {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       background: rgba(0,0,0,0.85); border: 1px solid rgba(0,212,255,0.5);
@@ -564,6 +578,7 @@
     <video id="jessica-video" autoplay playsinline muted></video>
     <div class="jv-status" id="jv-status"><span class="jv-dot"></span><span id="jv-status-text">Ready</span></div>
     <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
+    <div class="jv-mic-level" id="jv-mic-level"><div class="jv-mic-level-fill" id="jv-mic-level-fill"></div></div>
     <button class="jv-unmute-btn" id="jv-unmute-btn" title="Unmute Jessica" style="display:none">🔊 Tap for sound</button>
     <div class="jv-start" id="jv-start">
       <div class="jv-start-label">Hi! I'm Jessica, your AI host. Tap to start our chat.</div>
@@ -610,6 +625,61 @@
 
     function showUnmuteButton() {
       unmuteBtn.style.display = 'block';
+    }
+
+    // Mic diagnostic — dumps publication state and starts a live audio-level meter
+    async function inspectAndMonitorMic() {
+      if (!room) return;
+      const pubs = Array.from(room.localParticipant.audioTrackPublications.values());
+      log('localParticipant identity:', room.localParticipant.identity);
+      log('audioTrackPublications:', pubs.length);
+      if (pubs.length === 0) {
+        warn('NO audio track is published — Jessica cannot hear you');
+        setStatus('error', 'Mic not publishing — click 🎤 to retry');
+        return;
+      }
+      for (const p of pubs) {
+        const mst = p.track && p.track.mediaStreamTrack;
+        log('  pub:', p.trackSid,
+            'muted:', p.isMuted,
+            'subscribed:', p.isSubscribed,
+            'device:', mst && mst.label,
+            'enabled:', mst && mst.enabled,
+            'readyState:', mst && mst.readyState);
+      }
+      const track = pubs[0].track;
+      if (!track || !track.mediaStream) return;
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AC();
+        const src = ctx.createMediaStreamSource(track.mediaStream);
+        const an = ctx.createAnalyser();
+        an.fftSize = 512;
+        src.connect(an);
+        const buf = new Uint8Array(an.fftSize);
+        const levelEl = document.getElementById('jv-mic-level');
+        const fillEl = document.getElementById('jv-mic-level-fill');
+        levelEl.classList.add('show');
+        let peak10s = 0;
+        let frames = 0;
+        setInterval(() => {
+          an.getByteTimeDomainData(buf);
+          let max = 0;
+          for (let i = 0; i < buf.length; i++) {
+            const d = Math.abs(buf[i] - 128);
+            if (d > max) max = d;
+          }
+          fillEl.style.width = Math.min(100, max * 2) + '%';
+          if (max > 6) micBtn.classList.add('active');
+          else micBtn.classList.remove('active');
+          if (max > peak10s) peak10s = max;
+          frames++;
+          if (frames >= 50) {  // ~10s at 200ms
+            log('mic peak last ~10s:', peak10s, peak10s < 3 ? '— SILENT (check OS mic / input device)' : 'ok');
+            peak10s = 0; frames = 0;
+          }
+        }, 200);
+      } catch (e) { warn('mic monitor error:', e); }
     }
 
     async function attachVideo(track) {
@@ -724,6 +794,8 @@
         room.localParticipant.setMicrophoneEnabled(true).then(() => {
           log('mic enabled');
           micBtn.style.display = 'flex';
+          // Diagnostic: dump audio publication + start level meter
+          setTimeout(() => inspectAndMonitorMic(), 250);
         }).catch((micErr) => {
           warn('mic error:', micErr);
           micEnabled = false;
@@ -734,6 +806,9 @@
           if (/permission|denied|not allowed/i.test(m)) setStatus('error', 'Mic blocked 🔒');
           else if (/not found|no.*device/i.test(m)) setStatus('listening', 'Connected (no mic)');
         });
+
+        // Expose for console debugging
+        window.__jessica = { room, Livekit };
 
       } catch (e) {
         err('session error:', e);
