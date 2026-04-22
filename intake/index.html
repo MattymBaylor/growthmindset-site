@@ -958,6 +958,7 @@
           undoStack.push({ field, previousValue, insertedText: clean, timestamp: Date.now() });
           if (undoStack.length > MAX_UNDO) undoStack.shift();
           // Trigger change/input so auto-save + progress bar update
+          field._jvJustFilled = true;
           field.dispatchEvent(new Event('input', { bubbles: true }));
           field.dispatchEvent(new Event('change', { bubbles: true }));
           flashField(field);
@@ -1013,7 +1014,7 @@
           }
         });
 
-        // 📋 After Jessica finishes speaking: show insert button + transcript bubble
+        // 📋 After Jessica finishes speaking: show insert button + transcript bubble + per-field insert chips
         function showInsertButton(text) {
           const btn = document.getElementById('jv-insert-btn');
           if (btn) {
@@ -1026,7 +1027,7 @@
               btn.classList.remove('pulse');
             }, 120000);
           }
-          // Also populate the transcript bubble above her
+          // Populate the transcript bubble above her
           const bubble = document.getElementById('jv-transcript');
           const textEl = document.getElementById('jv-t-text');
           if (bubble && textEl) {
@@ -1034,7 +1035,47 @@
             bubble.dataset.text = text;
             bubble.classList.add('visible');
           }
+          // Add a little "⬇️ Insert here" chip next to every eligible field
+          addFieldChips(text);
         }
+
+        function removeFieldChips() {
+          document.querySelectorAll('.jv-field-chip').forEach(c => c.remove());
+        }
+
+        function addFieldChips(text) {
+          removeFieldChips();
+          const form = document.getElementById('intakeForm');
+          if (!form) return;
+          const fields = form.querySelectorAll('textarea, input[type="text"], input[type="email"], input[type="tel"]');
+          fields.forEach(field => {
+            const label = field.closest('.field')?.querySelector('label');
+            if (!label) return;
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'jv-field-chip';
+            chip.innerHTML = '⬇️ Insert';
+            chip.title = 'Insert Jessica\'s last answer into this field';
+            chip.style.cssText = 'margin-left:0.75rem;background:linear-gradient(135deg,#00d4ff,#0099ff);color:#000;border:0;font-family:inherit;font-weight:700;font-size:0.7rem;padding:0.2rem 0.55rem;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;gap:0.25rem;box-shadow:0 2px 6px rgba(0,212,255,0.35);vertical-align:middle;';
+            chip.onclick = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              lastFocusedField = field;
+              fillActiveField(text);
+              removeFieldChips();
+            };
+            label.appendChild(chip);
+          });
+        }
+
+        // Clean up chips if user edits a field manually (they become stale)
+        document.getElementById('intakeForm')?.addEventListener('input', (e) => {
+          if (e.target.closest('.field')) {
+            // Only remove chips if this wasn't a programmatic fill (no 'jv-filled' marker)
+            if (!e.target._jvJustFilled) removeFieldChips();
+            else delete e.target._jvJustFilled;
+          }
+        });
 
         // Listen for LiveAvatar response events (transcriptions, speak_ended)
         room.on(Livekit.RoomEvent.DataReceived, (payload, participant, kind, topic) => {
