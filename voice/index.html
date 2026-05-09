@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Voice Agents — AI That Answers Your Phone 24/7 | Growth Mindset AI</title>
+  <meta name="description" content="AI voice agents that answer your phone, qualify leads, and book jobs 24/7. Sounds human. Works nonstop. $397/mo — 14-day free trial, no contracts." />
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Smart Voice Agents — AI That Answers Your Phone 24/7 | Growth Mindset AI" />
+  <meta property="og:description" content="AI voice agents that answer your phone, qualify leads, and book jobs 24/7. Sounds human. Works nonstop. $397/mo — 14-day free trial, no contracts." />
+  <meta property="og:url" content="https://growthmindset.ai/voice" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://growthmindset.ai/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Smart Voice Agents — AI That Answers Your Phone 24/7 | Growth Mindset AI" />
+  <meta name="twitter:description" content="AI voice agents that answer your phone, qualify leads, and book jobs 24/7. $397/mo — 14-day free trial." />
+  <meta name="twitter:image" content="https://growthmindset.ai/og-image.png" />
+  <!-- Canonical -->
+  <link rel="canonical" href="https://growthmindset.ai/voice" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K90LREJCJF"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-K90LREJCJF');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #161616;
+      --border: rgba(255,255,255,0.07);
+      --border-accent: rgba(0,212,255,0.3);
+      --accent: #00d4ff;
+      --accent-dark: #0099ff;
+      --accent-dim: rgba(0,212,255,0.15);
+      --accent-glow: rgba(0,212,255,0.08);
+      --cta: #f97316;
+      --cta-dark: #ea6c0a;
+      --cta-glow: rgba(249,115,22,0.35);
+      --success: #10b981;
+      --text: #ffffff;
+      --text-muted: #888888;
+      --text-secondary: #bbbbbb;
+      --gradient-accent: linear-gradient(135deg, #00d4ff, #0099ff);
+      --gradient-cta: linear-gradient(135deg, #f97316, #ea6c0a);
+      --gradient-subtle: linear-gradient(180deg, rgba(0,212,255,0.05) 0%, transparent 100%);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 68px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--cta) !important;
+      color: #fff !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700 !important;
+      font-size: 0.875rem !important;
+      transition: opacity 0.2s, transform 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 6rem 1.5rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* ─── HERO ─── */
+    #hero {
+      padding-top: 10rem;
+      padding-bottom: 6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-accent);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.07;
+      letter-spacing: -0.035em;
+      margin-bottom: 1.5rem;
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gradient-cta);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 0.9rem 2.2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 30px var(--cta-glow);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px var(--cta-glow);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .hero-trust span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hero-trust span::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    /* ─── STATS ─── */
+    #stats {
+      padding: 3rem 1.5rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .stat-item { padding: 1.5rem; }
+
+    .stat-number {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* ─── SECTION HEADERS ─── */
+    .section-label {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    h2 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    /* ─── FEATURES ─── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gradient-accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-3px);
+    }
+
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    #how { text-align: center; }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3.5rem;
+      position: relative;
+    }
+
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(16.6% + 28px);
+      right: calc(16.6% + 28px);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-accent), var(--border-accent), transparent);
+    }
+
+    .step-card { position: relative; text-align: center; }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 0 auto 1.25rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .step-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    /* ─── INDUSTRIES ─── */
+    #industries {
+      background: linear-gradient(180deg, transparent, rgba(0,212,255,0.02), transparent);
+    }
+
+    .industries-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .industry-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+
+    .industry-tag {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1rem;
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      cursor: default;
+    }
+
+    .industry-tag:hover {
+      border-color: var(--border-accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .industry-tag .tag-icon {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    #proof {
+      background: linear-gradient(180deg, transparent, rgba(0,212,255,0.02), transparent);
+    }
+
+    .proof-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .proof-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: border-color 0.2s;
+    }
+
+    .proof-card:hover { border-color: var(--border-accent); }
+
+    .proof-stars {
+      color: #ffd84d;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+    }
+
+    .proof-quote {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+      font-style: italic;
+    }
+
+    .proof-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .proof-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .proof-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .proof-role {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── PRICING ─── */
+    #pricing { text-align: center; }
+
+    .pricing-card {
+      max-width: 500px;
+      margin: 3.5rem auto 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      border-radius: 20px;
+      padding: 2.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gradient-cta);
+    }
+
+    .pricing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(249,115,22,0.12);
+      border: 1px solid rgba(249,115,22,0.3);
+      color: var(--cta);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+
+    .pricing-price {
+      font-size: 3.8rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .pricing-price sup {
+      font-size: 1.5rem;
+      font-weight: 700;
+      vertical-align: super;
+      line-height: 0;
+    }
+
+    .pricing-period {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      width: 20px;
+      height: 20px;
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--success);
+      flex-shrink: 0;
+    }
+
+    .btn-cta-full {
+      display: block;
+      width: 100%;
+      background: var(--gradient-cta);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      text-align: center;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 30px var(--cta-glow);
+    }
+
+    .btn-cta-full:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px var(--cta-glow);
+    }
+
+    .pricing-trial {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+    }
+
+    .pricing-demo-link {
+      display: block;
+      margin-top: 1rem;
+      color: var(--accent);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .pricing-demo-link:hover { text-decoration: underline; }
+
+    /* ─── FAQ ─── */
+    #faq .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .faq-list {
+      max-width: 700px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .faq-item:hover { border-color: var(--border-accent); }
+
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      gap: 1rem;
+    }
+
+    .faq-question::after {
+      content: '+';
+      font-size: 1.3rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: transform 0.3s;
+      line-height: 1;
+    }
+
+    .faq-item.open .faq-question::after { transform: rotate(45deg); }
+
+    .faq-answer {
+      display: none;
+      padding: 0 1.5rem 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .faq-item.open .faq-answer { display: block; }
+
+    /* ─── FINAL CTA ─── */
+    #cta {
+      text-align: center;
+      padding: 8rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    #cta h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      max-width: 700px;
+      margin: 0 auto 1.25rem;
+    }
+
+    #cta .section-desc {
+      margin: 0 auto 2.5rem;
+      font-size: 1.1rem;
+    }
+
+    .cta-note {
+      margin-top: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      width: 100%;
+      text-align: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+
+    /* ─── DANI WIDGET ─── */
+    #jessica-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,212,255,0.15);
+      border: 1px solid rgba(0,212,255,0.2);
+      background: #000;
+      z-index: 9999;
+      transition: all 0.25s ease;
+    }
+
+    #jessica-widget.minimized {
+      width: 64px; height: 64px; border-radius: 50%; cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,212,255,0.35);
+    }
+
+    #jessica-widget.minimized .jv-container { display: none; }
+
+    #jessica-widget.minimized::before {
+      content: '💬';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      background: var(--gradient-accent);
+    }
+
+    .jv-container {
+      width: 100%; height: 100%;
+      position: relative;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      background: linear-gradient(160deg, #001420 0%, #002840 100%);
+    }
+
+    #jessica-video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      position: absolute; inset: 0; z-index: 1;
+    }
+
+    #jessica-canvas {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      position: absolute; inset: 0; z-index: 2;
+      display: none;
+      background: transparent;
+    }
+
+    #jessica-canvas.active { display: block; }
+
+    .jv-status {
+      position: absolute; top: 12px; left: 12px;
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(0,0,0,0.6); color: #fff;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      z-index: 10; pointer-events: none;
+    }
+
+    .jv-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #888; flex-shrink: 0;
+    }
+
+    .jv-status.connected .jv-dot { background: #22c55e; animation: blink 2s infinite; }
+    .jv-status.speaking .jv-dot { background: var(--accent); animation: blink 0.8s infinite; }
+    .jv-status.listening .jv-dot { background: #f97316; animation: blink 0.5s infinite; }
+    .jv-status.error .jv-dot { background: #ef4444; }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .jv-mic-btn {
+      position: absolute; bottom: 64px; right: 12px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 16px; cursor: pointer;
+      z-index: 10; transition: background 0.2s;
+    }
+
+    .jv-mic-btn:hover { background: rgba(0,212,255,0.2); }
+    .jv-mic-btn.muted { background: rgba(239,68,68,0.3); border-color: rgba(239,68,68,0.5); }
+
+    .jv-mic-level {
+      position: absolute; bottom: 54px; left: 12px; right: 60px;
+      height: 4px; background: rgba(255,255,255,0.1);
+      border-radius: 2px; z-index: 10; display: none;
+    }
+
+    .jv-mic-level.show { display: block; }
+    .jv-mic-level-fill { height: 100%; background: var(--accent); border-radius: 2px; width: 0%; transition: width 0.1s; }
+
+    .jv-unmute-btn {
+      position: absolute; bottom: 12px; left: 12px; right: 12px;
+      padding: 8px; border-radius: 8px;
+      background: rgba(0,212,255,0.2); border: 1px solid rgba(0,212,255,0.4);
+      color: var(--accent); font-size: 13px; font-weight: 600;
+      cursor: pointer; z-index: 10; font-family: inherit;
+    }
+
+    .jv-start {
+      position: absolute; inset: 0; z-index: 5;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      padding: 1.5rem; gap: 0.75rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+    }
+
+    .jv-start-label {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.85rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .jv-start-btn {
+      width: 100%; padding: 0.75rem;
+      background: var(--gradient-accent);
+      border: none; border-radius: 8px;
+      color: #000; font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      transition: opacity 0.2s;
+    }
+
+    .jv-start-btn:hover { opacity: 0.9; }
+
+    #jessica-toggle {
+      position: absolute; top: 10px; right: 10px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 16px; line-height: 1;
+      cursor: pointer; z-index: 11;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    #jessica-toggle:hover { background: rgba(0,0,0,0.9); }
+    #jessica-widget.minimized #jessica-toggle { display: none; }
+
+    #jv-transcript {
+      position: fixed;
+      bottom: 455px; right: 20px;
+      width: 320px;
+      background: #111;
+      border: 1px solid rgba(0,212,255,0.25);
+      border-radius: 12px;
+      padding: 1rem;
+      z-index: 9998;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      display: none;
+    }
+
+    #jv-transcript.visible { display: block; }
+
+    .jv-t-label {
+      font-size: 0.75rem; font-weight: 700;
+      color: var(--accent); margin-bottom: 0.5rem;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+
+    .jv-t-text {
+      font-size: 0.875rem; color: var(--text-secondary);
+      line-height: 1.6; margin-bottom: 0.75rem;
+    }
+
+    .jv-t-close {
+      position: absolute; top: 8px; right: 10px;
+      background: none; border: none;
+      color: var(--text-muted); font-size: 18px;
+      cursor: pointer; line-height: 1;
+    }
+
+    .jv-t-close:hover { color: var(--text); }
+
+    @media (max-width: 500px) {
+      #jessica-widget { width: calc(100vw - 24px); height: 55vh; right: 12px; bottom: 12px; }
+      #jessica-widget.minimized { width: 56px; height: 56px; }
+      #jv-transcript { width: calc(100vw - 24px); right: 12px; bottom: calc(55vh + 28px); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .industry-grid { grid-template-columns: repeat(3, 1fr); }
+      .steps-grid { grid-template-columns: 1fr; }
+      .steps-grid::before { display: none; }
+      .proof-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+
+      section { padding: 4rem 1.25rem; }
+      #hero { padding-top: 7rem; }
+
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .industry-grid { grid-template-columns: repeat(2, 1fr); }
+      .proof-grid { grid-template-columns: 1fr; }
+
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.75rem; }
+
+      .hero-trust { flex-direction: column; gap: 0.75rem; }
+      .pricing-card { padding: 1.75rem 1.5rem; }
+
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav>
+    <a href="/" class="nav-logo">growthmindset<span>.ai</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pricing">Pricing</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="https://cal.com/matthew-martelli/call-with-matt" target="_blank" rel="noopener noreferrer">Book a Demo</a></li>
+      <li><a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer" class="nav-cta">Start Free Trial</a></li>
+    </ul>
+    <div class="nav-hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-badge">Smart Voice Agents — Now Available</div>
+      <h1>AI That Answers Your Phone,<br /><em>Qualifies Leads &amp; Books Jobs</em> — 24/7</h1>
+      <p class="hero-sub">
+        Your Smart Voice Agent sounds human, works nonstop, and pays for itself in one call. Stop losing jobs to voicemail. Start your 14-day free trial today.
+      </p>
+      <div class="hero-actions">
+        <a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer" class="btn-primary">
+          Start Free Trial — 14 Days Free →
+        </a>
+        <a href="https://cal.com/matthew-martelli/call-with-matt" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+          📅 Book a Demo
+        </a>
+      </div>
+      <div class="hero-trust">
+        <span>$397/mo flat rate</span>
+        <span>14-day free trial</span>
+        <span>No contracts</span>
+        <span>Live in 24 hours</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── STATS ─── -->
+  <section id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Always-on coverage — nights, weekends, holidays</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">62%</div>
+          <div class="stat-label">of callers won't leave a voicemail — they call your competitor</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">80%</div>
+          <div class="stat-label">of jobs go to the first contractor who picks up</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">&lt;24h</div>
+          <div class="stat-label">Average setup time from onboarding call to first live call</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES ─── -->
+  <section id="features">
+    <div class="container">
+      <span class="section-label">What It Does</span>
+      <h2>Your front desk — <em>on autopilot.</em></h2>
+      <p class="section-desc">One agent. Every call answered, every lead qualified, every job booked.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📞</div>
+          <div class="feature-title">Answers Every Call, 24/7</div>
+          <div class="feature-desc">Picks up on the first ring around the clock. No voicemail, no missed leads, no lost jobs — even nights, weekends, and holidays.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">Qualifies Every Lead</div>
+          <div class="feature-desc">Asks the right questions, captures key details, and separates hot leads from tire-kickers — so you only spend time on calls worth your time.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <div class="feature-title">Books Appointments</div>
+          <div class="feature-desc">Syncs with your calendar and schedules jobs while the caller is still on the line. No back-and-forth, no phone tag, no dropped balls.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <div class="feature-title">Follow-Up Texts, Automatically</div>
+          <div class="feature-desc">Sends appointment confirmations, follow-ups, and answers common questions by text — so you don't have to chase anyone down.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🗣️</div>
+          <div class="feature-title">Sounds Completely Human</div>
+          <div class="feature-desc">Natural conversation in your brand voice. Most callers never realize they're talking to AI — and that's exactly the point.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Setup in 24 Hours</div>
+          <div class="feature-desc">We handle everything — your voice, script, and calendar integration. You review, approve, forward your number, and you're live. No IT required.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOW IT WORKS ─── -->
+  <section id="how">
+    <div class="container">
+      <span class="section-label">How It Works</span>
+      <h2>Live in 24 hours — <em>no tech team required.</em></h2>
+      <p class="section-desc" style="margin: 0 auto;">Three steps, one day, zero complexity.</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-title">Tell Us About Your Business</div>
+          <div class="step-desc">A quick 15-minute onboarding call. We learn your services, hours, coverage area, and how you want leads handled. That's it.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-title">We Build Your AI Agent</div>
+          <div class="step-desc">We train your voice agent on your business — your tone, your services, your calendar. You review and approve before anything goes live.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-title">Start Taking Calls</div>
+          <div class="step-desc">Forward your number. Your AI agent answers from day one. Every call handled, every lead captured, every job booked — automatically.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── INDUSTRIES ─── -->
+  <section id="industries">
+    <div class="container">
+      <div class="industries-header">
+        <span class="section-label">Industries</span>
+        <h2>Built for businesses where <em>every call counts</em></h2>
+        <p class="section-desc">If your phone rings for a living, your Smart Voice Agent is built for you.</p>
+      </div>
+      <div class="industry-grid">
+        <div class="industry-tag">
+          <span class="tag-icon">🏗️</span>
+          Roofing
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">❄️</span>
+          HVAC
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">🔧</span>
+          Plumbing
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">⚡</span>
+          Electrical
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">🏠</span>
+          Home Services
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">🔒</span>
+          Locksmith
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">🏢</span>
+          Property Mgmt
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">🏡</span>
+          Real Estate
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">🏥</span>
+          Medical / Dental
+        </div>
+        <div class="industry-tag">
+          <span class="tag-icon">🚗</span>
+          Auto Services
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SOCIAL PROOF ─── -->
+  <section id="proof">
+    <div class="container">
+      <div class="proof-header">
+        <span class="section-label">Real Results</span>
+        <h2>What happens when your phone <em>actually gets answered.</em></h2>
+        <p class="section-desc">From contractors and business owners who stopped bleeding leads to voicemail.</p>
+      </div>
+      <div class="proof-grid">
+        <div class="proof-card">
+          <div class="proof-stars">★★★★★</div>
+          <div class="proof-quote">"We were losing 15-20 leads a week to voicemail. Growth Mindset set up our AI receptionist in a day and now every call gets answered. It's paid for itself ten times over."</div>
+          <div class="proof-author">
+            <div class="proof-avatar">JR</div>
+            <div>
+              <div class="proof-name">Jesse Ramirez</div>
+              <div class="proof-role">Owner · Ramirez Roofing</div>
+            </div>
+          </div>
+        </div>
+        <div class="proof-card">
+          <div class="proof-stars">★★★★★</div>
+          <div class="proof-quote">"Honestly I didn't think an AI could sound this natural. Half my customers still don't realize they were talking to a computer. It handles bookings better than my old receptionist did."</div>
+          <div class="proof-author">
+            <div class="proof-avatar">SK</div>
+            <div>
+              <div class="proof-name">Sarah Kowalski</div>
+              <div class="proof-role">GM · Premier HVAC Solutions</div>
+            </div>
+          </div>
+        </div>
+        <div class="proof-card">
+          <div class="proof-stars">★★★★★</div>
+          <div class="proof-quote">"We run 24/7 for storm response. Before, after-hours calls went nowhere. Now our AI captures, qualifies, and texts me the hot ones. I've booked $80K in jobs I would have missed."</div>
+          <div class="proof-author">
+            <div class="proof-avatar">DB</div>
+            <div>
+              <div class="proof-name">Dan Bachman</div>
+              <div class="proof-role">Owner · Bachman Exteriors</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PRICING ─── -->
+  <section id="pricing">
+    <div class="container">
+      <span class="section-label">Pricing</span>
+      <h2>One price. Everything included.</h2>
+      <p class="section-desc" style="margin: 0 auto;">No tiers, no hidden fees, no surprises. One agent pays for itself in a single job.</p>
+
+      <div class="pricing-card">
+        <div class="pricing-badge">🔥 Launch Special — Only 12 spots left</div>
+        <div class="pricing-price"><sup>$</sup>397</div>
+        <div class="pricing-period">per month — everything included, cancel anytime</div>
+        <ul class="pricing-features">
+          <li>Unlimited inbound calls answered, 24/7</li>
+          <li>Lead qualification built for your business</li>
+          <li>Appointment booking to your calendar</li>
+          <li>Instant text summaries after every call</li>
+          <li>Automated follow-up texts</li>
+          <li>After-hours &amp; emergency call handling</li>
+          <li>Custom training on your services &amp; coverage area</li>
+          <li>Setup &amp; onboarding included (24h turnaround)</li>
+          <li>Ongoing support &amp; updates</li>
+        </ul>
+        <a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer" class="btn-cta-full">
+          Start My Free Trial — 14 Days Free →
+        </a>
+        <p class="pricing-trial">No credit card required to start · Cancel anytime · Setup in 24 hours</p>
+        <a href="https://cal.com/matthew-martelli/call-with-matt" target="_blank" rel="noopener noreferrer" class="pricing-demo-link">
+          Or book a 20-min demo call first →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FAQ ─── -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">FAQ</span>
+        <h2>Questions? Here are the honest answers.</h2>
+        <p class="section-desc" style="margin: 0 auto;">Everything business owners ask before getting started.</p>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item open">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">Does it actually sound human, or is it obviously a robot?</div>
+          <div class="faq-answer">It sounds natural. Your agent is trained specifically on your business — your services, your tone, your FAQs. Most callers assume they're talking to a real person on your team. You can call our live demo line at (239) 259-9975 and hear it yourself before you decide.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">How long does setup take?</div>
+          <div class="faq-answer">Most businesses are live within 24 hours of the onboarding call. We handle all the training and configuration. You review, request any tweaks, approve, then forward your number. That's it.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">Do I need to change my phone number?</div>
+          <div class="faq-answer">No. You keep your existing number. We set up a dedicated forwarding number that routes through your AI agent. You can toggle it on or off anytime — your number stays yours.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">What happens during true emergencies or upset customers?</div>
+          <div class="faq-answer">Your agent is trained to identify urgent situations. It captures all the information, reassures the caller, and immediately texts or escalates to you. For upset customers, you define the handoff rules — we set it up however you want it handled.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">What about pricing questions — what does it say?</div>
+          <div class="faq-answer">You decide. We can train it to give ranges, tell callers pricing is given after a free estimate, or steer away from pricing entirely and just book the appointment. Your business, your rules.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">Is there a contract?</div>
+          <div class="faq-answer">No contracts. Month-to-month. Start with the 14-day free trial — if it's not worth it, cancel before the trial ends and you pay nothing. We're confident once you see the first week of calls, you'll stay.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">What if I serve multiple areas or have multiple service lines?</div>
+          <div class="faq-answer">No problem. We train your agent on your full service footprint — all service types, all coverage areas. Whether you run one location or cover a full region, your agent knows where and what you do.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FINAL CTA ─── -->
+  <section id="cta">
+    <div class="container" style="position:relative; z-index:1;">
+      <span class="section-label">Get Started</span>
+      <h2>Every unanswered call is a job you just handed your competitor.</h2>
+      <p class="section-desc">Start your 14-day free trial. No credit card. No contracts. Live in 24 hours.</p>
+      <a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer" class="btn-primary" style="font-size:1.1rem; padding: 1rem 2.5rem;">
+        Start Free Trial — 14 Days Free →
+      </a>
+      <p class="cta-note">
+        Prefer to talk first?
+        <a href="https://cal.com/matthew-martelli/call-with-matt" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Book a 20-min demo →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-inner">
+      <a href="/" class="footer-logo">growthmindset<span>.ai</span></a>
+      <ul class="footer-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="/pricing">All Plans</a></li>
+        <li><a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer">Start Free Trial</a></li>
+      </ul>
+      <p class="footer-copy">© 2026 Growth Mindset AI. Smart Voice Agents for businesses that run on phone calls. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ─── DANI WIDGET ─── -->
+  <div id="jessica-widget" aria-label="Chat with Dani">
+    <button id="jessica-toggle" aria-label="Minimize" onclick="event.stopPropagation();document.getElementById('jessica-widget').classList.add('minimized')">–</button>
+    <div class="jv-container">
+      <video id="jessica-video" autoplay playsinline muted></video>
+      <canvas id="jessica-canvas"></canvas>
+      <div class="jv-status" id="jv-status"><span class="jv-dot"></span><span id="jv-status-text">Ready</span></div>
+      <button class="jv-mic-btn" id="jv-mic-btn" title="Toggle microphone" style="display:none">🎤</button>
+      <div class="jv-mic-level" id="jv-mic-level"><div class="jv-mic-level-fill" id="jv-mic-level-fill"></div></div>
+      <button class="jv-unmute-btn" id="jv-unmute-btn" title="Unmute Dani" style="display:none">🔊 Tap for sound</button>
+      <div class="jv-start" id="jv-start">
+        <div class="jv-start-label">Hi! I'm Dani — have questions about Smart Voice Agents? I'm here to help.</div>
+        <button class="jv-start-btn" id="jv-start-btn">Chat with Dani</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="jv-transcript">
+    <button class="jv-t-close" id="jv-t-close" title="Close">×</button>
+    <div class="jv-t-label">💬 Dani said</div>
+    <div class="jv-t-text" id="jv-t-text"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
+  <script>
+  (function() {
+    const statusEl = document.getElementById('jv-status');
+    const statusText = document.getElementById('jv-status-text');
+    const video = document.getElementById('jessica-video');
+    const startOverlay = document.getElementById('jv-start');
+    const startBtn = document.getElementById('jv-start-btn');
+    const micBtn = document.getElementById('jv-mic-btn');
+    const unmuteBtn = document.getElementById('jv-unmute-btn');
+    const widget = document.getElementById('jessica-widget');
+
+    let room = null;
+    let micEnabled = true;
+    let audioElements = [];
+
+    function log(...a) { console.log('[Dani]', ...a); }
+    function warn(...a) { console.warn('[Dani]', ...a); }
+
+    function setStatus(state, text) {
+      statusEl.className = 'jv-status ' + state;
+      statusText.textContent = text;
+    }
+
+    async function tryPlay(el) {
+      try { await el.play(); return true; }
+      catch(e) { warn('play() rejected:', e.name); return false; }
+    }
+
+    widget.addEventListener('click', function(e) {
+      if (widget.classList.contains('minimized')) {
+        widget.classList.remove('minimized');
+      }
+    });
+
+    startBtn.addEventListener('click', async function() {
+      startOverlay.style.display = 'none';
+      setStatus('', 'Connecting…');
+
+      try {
+        const res = await fetch('/api/liveavatar-token');
+        if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
+        const data = await res.json();
+        const { token, url } = data;
+
+        room = new LivekitClient.Room({ adaptiveStream: true, dynacast: true });
+
+        room.on(LivekitClient.RoomEvent.Connected, () => {
+          setStatus('connected', 'Connected');
+          micBtn.style.display = 'block';
+          log('connected');
+        });
+
+        room.on(LivekitClient.RoomEvent.Disconnected, () => {
+          setStatus('', 'Disconnected');
+          micBtn.style.display = 'none';
+          log('disconnected');
+        });
+
+        room.on(LivekitClient.RoomEvent.TrackSubscribed, async (track, pub, participant) => {
+          log('track subscribed:', track.kind, participant.identity);
+          if (track.kind === LivekitClient.Track.Kind.Video) {
+            const el = track.attach();
+            el.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;';
+            document.querySelector('.jv-container').appendChild(el);
+            setStatus('speaking', 'Live');
+          } else if (track.kind === LivekitClient.Track.Kind.Audio) {
+            const el = track.attach();
+            el.style.display = 'none';
+            document.body.appendChild(el);
+            audioElements.push(el);
+            const ok = await tryPlay(el);
+            if (!ok) { unmuteBtn.style.display = 'block'; }
+          }
+        });
+
+        room.on(LivekitClient.RoomEvent.DataReceived, (data) => {
+          try {
+            const msg = JSON.parse(new TextDecoder().decode(data));
+            if (msg.type === 'transcript' && msg.text) {
+              const bubble = document.getElementById('jv-transcript');
+              const textEl = document.getElementById('jv-t-text');
+              if (bubble && textEl) {
+                textEl.textContent = msg.text;
+                bubble.classList.add('visible');
+              }
+            }
+          } catch(e) {}
+        });
+
+        await room.connect(url, token, { autoSubscribe: true });
+        await room.localParticipant.setMicrophoneEnabled(true);
+
+      } catch(e) {
+        warn('connect error:', e);
+        setStatus('error', 'Connection failed');
+        startOverlay.style.display = 'flex';
+        startBtn.textContent = 'Retry';
+      }
+    });
+
+    micBtn.addEventListener('click', async function() {
+      if (!room) return;
+      micEnabled = !micEnabled;
+      await room.localParticipant.setMicrophoneEnabled(micEnabled);
+      micBtn.textContent = micEnabled ? '🎤' : '🔇';
+      micBtn.classList.toggle('muted', !micEnabled);
+    });
+
+    unmuteBtn.addEventListener('click', async function() {
+      for (const el of audioElements) {
+        try { await el.play(); } catch(e) {}
+      }
+      unmuteBtn.style.display = 'none';
+    });
+
+    const closeBtn = document.getElementById('jv-t-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        document.getElementById('jv-transcript').classList.remove('visible');
+      });
+    }
+  })();
+  </script>
+
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // Sticky nav shadow
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      nav.style.boxShadow = window.scrollY > 20 ? '0 4px 30px rgba(0,0,0,0.4)' : 'none';
+    });
+
+    // Mobile nav
+    const hamburger = document.querySelector('.nav-hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        const isOpen = navLinks.style.display === 'flex';
+        navLinks.style.display = isOpen ? 'none' : 'flex';
+        navLinks.style.flexDirection = 'column';
+        navLinks.style.position = 'absolute';
+        navLinks.style.top = '68px';
+        navLinks.style.left = '0';
+        navLinks.style.right = '0';
+        navLinks.style.background = 'rgba(10,10,10,0.97)';
+        navLinks.style.padding = '1rem 1.5rem 1.5rem';
+        navLinks.style.borderBottom = '1px solid rgba(255,255,255,0.07)';
+        navLinks.style.backdropFilter = 'blur(16px)';
+        if (isOpen) navLinks.style.display = 'none';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -14,7 +14,9 @@
     { "source": "/property-mgmt", "destination": "/property-mgmt/index.html" },
     { "source": "/home-services", "destination": "/home-services/index.html" },
     { "source": "/custom", "destination": "/custom/index.html" },
-    { "source": "/auto", "destination": "/locksmith/index.html" }
+    { "source": "/auto", "destination": "/locksmith/index.html" },
+    { "source": "/voice", "destination": "/voice/index.html" },
+    { "source": "/pricing", "destination": "/pricing/index.html" }
   ],
   "headers": [
     {

@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — Smart Voice Agents | Growth Mindset AI</title>
+  <meta name="description" content="Simple pricing for AI voice agents that answer your phone 24/7. Start at $397/mo with a 14-day free trial. No contracts." />
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Pricing — Smart Voice Agents | Growth Mindset AI" />
+  <meta property="og:description" content="Simple pricing for AI voice agents. $397/mo, 14-day free trial, no contracts." />
+  <meta property="og:url" content="https://growthmindset.ai/pricing" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://growthmindset.ai/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pricing — Smart Voice Agents | Growth Mindset AI" />
+  <meta name="twitter:description" content="Simple pricing for AI voice agents. $397/mo, 14-day free trial, no contracts." />
+  <meta name="twitter:image" content="https://growthmindset.ai/og-image.png" />
+  <!-- Canonical -->
+  <link rel="canonical" href="https://growthmindset.ai/pricing" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K90LREJCJF"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-K90LREJCJF');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #161616;
+      --border: rgba(255,255,255,0.07);
+      --border-accent: rgba(0,212,255,0.3);
+      --accent: #00d4ff;
+      --accent-dim: rgba(0,212,255,0.15);
+      --accent-glow: rgba(0,212,255,0.08);
+      --cta: #f97316;
+      --cta-dark: #ea6c0a;
+      --cta-glow: rgba(249,115,22,0.35);
+      --success: #10b981;
+      --text: #ffffff;
+      --text-muted: #888888;
+      --text-secondary: #bbbbbb;
+      --gradient-accent: linear-gradient(135deg, #00d4ff, #0099ff);
+      --gradient-cta: linear-gradient(135deg, #f97316, #ea6c0a);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 68px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #000 !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 700 !important;
+    }
+
+    .nav-cta:hover { opacity: 0.9; }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 101;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: 0.2s;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
+    /* ─── HERO ─── */
+    .pricing-hero {
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-accent);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+
+    .pricing-hero h1 {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .pricing-hero h1 em {
+      font-style: normal;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .pricing-hero p {
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ─── PRICING GRID ─── */
+    .pricing-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+    }
+
+    .plan-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+
+    .plan-card:hover {
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+
+    .plan-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(0,212,255,0.04) 0%, var(--bg-card) 40%);
+      box-shadow: 0 0 40px rgba(0,212,255,0.08);
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient-accent);
+      color: #000;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+    }
+
+    .plan-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    .plan-price {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .plan-price .currency { font-size: 1.5rem; vertical-align: super; }
+    .plan-price .period { font-size: 1rem; font-weight: 500; color: var(--text-muted); }
+
+    .plan-price-custom {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .plan-desc {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin-bottom: 2rem;
+      flex: 1;
+    }
+
+    .plan-features li {
+      padding: 0.55rem 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .plan-features li:last-child { border-bottom: none; }
+
+    .plan-features .check {
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .plan-btn {
+      display: block;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .plan-btn-primary {
+      background: var(--gradient-cta);
+      color: #fff;
+    }
+
+    .plan-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px var(--cta-glow);
+    }
+
+    .plan-btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border-accent);
+    }
+
+    .plan-btn-secondary:hover {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+    }
+
+    .plan-trial {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+    }
+
+    /* ─── COMPARISON TABLE ─── */
+    .compare-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    .compare-section h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .compare-section .subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      font-size: 1rem;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 0.85rem 1rem;
+      text-align: center;
+      font-size: 0.88rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .compare-table th:first-child,
+    .compare-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .compare-table th {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-accent);
+    }
+
+    .compare-table td { color: var(--text-secondary); }
+
+    .compare-table .yes { color: var(--accent); font-weight: 700; }
+    .compare-table .no { color: var(--text-muted); }
+
+    @media (max-width: 600px) {
+      .compare-table { font-size: 0.82rem; }
+      .compare-table th, .compare-table td { padding: 0.65rem 0.5rem; }
+    }
+
+    /* ─── FAQ ─── */
+    .faq-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    .faq-section h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 0;
+    }
+
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      gap: 1rem;
+    }
+
+    .faq-question:hover { color: var(--accent); }
+
+    .faq-icon {
+      font-size: 1.25rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      padding-top: 1rem;
+    }
+
+    .faq-answer p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    /* ─── CTA BANNER ─── */
+    .cta-banner {
+      text-align: center;
+      padding: 5rem 2rem;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,212,255,0.03) 50%, transparent 100%);
+    }
+
+    .cta-banner h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .cta-banner p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .cta-btn-primary {
+      background: var(--gradient-cta);
+      color: #fff;
+    }
+
+    .cta-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px var(--cta-glow);
+    }
+
+    .cta-btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .cta-btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .footer-logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      width: 100%;
+      text-align: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">growthmindset<span>.ai</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/voice">Voice Agents</a></li>
+      <li><a href="/pricing" class="active">Pricing</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="https://cal.com/matthew-martelli/call-with-matt" target="_blank" rel="noopener noreferrer">Book a Demo</a></li>
+      <li><a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer" class="nav-cta">Start Free Trial</a></li>
+    </ul>
+    <div class="nav-hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="pricing-hero">
+    <div class="eyebrow">Simple Pricing</div>
+    <h1>One Job Covers It. <em>Every Month.</em></h1>
+    <p>No hidden fees. No per-minute charges. No contracts. Start free, cancel anytime.</p>
+  </section>
+
+  <!-- PRICING CARDS -->
+  <section class="pricing-section">
+    <div class="pricing-grid">
+
+      <!-- STARTER -->
+      <div class="plan-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price"><span class="currency">$</span>397<span class="period">/mo</span></div>
+        <p class="plan-desc">Everything you need to stop losing calls and start booking jobs automatically.</p>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> 1 AI Voice Agent</li>
+          <li><span class="check">✓</span> Unlimited inbound calls</li>
+          <li><span class="check">✓</span> Lead qualification & screening</li>
+          <li><span class="check">✓</span> Calendar booking (Cal.com)</li>
+          <li><span class="check">✓</span> SMS follow-up & confirmations</li>
+          <li><span class="check">✓</span> Call recordings & transcripts</li>
+          <li><span class="check">✓</span> CRM logging (Google Sheets)</li>
+          <li><span class="check">✓</span> Setup in 24 hours</li>
+          <li><span class="check">✓</span> Email support</li>
+        </ul>
+        <a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer" class="plan-btn plan-btn-primary">Start 14-Day Free Trial →</a>
+        <p class="plan-trial">No credit card required · Cancel anytime</p>
+      </div>
+
+      <!-- GROWTH (Featured) -->
+      <div class="plan-card featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Growth</div>
+        <div class="plan-price-custom">Custom</div>
+        <p class="plan-desc">For teams handling higher volume or managing multiple service lines.</p>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> Multiple AI Voice Agents</li>
+          <li><span class="check">✓</span> Everything in Starter</li>
+          <li><span class="check">✓</span> Intake Copilot (guided onboarding)</li>
+          <li><span class="check">✓</span> Confirmation Copilot</li>
+          <li><span class="check">✓</span> Advanced call routing</li>
+          <li><span class="check">✓</span> Weekly ROI reports</li>
+          <li><span class="check">✓</span> Slack / webhook integrations</li>
+          <li><span class="check">✓</span> Priority support</li>
+          <li><span class="check">✓</span> Dedicated onboarding call</li>
+        </ul>
+        <a href="https://cal.com/matthew-martelli/call-with-matt" target="_blank" rel="noopener noreferrer" class="plan-btn plan-btn-primary">Book a Call →</a>
+        <p class="plan-trial">We'll build a custom plan for your volume</p>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="plan-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price-custom">Let's Talk</div>
+        <p class="plan-desc">White-glove service for multi-location businesses and franchises.</p>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> Unlimited AI Voice Agents</li>
+          <li><span class="check">✓</span> Everything in Growth</li>
+          <li><span class="check">✓</span> All Copilots included</li>
+          <li><span class="check">✓</span> Custom voice & personality</li>
+          <li><span class="check">✓</span> Multi-location routing</li>
+          <li><span class="check">✓</span> API access</li>
+          <li><span class="check">✓</span> Dedicated account manager</li>
+          <li><span class="check">✓</span> SLA guarantee</li>
+          <li><span class="check">✓</span> Custom integrations</li>
+        </ul>
+        <a href="https://cal.com/matthew-martelli/call-with-matt" target="_blank" rel="noopener noreferrer" class="plan-btn plan-btn-secondary">Contact Sales →</a>
+        <p class="plan-trial">Built around your business</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="compare-section">
+    <h2>Compare Plans</h2>
+    <p class="subtitle">Everything you get at every level.</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Starter</th>
+          <th>Growth</th>
+          <th>Enterprise</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AI Voice Agents</td>
+          <td>1</td>
+          <td>Multiple</td>
+          <td>Unlimited</td>
+        </tr>
+        <tr>
+          <td>Inbound calls</td>
+          <td class="yes">Unlimited</td>
+          <td class="yes">Unlimited</td>
+          <td class="yes">Unlimited</td>
+        </tr>
+        <tr>
+          <td>Lead qualification</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Calendar booking</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>SMS follow-up</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Call recordings</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>CRM logging</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Intake Copilot</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Confirmation Copilot</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Weekly ROI reports</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Advanced routing</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Custom voice</td>
+          <td class="no">—</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Multi-location</td>
+          <td class="no">—</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>API access</td>
+          <td class="no">—</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Dedicated account manager</td>
+          <td class="no">—</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>SLA guarantee</td>
+          <td class="no">—</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Support</td>
+          <td>Email</td>
+          <td>Priority</td>
+          <td>Dedicated</td>
+        </tr>
+        <tr>
+          <td>Setup</td>
+          <td>24 hours</td>
+          <td>24 hours</td>
+          <td>White-glove</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>Is there really a free trial?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Yes. 14 days, fully functional, no credit card required. Your AI agent will be live and answering calls within 24 hours of signing up. If it's not for you, walk away — no questions asked.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>Are there any per-minute or per-call charges?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>No. $397/mo is flat. Unlimited inbound calls, unlimited minutes. We don't nickel-and-dime you based on volume. One price, everything included.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>How long does setup take?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>About 24 hours. You tell us about your business (5 minutes), we build and configure your AI agent, you review and approve, then forward your calls. Most clients are live the next business day.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>Will callers know it's AI?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Most don't. The voice is natural and conversational, trained on your brand's tone. It handles real conversations — not robotic scripts. We've had clients tell us their customers thought they hired a new receptionist.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>What if I need to cancel?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Cancel anytime. No contracts, no cancellation fees, no retention games. Email us or click one button. We keep it simple because the product speaks for itself.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>Do you integrate with my existing tools?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Yes. Calendar booking via Cal.com, CRM logging to Google Sheets (or your preferred system), Slack notifications, SMS via your existing provider. Growth and Enterprise plans include custom integrations.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>What's the ROI?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>The average missed call costs a home services business $1,200. At $397/mo, one booked job pays for the entire month. Most clients capture 10+ additional leads per month that would have gone to voicemail.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <h2>Stop Losing Jobs to Voicemail</h2>
+    <p>Your AI agent is live in 24 hours. One captured lead pays for the month.</p>
+    <div class="cta-buttons">
+      <a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-primary">Start 14-Day Free Trial →</a>
+      <a href="https://cal.com/matthew-martelli/call-with-matt" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-secondary">Book a 20-min Demo</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <a href="/" class="footer-logo">growthmindset<span>.ai</span></a>
+      <ul class="footer-links">
+        <li><a href="/voice">Voice Agents</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/intake">Get Started</a></li>
+        <li><a href="https://buy.stripe.com/cNi6oA5vwfSM3Zz5nvgUM00" target="_blank" rel="noopener noreferrer">Start Free Trial</a></li>
+      </ul>
+      <p class="footer-copy">© 2026 Growth Mindset AI. Smart Voice Agents for businesses that run on phone calls. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // Sticky nav shadow
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      nav.style.boxShadow = window.scrollY > 20 ? '0 4px 30px rgba(0,0,0,0.4)' : 'none';
+    });
+
+    // Mobile nav
+    const hamburger = document.querySelector('.nav-hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        const isOpen = navLinks.style.display === 'flex';
+        navLinks.style.display = isOpen ? 'none' : 'flex';
+        navLinks.style.flexDirection = 'column';
+        navLinks.style.position = 'absolute';
+        navLinks.style.top = '68px';
+        navLinks.style.left = '0';
+        navLinks.style.right = '0';
+        navLinks.style.background = 'rgba(10,10,10,0.97)';
+        navLinks.style.padding = '1rem 1.5rem 1.5rem';
+        navLinks.style.borderBottom = '1px solid rgba(255,255,255,0.07)';
+        navLinks.style.backdropFilter = 'blur(16px)';
+        if (isOpen) navLinks.style.display = 'none';
+      });
+    }
+  </script>
+</body>
+</html>
