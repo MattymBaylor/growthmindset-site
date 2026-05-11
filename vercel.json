@@ -18,7 +18,8 @@
     { "source": "/voice", "destination": "/voice/index.html" },
     { "source": "/pricing", "destination": "/pricing/index.html" },
     { "source": "/compare", "destination": "/compare/index.html" },
-    { "source": "/speedlead", "destination": "/speedlead/index.html" }
+    { "source": "/speedlead", "destination": "/speedlead/index.html" },
+    { "source": "/calculator", "destination": "/calculator/index.html" }
   ],
   "headers": [
     {

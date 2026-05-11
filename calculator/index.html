@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missed Call Revenue Calculator | Smart Voice Agents</title>
+<meta name="description" content="See exactly how much revenue your contracting business loses from missed calls — and how Smart Voice Agents pays for itself in days.">
+<meta property="og:title" content="Missed Call Revenue Calculator | Smart Voice Agents">
+<meta property="og:description" content="Most contractors miss 62% of incoming calls. Calculate your lost revenue in 30 seconds.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://growthmindset.ai/calculator">
+<link rel="canonical" href="https://growthmindset.ai/calculator">
+<!-- GA -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--card:#12121a;--card2:#1a1a26;--accent:#6c63ff;--accent2:#00d4aa;--accent3:#ff6b6b;--text:#e8e8f0;--muted:#8888aa;--border:#2a2a3d;--glow:0 0 30px rgba(108,99,255,.15)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.hero{text-align:center;padding:3rem 1.5rem 2rem;max-width:700px;margin:0 auto}
+.hero .badge{display:inline-block;background:rgba(108,99,255,.15);color:var(--accent);padding:.35rem 1rem;border-radius:99px;font-size:.8rem;font-weight:600;letter-spacing:.03em;margin-bottom:1.25rem;border:1px solid rgba(108,99,255,.25)}
+.hero h1{font-size:clamp(1.75rem,5vw,2.5rem);font-weight:800;line-height:1.2;margin-bottom:.75rem}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--muted);font-size:1.05rem;max-width:520px;margin:0 auto}
+.calc-wrap{max-width:900px;margin:0 auto;padding:0 1.5rem 3rem}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+@media(max-width:700px){.calc-grid{grid-template-columns:1fr}}
+.input-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--glow)}
+.input-card h2{font-size:1.1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
+.input-card h2 .icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.icon-trade{background:rgba(108,99,255,.15)}
+.icon-numbers{background:rgba(0,212,170,.15)}
+.field{margin-bottom:1.25rem}
+.field label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:.4rem;font-weight:500}
+.field select,.field input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;color:var(--text);font-size:1rem;transition:border-color .2s}
+.field select:focus,.field input:focus{outline:none;border-color:var(--accent)}
+.field select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888aa' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
+.field .hint{font-size:.75rem;color:var(--muted);margin-top:.3rem}
+.range-row{display:flex;align-items:center;gap:.75rem}
+.range-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:6px;background:var(--border);border-radius:3px;outline:none}
+.range-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 8px rgba(108,99,255,.4)}
+.range-val{min-width:60px;text-align:right;font-weight:700;font-size:1rem;color:var(--accent)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--glow);display:flex;flex-direction:column}
+.results-card h2{font-size:1.1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem}
+.stat{background:var(--card2);border-radius:12px;padding:1rem 1.25rem;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center}
+.stat .label{font-size:.85rem;color:var(--muted)}
+.stat .value{font-size:1.35rem;font-weight:800}
+.stat .value.red{color:var(--accent3)}
+.stat .value.green{color:var(--accent2)}
+.stat .value.purple{color:var(--accent)}
+.divider{height:1px;background:var(--border);margin:1rem 0}
+.roi-box{background:linear-gradient(135deg,rgba(0,212,170,.08),rgba(108,99,255,.08));border:1px solid rgba(0,212,170,.2);border-radius:12px;padding:1.25rem;text-align:center;margin-top:auto}
+.roi-box .roi-label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.roi-box .roi-value{font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+.roi-box .roi-sub{font-size:.85rem;color:var(--muted);margin-top:.25rem}
+.cta-section{text-align:center;padding:2.5rem 1.5rem;max-width:600px;margin:0 auto}
+.cta-section p{color:var(--muted);margin-bottom:1.25rem;font-size:1rem}
+.cta-btn{display:inline-block;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;font-size:1.05rem;font-weight:700;padding:.85rem 2.5rem;border-radius:12px;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 20px rgba(108,99,255,.3)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(108,99,255,.45)}
+.data-bar{display:flex;gap:.5rem;align-items:flex-end;height:80px;margin:1rem 0 .5rem}
+.data-bar .bar{flex:1;border-radius:6px 6px 0 0;transition:height .4s ease;position:relative}
+.data-bar .bar.missed{background:linear-gradient(180deg,var(--accent3),rgba(255,107,107,.4))}
+.data-bar .bar.answered{background:linear-gradient(180deg,var(--accent2),rgba(0,212,170,.4))}
+.bar-labels{display:flex;gap:.5rem;font-size:.7rem;color:var(--muted);text-align:center}
+.bar-labels span{flex:1}
+.fine{text-align:center;color:var(--muted);font-size:.75rem;padding:0 1.5rem 2rem;max-width:600px;margin:0 auto}
+.fine a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">⚡ FREE TOOL — 30-SECOND CALCULATION</div>
+  <h1>How Much Revenue Are You <span>Losing to Missed Calls?</span></h1>
+  <p>Most contractors miss 62% of incoming calls. Every unanswered ring is a customer calling your competitor instead.</p>
+</div>
+
+<div class="calc-wrap">
+  <div class="calc-grid">
+    <div class="input-card">
+      <h2><span class="icon icon-trade">🔧</span> Your Business</h2>
+
+      <div class="field">
+        <label>What trade are you in?</label>
+        <select id="trade" onchange="recalc()">
+          <option value="hvac" data-miss="62" data-afterhours="89" data-avg="485" data-leak="124000">HVAC</option>
+          <option value="plumbing" data-miss="58" data-afterhours="91" data-avg="380" data-leak="81000">Plumbing</option>
+          <option value="roofing" data-miss="65" data-afterhours="97" data-avg="8500" data-leak="672000">Roofing</option>
+          <option value="electrical" data-miss="55" data-afterhours="88" data-avg="420" data-leak="96000">Electrical</option>
+          <option value="gc" data-miss="68" data-afterhours="98" data-avg="12000" data-leak="720000">General Contractor</option>
+          <option value="landscaping" data-miss="60" data-afterhours="92" data-avg="350" data-leak="68000">Landscaping</option>
+          <option value="pest" data-miss="57" data-afterhours="90" data-avg="280" data-leak="52000">Pest Control</option>
+          <option value="cleaning" data-miss="59" data-afterhours="93" data-avg="220" data-leak="45000">Cleaning Services</option>
+          <option value="other" data-miss="62" data-afterhours="90" data-avg="400" data-leak="100000">Other Home Services</option>
+        </select>
+      </div>
+
+      <h2 style="margin-top:.5rem"><span class="icon icon-numbers">📊</span> Your Numbers</h2>
+
+      <div class="field">
+        <label>Monthly incoming calls</label>
+        <div class="range-row">
+          <input type="range" id="calls" min="50" max="1000" step="10" value="200" oninput="recalc()">
+          <span class="range-val" id="callsVal">200</span>
+        </div>
+        <div class="hint">Include all incoming calls — during and after hours</div>
+      </div>
+
+      <div class="field">
+        <label>Average job value ($)</label>
+        <div class="range-row">
+          <input type="range" id="jobval" min="100" max="25000" step="50" value="485" oninput="recalc()">
+          <span class="range-val" id="jobvalVal">$485</span>
+        </div>
+        <div class="hint">Average ticket size for a booked job</div>
+      </div>
+
+      <div class="field">
+        <label>Your close rate (%)</label>
+        <div class="range-row">
+          <input type="range" id="closerate" min="10" max="80" step="5" value="35" oninput="recalc()">
+          <span class="range-val" id="closerateVal">35%</span>
+        </div>
+        <div class="hint">% of answered calls that become booked jobs</div>
+      </div>
+    </div>
+
+    <div class="results-card">
+      <h2>📉 Your Monthly Losses</h2>
+
+      <div class="data-bar">
+        <div class="bar missed" id="barMissed" style="height:62%"></div>
+        <div class="bar answered" id="barAnswered" style="height:38%"></div>
+      </div>
+      <div class="bar-labels">
+        <span id="barMissedLabel">124 missed (62%)</span>
+        <span id="barAnsweredLabel">76 answered (38%)</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="stat">
+        <span class="label">Calls you're missing/month</span>
+        <span class="value red" id="missedCalls">124</span>
+      </div>
+      <div class="stat">
+        <span class="label">Lost jobs (78% hire first responder)</span>
+        <span class="value red" id="lostJobs">34</span>
+      </div>
+      <div class="stat">
+        <span class="label">Revenue walking out the door</span>
+        <span class="value red" id="lostRev">$16,490/mo</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="stat">
+        <span class="label">Smart Voice Agents cost</span>
+        <span class="value purple">$397/mo</span>
+      </div>
+      <div class="stat">
+        <span class="label">Revenue recovered (conservative)</span>
+        <span class="value green" id="recovered">$9,894/mo</span>
+      </div>
+
+      <div class="roi-box">
+        <div class="roi-label">Your Return on Investment</div>
+        <div class="roi-value" id="roiValue">24.9x</div>
+        <div class="roi-sub" id="roiSub">SVA pays for itself in <strong id="paybackDays">1.2 days</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <p>Stop leaving money on the table. Smart Voice Agents answers every call 24/7 — books jobs while you sleep.</p>
+  <a href="https://growthmindset.ai/voice" class="cta-btn">See How It Works →</a>
+</div>
+
+<div class="fine">
+  <p>Data sourced from <a href="#">CallJolt 2026</a>, <a href="#">NextPhone</a>, and <a href="#">ServiceTitan Industry Reports</a>. Miss rates are industry averages — your actual rate may vary. "78% hire first responder" from <a href="#">ServiceTitan 2025 Consumer Study</a>. Recovery estimate assumes 60% of previously-missed calls are captured by SVA.</p>
+</div>
+
+<script>
+function fmt(n){return n>=1000?'$'+n.toLocaleString('en-US'):'$'+n}
+function recalc(){
+  const sel=document.getElementById('trade');
+  const opt=sel.options[sel.selectedIndex];
+  const missRate=parseInt(opt.dataset.miss)/100;
+  const calls=parseInt(document.getElementById('calls').value);
+  const jobVal=parseInt(document.getElementById('jobval').value);
+  const closeRate=parseInt(document.getElementById('closerate').value)/100;
+
+  // Update displayed values
+  document.getElementById('callsVal').textContent=calls;
+  document.getElementById('jobvalVal').textContent=fmt(jobVal);
+  document.getElementById('closerateVal').textContent=Math.round(closeRate*100)+'%';
+
+  // Core math
+  const missed=Math.round(calls*missRate);
+  const answered=calls-missed;
+  // 78% of callers hire the first responder — so missed calls are mostly lost
+  const lostOpportunities=Math.round(missed*0.78);
+  const lostJobs=Math.round(lostOpportunities*closeRate);
+  const lostRev=lostJobs*jobVal;
+
+  // SVA recovery: conservative 60% capture rate of previously missed
+  const svaCaptured=Math.round(missed*0.60);
+  const svaJobs=Math.round(svaCaptured*closeRate*0.78);
+  const svaRev=svaJobs*jobVal;
+  const svaCost=397;
+  const roi=svaRev/svaCost;
+  const paybackDays=svaRev>0?Math.max(0.1,(svaCost/(svaRev/30))).toFixed(1):'∞';
+
+  // Update bars
+  const missedPct=Math.round(missRate*100);
+  document.getElementById('barMissed').style.height=missedPct+'%';
+  document.getElementById('barAnswered').style.height=(100-missedPct)+'%';
+  document.getElementById('barMissedLabel').textContent=missed+' missed ('+missedPct+'%)';
+  document.getElementById('barAnsweredLabel').textContent=answered+' answered ('+(100-missedPct)+'%)';
+
+  // Update stats
+  document.getElementById('missedCalls').textContent=missed.toLocaleString();
+  document.getElementById('lostJobs').textContent=lostJobs.toLocaleString();
+  document.getElementById('lostRev').textContent=fmt(lostRev)+'/mo';
+  document.getElementById('recovered').textContent=fmt(svaRev)+'/mo';
+  document.getElementById('roiValue').textContent=roi>=1?roi.toFixed(1)+'x':'<1x';
+  document.getElementById('paybackDays').textContent=paybackDays+' days';
+}
+
+// Set default job value from trade selection
+document.getElementById('trade').addEventListener('change',function(){
+  const opt=this.options[this.selectedIndex];
+  document.getElementById('jobval').value=parseInt(opt.dataset.avg);
+  recalc();
+});
+
+recalc();
+</script>
+</body>
+</html>
