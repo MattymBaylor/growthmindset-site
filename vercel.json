@@ -16,7 +16,9 @@
     { "source": "/custom", "destination": "/custom/index.html" },
     { "source": "/auto", "destination": "/locksmith/index.html" },
     { "source": "/voice", "destination": "/voice/index.html" },
-    { "source": "/pricing", "destination": "/pricing/index.html" }
+    { "source": "/pricing", "destination": "/pricing/index.html" },
+    { "source": "/compare", "destination": "/compare/index.html" },
+    { "source": "/speedlead", "destination": "/speedlead/index.html" }
   ],
   "headers": [
     {
