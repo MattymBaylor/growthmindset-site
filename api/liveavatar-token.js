@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       stt_config: body.stt_config || { provider: 'deepgram', language: 'en', model: 'nova-2' },
     },
     video_settings: {
-      quality: body.quality || 'very_high',  // 1080p max
+      quality: body.quality || 'high',  // 720p — downgraded from very_high; 1080p requires Business/Enterprise plan
       encoding: body.encoding || 'H264',
     },
   };
