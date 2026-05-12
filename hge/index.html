@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirm Your Appointment — Home Genius Exteriors</title>
+  <meta name="description" content="Confirm your upcoming project appointment with Home Genius Exteriors." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --hge-blue: #204ce5;
+      --hge-blue-dark: #1638ae;
+      --hge-navy: #03123d;
+      --hge-sky: #44b2e5;
+      --hge-green: #20fc8f;
+      --white: #ffffff;
+      --gray-50: #f8f9fb;
+      --gray-100: #eef1f6;
+      --gray-200: #dde2eb;
+      --gray-300: #c2cad6;
+      --gray-400: #8a93a3;
+      --gray-500: #5d6676;
+      --gray-600: #434b58;
+      --gray-700: #2a3040;
+      --border: #e5e9f0;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-700);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Bebas Neue', Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      color: var(--hge-navy);
+      line-height: 1.1;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      padding: 14px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--hge-navy);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    }
+    .logo-img { height: 44px; width: auto; display: block; }
+    .nav-phone {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .nav-phone svg { color: var(--hge-sky); }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--hge-navy) 0%, #0a1d52 100%);
+      color: var(--white);
+      padding: 60px 24px 50px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -50%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(32,76,229,0.25), transparent 60%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 720px; margin: 0 auto; text-align: center; position: relative; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(32,252,143,0.15);
+      border: 1px solid rgba(32,252,143,0.4);
+      color: var(--hge-green);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px; letter-spacing: 0.15em;
+      padding: 5px 14px;
+      border-radius: 3px;
+      margin-bottom: 18px;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px; background: var(--hge-green); border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .hero h1 {
+      color: var(--white);
+      font-size: clamp(36px, 5.5vw, 56px);
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+    .hero h1 .accent { color: var(--hge-green); }
+    .hero-sub {
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* APPOINTMENT CARD (boarding pass style) */
+    .appointment-wrap {
+      max-width: 760px;
+      margin: -40px auto 0;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+    .appointment-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(3,18,61,0.15);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .ac-header {
+      background: var(--hge-navy);
+      color: white;
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .ac-header-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.7);
+    }
+    .ac-confirmation-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.1em;
+      color: var(--hge-green);
+    }
+    .ac-body {
+      padding: 36px 32px 32px;
+    }
+    .ac-greeting {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px;
+      color: var(--hge-navy);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+    .ac-greeting .name { color: var(--hge-blue); }
+    .ac-subgreeting {
+      color: var(--gray-500);
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    /* KEY APPOINTMENT DETAILS */
+    .ac-datetime {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 20px;
+      align-items: center;
+      padding: 24px;
+      background: var(--gray-50);
+      border-radius: 10px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+    .ac-date, .ac-time {
+      text-align: center;
+    }
+    .ac-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--gray-400);
+      margin-bottom: 4px;
+    }
+    .ac-date-main {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px;
+      color: var(--hge-navy);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .ac-date-sub {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .ac-time-main {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px;
+      color: var(--hge-navy);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .ac-time-sub {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+    .ac-arrow {
+      color: var(--hge-blue);
+      font-size: 24px;
+    }
+
+    /* INFO ROWS */
+    .ac-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+      gap: 16px;
+    }
+    .ac-row:last-of-type { border-bottom: none; }
+    .ac-row-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      color: var(--gray-500);
+    }
+    .ac-row-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-700);
+      line-height: 1.5;
+    }
+    .ac-row-value .secondary {
+      font-weight: 400;
+      color: var(--gray-500);
+      font-size: 13px;
+      display: block;
+      margin-top: 2px;
+    }
+    .ac-row-value .badge {
+      display: inline-block;
+      background: rgba(32,76,229,0.1);
+      color: var(--hge-blue);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      padding: 2px 10px;
+      border-radius: 3px;
+      margin-left: 6px;
+    }
+
+    /* CONFIRMATION SECTION */
+    .ac-confirm-section {
+      margin-top: 28px;
+      padding-top: 28px;
+      border-top: 2px dashed var(--border);
+    }
+    .ac-confirm-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--hge-navy);
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .ac-checkboxes {
+      background: var(--gray-50);
+      padding: 20px 24px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    .ac-checkbox {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .ac-checkbox:last-child { border-bottom: none; }
+    .ac-checkbox input[type="checkbox"] {
+      width: 22px; height: 22px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: var(--hge-blue);
+      flex-shrink: 0;
+    }
+    .ac-checkbox-text {
+      font-size: 14px;
+      color: var(--gray-700);
+      line-height: 1.5;
+    }
+    .ac-checkbox-text strong { color: var(--hge-navy); }
+    .ac-checkbox-help {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .ac-checkbox-help .ask-avatar {
+      color: var(--hge-blue);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .ac-checkbox-help .ask-avatar:hover { text-decoration: underline; }
+
+    .ac-notes-group {
+      margin-top: 18px;
+    }
+    .ac-notes-group label {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+    }
+    .ac-notes-group textarea {
+      width: 100%;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--gray-700);
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .ac-notes-group textarea:focus {
+      border-color: var(--hge-blue);
+      box-shadow: 0 0 0 3px rgba(32,76,229,0.1);
+    }
+    .ac-notes-hint {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+    .ac-notes-hint .ask-avatar {
+      color: var(--hge-blue);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .ac-notes-hint .ask-avatar:hover { text-decoration: underline; }
+
+    /* CTA */
+    .ac-cta-section {
+      margin-top: 28px;
+      text-align: center;
+    }
+    .confirm-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--hge-green);
+      color: var(--hge-navy);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 0.08em;
+      padding: 20px 50px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      max-width: 460px;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 8px 20px rgba(32,252,143,0.3);
+    }
+    .confirm-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(32,252,143,0.45);
+    }
+    .confirm-btn:active { transform: translateY(0); }
+    .confirm-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .reschedule-note {
+      margin-top: 18px;
+      font-size: 14px;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+    .reschedule-note strong {
+      color: var(--hge-navy);
+      font-size: 16px;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.03em;
+    }
+    .reschedule-note a {
+      color: var(--hge-blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* WHAT TO EXPECT */
+    .expect-section {
+      max-width: 760px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+    }
+    .expect-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--hge-navy);
+      letter-spacing: 0.06em;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .expect-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .expect-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 18px;
+      text-align: center;
+    }
+    .expect-icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: rgba(32,76,229,0.1);
+      color: var(--hge-blue);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .expect-card h4 {
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .expect-card p {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.5;
+    }
+
+    /* TRUST ROW */
+    .trust-row {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin: 40px auto;
+      flex-wrap: wrap;
+      padding: 0 24px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: var(--gray-500);
+    }
+    .trust-item svg { color: var(--hge-blue); flex-shrink: 0; }
+
+    /* FOOTER */
+    footer {
+      background: var(--hge-navy);
+      color: rgba(255,255,255,0.7);
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 12px;
+      margin-top: 40px;
+    }
+    footer a { color: var(--hge-green); text-decoration: none; }
+    footer .footer-logo { height: 30px; margin-bottom: 14px; filter: brightness(0) invert(1); }
+
+    /* ============ AVATAR WIDGET ============ */
+    .av-launcher {
+      position: fixed; right: 24px; bottom: 24px; z-index: 1000;
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .av-launcher:hover { transform: translateY(-2px); }
+    .av-launcher.hidden { display: none; }
+    .av-launcher-msg {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--hge-navy);
+      padding: 12px 18px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(3,18,61,0.15);
+      max-width: 230px;
+    }
+    .av-launcher-btn {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--hge-blue), var(--hge-blue-dark));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 30px rgba(32,76,229,0.45);
+      position: relative;
+    }
+    .av-launcher-btn svg { color: white; width: 28px; height: 28px; }
+    .av-launcher-btn::after {
+      content: '';
+      position: absolute; top: -2px; right: -2px;
+      width: 14px; height: 14px;
+      background: var(--hge-green);
+      border-radius: 50%;
+      border: 2px solid var(--white);
+      animation: pulse 2s infinite;
+    }
+    .av-widget {
+      position: fixed; right: 24px; bottom: 24px;
+      width: 380px; height: 580px; z-index: 1001;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(3,18,61,0.25);
+      animation: slideUp 0.3s ease-out;
+    }
+    .av-widget.open { display: flex; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .av-header {
+      padding: 14px 16px;
+      background: var(--hge-navy);
+      color: white;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .av-header-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--hge-blue), var(--hge-sky));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 14px;
+      flex-shrink: 0;
+    }
+    .av-header-info { flex: 1; min-width: 0; }
+    .av-header-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 17px;
+      letter-spacing: 0.05em;
+    }
+    .av-header-subtitle {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+    }
+    .av-header-status {
+      font-size: 11px; color: rgba(255,255,255,0.7);
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 2px;
+    }
+    .av-header-status .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+    }
+    .av-header-status.live .status-dot { background: var(--hge-green); }
+    .av-header-status.live { color: var(--hge-green); }
+    .av-close {
+      background: transparent; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.7); padding: 4px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+    }
+    .av-close:hover { background: rgba(255,255,255,0.1); color: white; }
+
+    .av-video-wrap {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: var(--hge-navy);
+      position: relative;
+      overflow: hidden;
+    }
+    .av-video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      background: var(--hge-navy);
+    }
+    .av-video-placeholder {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 14px;
+      color: rgba(255,255,255,0.6);
+      background: radial-gradient(ellipse at center, #0a1d52 0%, var(--hge-navy) 100%);
+    }
+    .av-photo {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--hge-blue), var(--hge-sky));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; font-weight: 700; color: white;
+      font-family: 'Bebas Neue', sans-serif;
+    }
+    .av-transcript {
+      flex: 1; overflow-y: auto;
+      padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 10px;
+      background: var(--gray-50);
+    }
+    .av-transcript::-webkit-scrollbar { width: 4px; }
+    .av-transcript::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+    .av-msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+    .av-msg.avatar {
+      background: var(--white);
+      color: var(--gray-700);
+      align-self: flex-start;
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+    .av-msg.user {
+      background: var(--hge-blue); color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .av-msg.system {
+      background: transparent;
+      color: var(--gray-500);
+      font-size: 11px;
+      align-self: center;
+      font-style: italic;
+    }
+    .av-input-row {
+      padding: 10px 12px;
+      border-top: 1px solid var(--border);
+      display: flex; gap: 8px;
+      background: var(--white);
+    }
+    .av-input {
+      flex: 1;
+      background: var(--gray-50);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--gray-700);
+      font-family: inherit;
+      outline: none;
+    }
+    .av-input:focus { border-color: var(--hge-blue); background: white; }
+    .av-input:disabled { opacity: 0.5; cursor: not-allowed; }
+    .av-mic, .av-send {
+      width: 40px; height: 40px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--gray-50);
+      color: var(--gray-500);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .av-mic:hover, .av-send:hover {
+      background: var(--hge-blue); color: white; border-color: var(--hge-blue);
+    }
+    .av-mic.active {
+      background: var(--hge-blue); color: white; border-color: var(--hge-blue);
+    }
+    .av-mic:disabled, .av-send:disabled { opacity: 0.4; cursor: not-allowed; }
+    .av-start-overlay {
+      position: absolute; inset: 0;
+      background: rgba(3,18,61,0.92);
+      backdrop-filter: blur(8px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; text-align: center; padding: 20px;
+      z-index: 5;
+      color: white;
+    }
+    .av-start-overlay.hidden { display: none; }
+    .av-start-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 0.05em;
+    }
+    .av-start-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      max-width: 270px;
+      line-height: 1.5;
+    }
+    .av-start-btn {
+      background: var(--hge-green);
+      color: var(--hge-navy);
+      padding: 12px 28px;
+      border-radius: 4px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px; letter-spacing: 0.08em;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .av-start-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(32,252,143,0.3);
+    }
+    .av-start-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      nav { padding: 12px 20px; }
+      .nav-phone { font-size: 16px; }
+      .hero { padding: 40px 20px 30px; }
+      .appointment-wrap { margin-top: -20px; }
+      .ac-body { padding: 24px 20px; }
+      .ac-header { padding: 16px 20px; }
+      .ac-row { grid-template-columns: 1fr; gap: 2px; padding: 12px 0; }
+      .ac-datetime { grid-template-columns: 1fr; gap: 12px; }
+      .ac-arrow { display: none; }
+      .expect-grid { grid-template-columns: 1fr; }
+      .av-widget {
+        right: 12px; bottom: 12px; left: 12px;
+        width: auto; height: 80vh; max-height: 600px;
+      }
+      .av-launcher { right: 16px; bottom: 16px; }
+      .av-launcher-msg { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="https://homegeniusexteriors.com/" aria-label="Home Genius Exteriors">
+      <img class="logo-img" src="/hge-assets/hge-logo-light.png" alt="Home Genius Exteriors" />
+    </a>
+    <a href="tel:2166267928" class="nav-phone">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+      (216) 626-7928
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        APPOINTMENT SCHEDULED
+      </div>
+      <h1>HI <span class="accent" id="heroName">JOHN</span>, YOU'RE ALL SET</h1>
+      <p class="hero-sub">Here are the details for your upcoming Home Genius Exteriors appointment. Review everything below and tap confirm when you're ready.</p>
+    </div>
+  </section>
+
+  <!-- APPOINTMENT CARD -->
+  <div class="appointment-wrap">
+    <div class="appointment-card">
+      <div class="ac-header">
+        <div>
+          <div class="ac-header-label">CONFIRMATION #</div>
+          <div class="ac-confirmation-num" id="confirmNum">HGE-20260421-1047</div>
+        </div>
+        <div>
+          <div class="ac-header-label" style="text-align:right;">STATUS</div>
+          <div class="ac-confirmation-num" style="text-align:right;">AWAITING YOUR CONFIRMATION</div>
+        </div>
+      </div>
+
+      <div class="ac-body">
+        <h2 class="ac-greeting">APPOINTMENT FOR <span class="name" id="custName">JOHN SMITH</span></h2>
+        <p class="ac-subgreeting">Please review the details below and confirm everything looks right.</p>
+
+        <!-- DATE/TIME -->
+        <div class="ac-datetime">
+          <div class="ac-date">
+            <div class="ac-label">DATE</div>
+            <div class="ac-date-main" id="apptDate">MON · APR 21</div>
+            <div class="ac-date-sub">2026</div>
+          </div>
+          <div class="ac-arrow">→</div>
+          <div class="ac-time">
+            <div class="ac-label">ARRIVAL WINDOW</div>
+            <div class="ac-time-main" id="apptTime">10:00 AM</div>
+            <div class="ac-time-sub">approx. 2–3 hours</div>
+          </div>
+        </div>
+
+        <!-- DETAILS -->
+        <div class="ac-row">
+          <div class="ac-row-label">SERVICE</div>
+          <div class="ac-row-value" id="serviceType">
+            Free Roofing Estimate <span class="badge">NO OBLIGATION</span>
+            <span class="secondary">Full inspection + same-day price quote</span>
+          </div>
+        </div>
+        <div class="ac-row">
+          <div class="ac-row-label">ADDRESS</div>
+          <div class="ac-row-value" id="apptAddress">
+            123 Main Street
+            <span class="secondary">Naples, FL 34102</span>
+          </div>
+        </div>
+        <div class="ac-row">
+          <div class="ac-row-label">YOUR REP</div>
+          <div class="ac-row-value" id="apptRep">
+            Marcus Chen
+            <span class="secondary">Senior Project Consultant · 12+ years experience</span>
+          </div>
+        </div>
+        <div class="ac-row">
+          <div class="ac-row-label">CONTACT</div>
+          <div class="ac-row-value" id="apptContact">
+            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="72181d1a1c5c011f1b061a32171f131b1e5c111d1f">[email&#160;protected]</a>
+            <span class="secondary">(555) 867-5309</span>
+          </div>
+        </div>
+
+        <!-- CONFIRMATION SECTION -->
+        <form id="confirmForm">
+          <div class="ac-confirm-section">
+            <h3 class="ac-confirm-title">A FEW QUICK THINGS TO CONFIRM</h3>
+
+            <div class="ac-checkboxes">
+              <label class="ac-checkbox">
+                <input type="checkbox" id="chkDate" name="chk_date" required />
+                <div class="ac-checkbox-text">
+                  <strong>I can make the appointment on Mon, Apr 21 at 10:00 AM.</strong>
+                  <div class="ac-checkbox-help">Can't make it? <strong>Call (216) 626-7928 to reschedule.</strong></div>
+                </div>
+              </label>
+
+              <label class="ac-checkbox">
+                <input type="checkbox" id="chkHomeowners" name="chk_homeowners" required />
+                <div class="ac-checkbox-text">
+                  <strong>All homeowners will be present at the appointment.</strong>
+                  <div class="ac-checkbox-help">
+                    So everyone can hear the recommendations and decide together.
+                    <a class="ask-avatar" data-prompt="help_all_homeowners">Why is this important? Ask Jessica →</a>
+                  </div>
+                </div>
+              </label>
+
+              <label class="ac-checkbox">
+                <input type="checkbox" id="chkAddress" name="chk_address" required />
+                <div class="ac-checkbox-text">
+                  <strong>The address above is correct.</strong>
+                  <div class="ac-checkbox-help">We'll inspect the exterior at this property.</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="ac-notes-group">
+              <label for="access_notes">ACCESS NOTES <span style="font-weight:400;color:var(--gray-400);font-size:11px;">(optional)</span></label>
+              <textarea id="access_notes" name="access_notes" placeholder="Gate codes, parking, pets, HOA rules, or anything else we should know..."></textarea>
+              <div class="ac-notes-hint">
+                Helps our rep arrive smoothly. <a class="ask-avatar" data-prompt="help_access_notes">Not sure what to put? Ask Jessica →</a>
+              </div>
+            </div>
+
+            <div class="ac-cta-section">
+              <button type="submit" class="confirm-btn" id="confirmBtn">
+                ✓ YES — CONFIRM MY APPOINTMENT
+              </button>
+              <p class="reschedule-note">
+                Need to reschedule? Call <strong><a href="tel:2166267928">(216) 626-7928</a></strong> — we'll take care of it.
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT TO EXPECT -->
+  <div class="expect-section">
+    <h3 class="expect-title">WHAT TO EXPECT ON APPOINTMENT DAY</h3>
+    <div class="expect-grid">
+      <div class="expect-card">
+        <div class="expect-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4>ON-TIME ARRIVAL</h4>
+        <p>Marcus will arrive within your scheduled window. You'll get a text when he's on the way.</p>
+      </div>
+      <div class="expect-card">
+        <div class="expect-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h4>FULL INSPECTION</h4>
+        <p>Thorough exterior walk-through, including roof, gutters, siding, and any problem areas.</p>
+      </div>
+      <div class="expect-card">
+        <div class="expect-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h4>SAME-DAY ESTIMATE</h4>
+        <p>Transparent pricing, financing options, and warranty details reviewed before Marcus leaves.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUST ROW -->
+  <div class="trust-row">
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      12,000+ JOBS COMPLETED
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      A+ BBB RATING
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      PLATINUM LIFETIME WARRANTIES
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      FREE · NO-OBLIGATION
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="/hge-assets/logo-white-blue.svg" alt="Home Genius Exteriors" class="footer-logo" />
+    <div>Home Genius Exteriors · <a href="tel:2166267928">(216) 626-7928</a> · <a href="https://homegeniusexteriors.com/">homegeniusexteriors.com</a></div>
+    <div style="margin-top:8px;">Owens Corning Platinum Preferred Contractor · A+ BBB · 12,000+ Jobs</div>
+  </footer>
+
+  <!-- AVATAR LAUNCHER -->
+  <div class="av-launcher" id="avLauncher">
+    <div class="av-launcher-msg">👋 Hi John! I'm Jessica — questions before you confirm?</div>
+    <div class="av-launcher-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- AVATAR WIDGET -->
+  <div class="av-widget" id="avWidget">
+    <div class="av-header">
+      <div class="av-header-avatar">J</div>
+      <div class="av-header-info">
+        <div class="av-header-name">JESSICA</div>
+        <div class="av-header-status" id="avStatus">
+          <span class="status-dot"></span>
+          <span class="status-text">Home Genius Exteriors</span>
+        </div>
+      </div>
+      <button class="av-close" id="avClose" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <div class="av-video-wrap">
+      <video id="avVideo" class="av-video" autoplay playsinline></video>
+      <div class="av-video-placeholder" id="avPlaceholder">
+        <div class="av-photo">J</div>
+        <div style="font-size:12px;">Ready when you are</div>
+      </div>
+      <div class="av-start-overlay" id="avStartOverlay">
+        <div class="av-photo" style="width:72px;height:72px;font-size:28px;">J</div>
+        <div class="av-start-title">MEET JESSICA</div>
+        <div class="av-start-desc">I'll answer any questions about your upcoming appointment.</div>
+        <button class="av-start-btn" id="avStartBtn">START CONVERSATION</button>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);">Uses your mic. You can type too.</div>
+      </div>
+    </div>
+
+    <div class="av-transcript" id="avTranscript"></div>
+
+    <div class="av-input-row">
+      <button class="av-mic" id="avMic" aria-label="Toggle microphone" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+      <input type="text" class="av-input" id="avInput" placeholder="Ask Jessica..." disabled />
+      <button class="av-send" id="avSend" aria-label="Send" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ============ LIVEAVATAR CONFIG ============
+    // API key is held server-side at /api/liveavatar-token (Vercel serverless function).
+    const API_BASE = 'https://api.liveavatar.com';
+    // Any of these can still be overridden per-request if we need to point this widget at a different persona.
+    const TOKEN_ENDPOINT = "/api/liveavatar-token";
+    // HGE-specific persona — override the gm defaults so this widget uses the HGE Erin context
+    // (Avatar + voice are the placeholders we were using before the custom HGE avatar trains.)
+    const OVERRIDES = {
+      avatar_id:  "09919247-f4b2-45d8-a75e-86fc2fceaebf",  // Katya in Pink Suit (the woman from the embed Matt showed)
+      // voice_id intentionally omitted → uses her default voice (864a26b8... British)
+      context_id: "34878300-8406-4e32-8176-1ec1ef44aceb",  // HGE Erin appointment confirmation context
+    };
+
+    const HELP_PROMPTS = {
+      help_all_homeowners: "Why do all homeowners need to be present at the appointment?",
+      help_access_notes:   "What kind of access notes should I include? Give me some examples."
+    };
+
+    const launcher   = document.getElementById('avLauncher');
+    const widget     = document.getElementById('avWidget');
+    const closeBtn   = document.getElementById('avClose');
+    const videoEl    = document.getElementById('avVideo');
+    const placeholder= document.getElementById('avPlaceholder');
+    const startOvl   = document.getElementById('avStartOverlay');
+    const startBtn   = document.getElementById('avStartBtn');
+    const statusEl   = document.getElementById('avStatus');
+    const statusText = statusEl.querySelector('.status-text');
+    const transcript = document.getElementById('avTranscript');
+    const micBtn     = document.getElementById('avMic');
+    const inputEl    = document.getElementById('avInput');
+    const sendBtn    = document.getElementById('avSend');
+
+    let room = null;
+    let sessionId = null;
+    let sessionToken = null;
+    let micOn = false;
+    let isStarting = false;
+    let pendingPrompt = null;
+
+    function openWidget() { widget.classList.add('open'); launcher.classList.add('hidden'); }
+    function closeWidget() { widget.classList.remove('open'); launcher.classList.remove('hidden'); }
+    function setStatus(text, live=false) { statusText.textContent = text; statusEl.classList.toggle('live', live); }
+    function addMsg(kind, text) {
+      if (!text) return;
+      const div = document.createElement('div');
+      div.className = 'av-msg ' + kind;
+      div.textContent = text;
+      transcript.appendChild(div);
+      transcript.scrollTop = transcript.scrollHeight;
+    }
+    launcher.addEventListener('click', openWidget);
+    closeBtn.addEventListener('click', closeWidget);
+
+    // Open Jessica widget automatically on page load so first-time visitors see her immediately.
+    // (If they close her, she stays closed — we respect the click.)
+    setTimeout(openWidget, 400);
+
+    // Single call to our backend. Returns { session_id, session_token, livekit_url, livekit_client_token }.
+    async function fetchSessionCredentials() {
+      const res = await fetch(TOKEN_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(OVERRIDES),
+      });
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error('Token endpoint ' + res.status + ': ' + body.slice(0, 200));
+      }
+      const data = await res.json();
+      if (!data.livekit_url || !data.livekit_client_token) {
+        throw new Error('Bad credentials payload: ' + JSON.stringify(data).slice(0, 200));
+      }
+      return data;
+    }
+    async function connectToRoom(livekitUrl, clientToken) {
+      const { Room, RoomEvent, Track } = LivekitClient;
+      // adaptiveStream:false because the widget is fixed-size and sometimes off-screen;
+      // avoids IntersectionObserver pausing tracks before layout settles.
+      room = new Room({ adaptiveStream: false, dynacast: true });
+
+      // Video must be muted until user interaction so autoplay isn't blocked.
+      videoEl.muted = true;
+      videoEl.autoplay = true;
+      videoEl.playsInline = true;
+
+      const tryPlay = async (el) => { try { await el.play(); } catch (e) { /* autoplay policy */ } };
+
+      async function attachTrack(track) {
+        if (track.kind === Track.Kind.Video) {
+          track.attach(videoEl);
+          await tryPlay(videoEl);
+          placeholder.style.display = 'none';
+          setStatus('Live', true);
+        } else if (track.kind === Track.Kind.Audio) {
+          const a = track.attach();
+          a.autoplay = true;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          await tryPlay(a);
+        }
+      }
+
+      room.on(RoomEvent.TrackSubscribed, attachTrack);
+      room.on(RoomEvent.DataReceived, (payload, participant, kind, topic) => {
+        if (topic !== 'agent-response') return;
+        try { handleServerEvent(JSON.parse(new TextDecoder().decode(payload))); } catch (e) {}
+      });
+      room.on(RoomEvent.Disconnected, () => { setStatus('Ended'); });
+
+      await room.connect(livekitUrl, clientToken);
+
+      // Catch-up: attach any tracks that were already subscribed before our listener was attached
+      room.remoteParticipants.forEach(p => {
+        p.trackPublications.forEach(pub => {
+          if (pub.track && pub.isSubscribed) attachTrack(pub.track);
+        });
+      });
+    }
+    function handleServerEvent(msg) {
+      switch (msg.event_type) {
+        case 'avatar.transcription': if (msg.text) addMsg('avatar', msg.text); break;
+        case 'user.transcription':   if (msg.text) addMsg('user', msg.text); break;
+        case 'avatar.speak_started': setStatus('Speaking', true); break;
+        case 'avatar.speak_ended':   setStatus('Listening', true); break;
+        case 'user.speak_ended':     setStatus('Thinking', true); break;
+      }
+    }
+    async function sendControlEvent(eventType, payload = {}) {
+      if (!room || !room.localParticipant) return;
+      const data = { event_id: crypto.randomUUID(), event_type: eventType, session_id: sessionId, source_event_id: null, ...payload };
+      await room.localParticipant.publishData(
+        new TextEncoder().encode(JSON.stringify(data)),
+        { reliable: true, topic: 'agent-control' }
+      );
+    }
+    async function sendText(text) {
+      if (!text.trim() || !room) return;
+      addMsg('user', text);
+      await sendControlEvent('avatar.speak_response', { text });
+    }
+
+    startBtn.addEventListener('click', async () => {
+      if (isStarting) return;
+      isStarting = true;
+      startBtn.disabled = true;
+      startBtn.textContent = 'CONNECTING...';
+      setStatus('Connecting');
+      try {
+        if (typeof LivekitClient === 'undefined') throw new Error('LiveKit SDK not loaded');
+        const creds = await fetchSessionCredentials();
+        sessionId = creds.session_id;
+        sessionToken = creds.session_token;
+        await connectToRoom(creds.livekit_url, creds.livekit_client_token);
+        // Unmute video now that we're connected post-user-gesture
+        videoEl.muted = false;
+        try { await videoEl.play(); } catch (e) {}
+        startOvl.classList.add('hidden');
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+        micBtn.disabled = false;
+        setStatus('Connected', true);
+        if (pendingPrompt) {
+          const p = pendingPrompt; pendingPrompt = null;
+          setTimeout(() => sendText(p), 2500);
+        }
+      } catch (err) {
+        console.error('[Jessica]', err);
+        setStatus('Error');
+        addMsg('system', 'Could not connect: ' + err.message);
+        startBtn.disabled = false;
+        startBtn.textContent = 'TRY AGAIN';
+      } finally { isStarting = false; }
+    });
+
+    sendBtn.addEventListener('click', async () => {
+      const t = inputEl.value.trim(); if (!t) return;
+      inputEl.value = ''; await sendText(t);
+    });
+    inputEl.addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        const t = inputEl.value.trim(); if (!t) return;
+        inputEl.value = ''; await sendText(t);
+      }
+    });
+    micBtn.addEventListener('click', async () => {
+      if (!room) return;
+      try {
+        micOn = !micOn;
+        await room.localParticipant.setMicrophoneEnabled(micOn);
+        micBtn.classList.toggle('active', micOn);
+      } catch (e) { addMsg('system', 'Mic error: ' + e.message); }
+    });
+
+    document.querySelectorAll('.ask-avatar').forEach(link => {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const prompt = HELP_PROMPTS[link.dataset.prompt];
+        if (!prompt) return;
+        if (!widget.classList.contains('open')) openWidget();
+        if (!room) {
+          pendingPrompt = prompt;
+          if (!isStarting) startBtn.click();
+          return;
+        }
+        await sendText(prompt);
+      });
+    });
+
+    // CONFIRM SUBMIT
+    document.getElementById('confirmForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('confirmBtn');
+      const orig = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = 'CONFIRMING...';
+      const notes = document.getElementById('access_notes').value;
+      const payload = {
+        _source: 'hge-confirmation',
+        confirmation_num: document.getElementById('confirmNum').textContent,
+        customer_name: document.getElementById('custName').textContent,
+        service_type: 'Free Roofing Estimate',
+        appointment_date: 'Mon, Apr 21, 2026',
+        appointment_time: '10:00 AM',
+        address: '123 Main Street, Naples, FL 34102',
+        sales_rep: 'Marcus Chen',
+        confirmed_date: true,
+        confirmed_homeowners: true,
+        confirmed_address: true,
+        access_notes: notes,
+        confirmed_at: new Date().toISOString()
+      };
+      try {
+        await fetch('/api/hge-submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        // success replace
+        document.querySelector('.appointment-card').innerHTML = `
+          <div class="ac-header" style="background:var(--hge-green);color:var(--hge-navy);">
+            <div>
+              <div class="ac-header-label" style="color:rgba(3,18,61,0.7);">STATUS</div>
+              <div class="ac-confirmation-num" style="color:var(--hge-navy);">✓ CONFIRMED</div>
+            </div>
+            <div>
+              <div class="ac-header-label" style="color:rgba(3,18,61,0.7);text-align:right;">CONFIRMATION #</div>
+              <div class="ac-confirmation-num" style="color:var(--hge-navy);text-align:right;">HGE-20260421-1047</div>
+            </div>
+          </div>
+          <div class="ac-body" style="text-align:center;">
+            <div style="width:88px;height:88px;border-radius:50%;background:rgba(32,252,143,0.15);border:2px solid var(--hge-green);display:inline-flex;align-items:center;justify-content:center;margin:16px 0 24px;">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--hge-navy)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h2 style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:0.04em;margin-bottom:12px;color:var(--hge-navy);">YOU'RE ALL SET, JOHN!</h2>
+            <p style="color:var(--gray-500);font-size:15px;max-width:480px;margin:0 auto 24px;line-height:1.6;">We've got you down for Monday, April 21 at 10:00 AM. Marcus will text you when he's on the way. Questions in the meantime? Just ask Jessica, or call <strong style="color:var(--hge-navy);">(216) 626-7928</strong>.</p>
+            <p style="color:var(--gray-400);font-size:13px;margin-top:20px;">A copy has been sent to your email.</p>
+          </div>
+        `;
+        if (room) setTimeout(() => sendText('I just confirmed my appointment! Thank you Jessica.'), 500);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+        alert('Something went wrong. Please call (216) 626-7928 or try again.');
+      }
+    });
+
+    window.addEventListener('beforeunload', () => {
+      if (room) room.disconnect();
+      if (sessionToken) fetch(`${API_BASE}/v1/sessions/stop`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionToken } }).catch(() => {});
+    });
+  </script>
+
+</body>
+</html>

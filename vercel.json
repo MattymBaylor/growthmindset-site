@@ -19,7 +19,8 @@
     { "source": "/pricing", "destination": "/pricing/index.html" },
     { "source": "/compare", "destination": "/compare/index.html" },
     { "source": "/speedlead", "destination": "/speedlead/index.html" },
-    { "source": "/calculator", "destination": "/calculator/index.html" }
+    { "source": "/calculator", "destination": "/calculator/index.html" },
+    { "source": "/hge", "destination": "/hge/index.html" }
   ],
   "headers": [
     {
